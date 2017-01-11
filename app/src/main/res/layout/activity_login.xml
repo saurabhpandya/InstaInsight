@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.instainsight.LoginActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background">
+
+        <ImageView
+            android:id="@+id/imgvw_instainsight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo" />
+
+        <RelativeLayout
+            android:id="@+id/rltv_connectwithinstagram"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_20dp"
+            android:background="@android:color/white"
+            android:padding="@dimen/dimen_10dp">
+
+            <TextView
+                android:id="@+id/txtvw_connectwithinstagram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/lbl_connectwithinstagram"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/font_18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_toLeftOf="@+id/txtvw_connectwithinstagram"
+                android:src="@drawable/instalogo" />
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

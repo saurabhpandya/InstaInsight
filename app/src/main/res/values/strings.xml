@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">InstaInsight</string>
+    <string name="text_signin">Log In</string>
+    <string name="text_signout">Log Out</string>
+
+    <string name="lbl_connectwithinstagram">Log in with Instagram</string>
+
+    <string name="menu_freeuser">Free User</string>
+    <string name="menu_paiduser">Paid User</string>
+
+    <string name="lbl_follower">Follower</string>
+    <string name="lbl_following">Following</string>
+
+    <string name="lbl_newfollowers">New Followers</string>
+    <string name="lbl_newfollowing">New Following</string>
+    <string name="lbl_blockedbyfollowing">Blokced by Following</string>
+    <string name="lbl_blockedfollowers">Blocked Followers</string>
+    <string name="lbl_likegraphs">Like Graphs</string>
+</resources>
