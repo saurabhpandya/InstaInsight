@@ -5,23 +5,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.instainsight.BaseActivity;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
 import com.instainsight.Utils.ConnectivityReceiver;
 
-public class LandingActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, View.OnClickListener {
+public class LandingActivity extends BaseActivity implements
+        ConnectivityReceiver.ConnectivityReceiverListener,
+        View.OnClickListener/*, Observer*/ {
 
+    //    private InstaInsightApp instaInsightApp;
     private String TAG = LandingActivity.class.getSimpleName();
-
     //    private BottomNavigationView bottomNavigationView;
     private ImageView imgvw_paid_user, imgvw_free_user;
-
     private int mSelectedItem;
     private boolean isConnected;
+    private LinearLayout lnrlyt_free_paid_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +34,12 @@ public class LandingActivity extends BaseActivity implements ConnectivityReceive
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 //            getWindow().setStatusBarColor(getResources().getColor(R.color.actionbar));
 
-        };
+        }
+        ;
         getIds();
         regListner();
+//        instaInsightApp = (InstaInsightApp) getApplication();
+//        instaInsightApp.getUserBeanObserver().addObserver(this);
 //        selectFragment(bottomNavigationView.getMenu().getItem(0));
         selectFragment(0);
     }
@@ -43,6 +48,7 @@ public class LandingActivity extends BaseActivity implements ConnectivityReceive
 //        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         imgvw_free_user = (ImageView) findViewById(R.id.imgvw_free_user);
         imgvw_paid_user = (ImageView) findViewById(R.id.imgvw_paid_user);
+        lnrlyt_free_paid_user = (LinearLayout) findViewById(R.id.lnrlyt_free_paid_user);
     }
 
     @Override
@@ -151,4 +157,25 @@ public class LandingActivity extends BaseActivity implements ConnectivityReceive
             default:
         }
     }
+
+//    @Override
+//    public void update(Observable observable, Object o) {
+//        if (observable instanceof UsersBean) {
+//            UsersBean usersBean = (UsersBean) observable;
+//            if (usersBean.isUpdate()) {
+//                imgvw_free_user.setEnabled(true);
+//                imgvw_paid_user.setEnabled(true);
+//                lnrlyt_free_paid_user.setEnabled(true);
+//                imgvw_free_user.setAlpha(1.0f);
+//                imgvw_paid_user.setAlpha(1.0f);
+//            } else {
+//                imgvw_free_user.setEnabled(false);
+//                imgvw_paid_user.setEnabled(true);
+//                lnrlyt_free_paid_user.setEnabled(false);
+//                imgvw_free_user.setAlpha(0.5f);
+//                imgvw_paid_user.setAlpha(0.5f);
+//
+//            }
+//        }
+//    }
 }

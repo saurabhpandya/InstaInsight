@@ -1,5 +1,6 @@
 package com.instainsight.profile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,6 +41,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private View vwProfile;
 
+//    private InstaInsightApp instaInsightApp;
+
+    private Context mContext;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,7 +52,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         getIds();
         regListner();
         getUserData();
+
         return vwProfile;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        mContext = context;
+//        instaInsightApp = (InstaInsightApp) context.getApplicationContext();
+        super.onAttach(context);
     }
 
     private void getIds() {
@@ -90,15 +103,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             Glide.with(getActivity()).load(instagramUser.profilPicture).into(imgvw_profilepic);
 
             if (isConnected()) {
+
+//                instaInsightApp.getUserBeanObserver().setUpdate(false);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", Constants.WebFields.ENDPOINT_USERSELF, new ArrayList<NameValuePair>(),
                         new InstagramRequest.InstagramRequestListener() {
                             @Override
                             public void onSuccess(String response) {
 
-                                UsersDao usersDao = new UsersDao(getActivity());
+                                UsersDao usersDao = new UsersDao(mContext);
                                 UsersBean usersBean = usersDao.getUserDetailsFromJson(response);
                                 usersBean = usersDao.saveUserDetails(usersBean);
+//                                instaInsightApp.getUserBeanObserver().setUpdate(true);
                                 txtvw_followercount.setText(usersBean.getFollowerCount());
                                 txtvw_followingcount.setText(usersBean.getFollowingCount());
                                 txtvw_newfollowers_count.setText(usersBean.getNewFollowerCount());
@@ -108,6 +124,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                             @Override
                             public void onError(String error) {
                                 Utility.showToast(getActivity(), error);
+//                                instaInsightApp.getUserBeanObserver().setUpdate(true);
                             }
                         });
             } else {

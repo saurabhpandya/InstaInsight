@@ -21,13 +21,10 @@ public class InstaInsightApp extends Application {
 
     private static InstagramSession mInstagramSession;
     private static Instagram mInstagram;
+//    public UsersBean usersBean;
 
     public static synchronized InstaInsightApp getInstance() {
         return mInstance;
-    }
-
-    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
-        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 
     public static InstagramSession getmInstagramSession(Instagram mInstagram) {
@@ -40,10 +37,19 @@ public class InstaInsightApp extends Application {
         return mInstagram;
     }
 
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+//        usersBean = new UsersBean();
     }
+
+//    public UsersBean getUserBeanObserver() {
+//        return usersBean;
+//    }
 
 }

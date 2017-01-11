@@ -4,7 +4,7 @@ package com.instainsight.profile.bean;
  * Created by SONY on 18-12-2016.
  */
 
-public class UsersBean {
+public class UsersBean /*extends Observable*/ {
 
     private String userId;
     private String userName;
@@ -15,6 +15,17 @@ public class UsersBean {
     private String followerCount;
     private String newFollowingCount;
     private String newFollowerCount;
+//    private boolean update;
+
+//    public boolean isUpdate() {
+//        return update;
+//    }
+//
+//    public void setUpdate(boolean update) {
+//        this.update = update;
+//        setChanged();
+//        notifyObservers();
+//    }
 
     public String getNewFollowingCount() {
         return newFollowingCount;
