@@ -100,7 +100,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             txtvw_profilename.setText(instagramUser.fullName);
 
-            Glide.with(getActivity()).load(instagramUser.profilPicture).into(imgvw_profilepic);
+            Glide.with(getActivity()).load(instagramUser.profilPicture).placeholder(R.drawable.defaultpic)
+                    .crossFade().into(imgvw_profilepic);
 
             if (isConnected()) {
 
@@ -180,23 +181,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void openNewFollowers() {
-        Utility.showToast(getActivity(), "New Followers");
+        startActivity(new Intent(getActivity(), FollowersActivity.class));
     }
 
     private void openNewFollowing() {
-        Utility.showToast(getActivity(), "New Following");
+        startActivity(new Intent(getActivity(), FollowingActivity.class));
     }
 
     private void openBlockedByFollowing() {
-        Utility.showToast(getActivity(), "Blocked by following");
+        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_blockedbyfollowing));
     }
 
     private void openBlockedFollowers() {
-        Utility.showToast(getActivity(), "Blocked followers");
+        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_blockedfollowers));
     }
 
     private void openLikeGraph() {
-        Utility.showToast(getActivity(), "Like Graph");
+        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_likegraphs));
     }
 
     @Override

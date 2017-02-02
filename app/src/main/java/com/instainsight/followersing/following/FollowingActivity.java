@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
 import com.instainsight.LoginActivity;
@@ -26,6 +29,7 @@ public class FollowingActivity extends BaseActivity {
 
     private String TAG = FollowingActivity.class.getSimpleName();
     private RecyclerView rcyclrvw_following;
+    private TextView txtvw_no_following;
     private FollowersingAdap mAdapter;
     private ArrayList<Object> arylstFollowing;
 
@@ -33,13 +37,22 @@ public class FollowingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following);
+        initActionbar();
+        setTitle(R.string.lbl_newfollowers);
         getIds();
         initRecyclerView();
         getFollowingData();
     }
 
+    private void initActionbar() {
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     private void getIds() {
         rcyclrvw_following = (RecyclerView) findViewById(R.id.rcyclrvw_following);
+        txtvw_no_following = (TextView) findViewById(R.id.txtvw_no_following);
     }
 
     private void initRecyclerView() {
@@ -63,9 +76,18 @@ public class FollowingActivity extends BaseActivity {
                                 FollowingDao followingDao = new FollowingDao(FollowingActivity.this);
                                 arylstFollowing = followingDao.getFollowing(response);
                                 followingDao.saveFollowing(arylstFollowing);
-                                arylstFollowing = followingDao.getAllFollowing();
-                                mAdapter.addFollowersing(arylstFollowing);
-                                mAdapter.notifyDataSetChanged();
+//                                arylstFollowing = followingDao.getAllFollowing();
+                                arylstFollowing = followingDao.getNewFollowing();
+                                if (arylstFollowing.size() > 0) {
+                                    rcyclrvw_following.setVisibility(View.VISIBLE);
+                                    txtvw_no_following.setVisibility(View.GONE);
+                                    mAdapter.addFollowersing(arylstFollowing);
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    rcyclrvw_following.setVisibility(View.GONE);
+                                    txtvw_no_following.setVisibility(View.VISIBLE);
+                                }
+
 //                            mAdapter = new FollowersingAdap(FollowingActivity.this, arylstFollowing, "Following");
 //                            rcyclrvw_following.setAdapter(mAdapter);
 
@@ -140,6 +162,17 @@ public class FollowingActivity extends BaseActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

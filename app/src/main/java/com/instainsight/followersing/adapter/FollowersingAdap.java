@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.instainsight.R;
 import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.following.bean.FollowingBean;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
     }
 
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
-        Glide.with(mContext).load(strUrl).placeholder(R.drawable.ic_user)
+        Glide.with(mContext).load(strUrl).placeholder(R.drawable.defaultlist)
                 .crossFade().into(imgvw_prflpc);
     }
 
@@ -55,6 +56,7 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
             FollowerBean followerBean = (FollowerBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followerBean.getFullName());
             loadImage(followerBean.getProfilePic(), holder.imgvw_followersing);
+
         } else if (objType.equalsIgnoreCase("Following")) {
             FollowingBean followingBean = (FollowingBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followingBean.getFullName());
@@ -68,14 +70,14 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imgvw_followersing;
+        public CircularImageView imgvw_followersing;
         public TextView txtvw_followersing_name;
 
         public MyViewHolder(View view) {
             super(view);
 //            if (objType.equalsIgnoreCase("Follower")){
             txtvw_followersing_name = (TextView) view.findViewById(R.id.txtvw_followersing_name);
-            imgvw_followersing = (ImageView) view.findViewById(R.id.imgvw_followersing);
+            imgvw_followersing = (CircularImageView) view.findViewById(R.id.imgvw_followersing);
 //            }else if (objType.equalsIgnoreCase("Following")){}
 
         }

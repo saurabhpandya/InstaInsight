@@ -17,20 +17,21 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/lnrlyt_free_paid_user"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imgvw_free_user"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="@drawable/freegray" />
 
         <ImageView
             android:id="@+id/imgvw_paid_user"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="@drawable/paidgray" />
 

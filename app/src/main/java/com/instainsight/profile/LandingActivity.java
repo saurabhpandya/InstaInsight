@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.instainsight.BaseActivity;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
@@ -24,6 +27,7 @@ public class LandingActivity extends BaseActivity implements
     private int mSelectedItem;
     private boolean isConnected;
     private LinearLayout lnrlyt_free_paid_user;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class LandingActivity extends BaseActivity implements
 //        instaInsightApp.getUserBeanObserver().addObserver(this);
 //        selectFragment(bottomNavigationView.getMenu().getItem(0));
         selectFragment(0);
+        initAd();
     }
 
     private void getIds() {
@@ -49,6 +54,33 @@ public class LandingActivity extends BaseActivity implements
         imgvw_free_user = (ImageView) findViewById(R.id.imgvw_free_user);
         imgvw_paid_user = (ImageView) findViewById(R.id.imgvw_paid_user);
         lnrlyt_free_paid_user = (LinearLayout) findViewById(R.id.lnrlyt_free_paid_user);
+    }
+
+    private void initAd() {
+        mInterstitialAd = new InterstitialAd(this);
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId("KnXhHKOr6tHcxTriZlifm3D1YrpsajKLGDop3fdHGcyl525NDzNgRqEC8oXNe98U");
+
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .build();
+
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F26D9F2D292FFCC31770FE3853CFE277").build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     @Override
@@ -158,7 +190,13 @@ public class LandingActivity extends BaseActivity implements
         }
     }
 
-//    @Override
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    //    @Override
 //    public void update(Observable observable, Object o) {
 //        if (observable instanceof UsersBean) {
 //            UsersBean usersBean = (UsersBean) observable;

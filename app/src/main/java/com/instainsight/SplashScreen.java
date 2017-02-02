@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.instainsight.followersing.followers.dao.FollowersDao;
+import com.instainsight.followersing.following.dao.FollowingDao;
 import com.instainsight.profile.LandingActivity;
 
 import static com.instainsight.constants.Constants.SPLASH_TIME;
@@ -21,10 +23,24 @@ public class SplashScreen extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
+        removeOldFollowers();
+        removeOldFollowing();
         showSplash();
     }
 
+    private void removeOldFollowers() {
+        FollowersDao followersDao = new FollowersDao(SplashScreen.this);
+        followersDao.removePreviousFollowers();
+    }
+
+    private void removeOldFollowing() {
+        FollowingDao followingDao = new FollowingDao(SplashScreen.this);
+        followingDao.removePreviousFollowing();
+    }
+
     private void showSplash() {
+
+
         new Handler().postDelayed(new Runnable() {
                                       /*
                                        * Showing splash screen with a timer. This will be useful when you

@@ -90,13 +90,14 @@ public class FollowersDao {
 
                     long inserId = db.insert(DatabaseHelper.TABLE_FOLLOWERS, null, values);
                     Log.d(TAG, "inserted : " + inserId);
-                } else {
-                    values.put(DatabaseHelper.KEY_ISNEW, "0");
-                    int updatedRecords = db.update(DatabaseHelper.TABLE_FOLLOWERS, values,
-                            DatabaseHelper.KEY_USERID + " = ? ",
-                            new String[]{followerBean.getId()});
-                    Log.d(TAG, "updated : " + updatedRecords);
                 }
+//                else {
+//                    values.put(DatabaseHelper.KEY_ISNEW, "0");
+//                    int updatedRecords = db.update(DatabaseHelper.TABLE_FOLLOWERS, values,
+//                            DatabaseHelper.KEY_USERID + " = ? ",
+//                            new String[]{followerBean.getId()});
+//                    Log.d(TAG, "updated : " + updatedRecords);
+//                }
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -105,8 +106,6 @@ public class FollowersDao {
             db.endTransaction();
             db.close();
         }
-
-
     }
 
     public ArrayList<Object> getAllFollowers() {
@@ -126,5 +125,71 @@ public class FollowersDao {
             db.close();
         }
         return arylstFollowers;
+    }
+
+    public ArrayList<Object> getNewFollowers() {
+        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ArrayList<Object> arylstFollowers = new ArrayList<Object>();
+        Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWERS, null,
+                DatabaseHelper.KEY_ISNEW + "=?", new String[]{"1"}, null, null, null);
+        if (cur.getCount() > 0 && cur.moveToFirst()) {
+            FollowerBean followerBean = new FollowerBean();
+            do {
+                followerBean.setId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERID)));
+                followerBean.setUserName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
+                followerBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
+                followerBean.setFullName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FULLNAME)));
+                arylstFollowers.add(followerBean);
+            } while (cur.moveToNext());
+            db.close();
+        }
+        return arylstFollowers;
+    }
+
+    public void removePreviousFollowers() {
+        ArrayList<Object> arylstFollowers = getNewFollowers();
+        if (arylstFollowers != null && arylstFollowers.size() > 0) {
+            DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+                ContentValues values = new ContentValues();
+                for (int i = 0; i <= (arylstFollowers.size() - 1); i++) {
+                    FollowerBean followerBean = (FollowerBean) arylstFollowers.get(i);
+                    values.put(DatabaseHelper.KEY_USERID, followerBean.getId());
+                    values.put(DatabaseHelper.KEY_FULLNAME, followerBean.getFullName());
+                    values.put(DatabaseHelper.KEY_USERNAME, followerBean.getUserName());
+                    values.put(DatabaseHelper.KEY_PROFILEPIC, followerBean.getProfilePic());
+
+                    Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWERS, null,
+                            DatabaseHelper.KEY_USERID + " = ? ",
+                            new String[]{followerBean.getId()}, null,
+                            null, null);
+
+//                    if (cur.getCount() == 0) {
+//                        values.put(DatabaseHelper.KEY_CREATEDAT, Utility.getDateTime());
+//                        values.put(DatabaseHelper.KEY_ISNEW, "1");
+//
+//                        long inserId = db.insert(DatabaseHelper.TABLE_FOLLOWERS, null, values);
+//                        Log.d(TAG, "inserted : " + inserId);
+//                    }
+//                else
+                    if (cur.getCount() > 0) {
+                        values.put(DatabaseHelper.KEY_ISNEW, "0");
+                        int updatedRecords = db.update(DatabaseHelper.TABLE_FOLLOWERS, values,
+                                DatabaseHelper.KEY_USERID + " = ? ",
+                                new String[]{followerBean.getId()});
+                        Log.d(TAG, "updated : " + updatedRecords);
+                    }
+                }
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
     }
 }
