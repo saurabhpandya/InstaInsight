@@ -10,6 +10,7 @@ import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants.WebFields;
 import com.instainsight.db.DatabaseHelper;
 import com.instainsight.followersing.followers.bean.FollowerBean;
+import com.instainsight.followersing.following.bean.FollowingBean;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -191,5 +192,36 @@ public class FollowersDao {
                 db.close();
             }
         }
+    }
+
+    public ArrayList<Object> getFollowersToWhomNotFollowing() {
+        // Get the followers who are not in following
+        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ArrayList<Object> arylstFollowersNotFollowing = new ArrayList<Object>();
+
+//        select distinct *
+//        from old a join new b on a.ManName = b. Manager_Name and a. ManNumber = b. Manager_Number
+//        SELECT * FROM DatabaseHelper.TABLE_FOLLOWING WHERE DatabaseHelper.KEY_USERID NOT IN ()
+        String followersToWhomNotFollowingQuery = "SELECT DISTINCT * FROM " +
+                DatabaseHelper.TABLE_FOLLOWERS + " followers " +
+                "JOIN " +
+                DatabaseHelper.TABLE_FOLLOWING + " following " +
+                "ON " +
+                "followers." + DatabaseHelper.KEY_USERID + " != following." + DatabaseHelper.KEY_USERID;
+        Cursor curFollowersNotFollowing = db.rawQuery(followersToWhomNotFollowingQuery, null);
+        Log.d(TAG, "getFollowersToWhomNotFollowing:curFollowersNotFollowing.getCount()::" + curFollowersNotFollowing.getCount());
+        if (curFollowersNotFollowing.getCount() > 0 && curFollowersNotFollowing.moveToFirst()) {
+            FollowingBean followingBean = new FollowingBean();
+            do {
+                followingBean.setId(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_USERID)));
+                followingBean.setUserName(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
+                followingBean.setProfilePic(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
+                followingBean.setFullName(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_FULLNAME)));
+                arylstFollowersNotFollowing.add(followingBean);
+            } while (curFollowersNotFollowing.moveToNext());
+            db.close();
+        }
+        return arylstFollowersNotFollowing;
     }
 }

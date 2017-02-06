@@ -33,7 +33,7 @@
         <activity android:name=".followersing.following.FollowingActivity" />
         <activity android:name=".BaseActivity" />
 
-        <!--Include the AdActivity configChanges and theme. -->
+        <!-- Include the AdActivity configChanges and theme. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
@@ -47,6 +47,9 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".followersing.NotFollowingBackActivity" />
+        <activity android:name=".followersing.NotFollowingMeBackActivity" />
+        <activity android:name=".profile.LikeGraphActivity"></activity>
     </application>
 
 </manifest>

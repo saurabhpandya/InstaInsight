@@ -188,7 +188,37 @@ public class FollowingDao {
                 db.close();
             }
         }
-
     }
 
+    public ArrayList<Object> getFollowingsNotFollowingBack() {
+        // Get the following who are not in followers
+        DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ArrayList<Object> arylstNotFollowingBack = new ArrayList<Object>();
+
+//        select distinct *
+//        from old a join new b on a.ManName = b. Manager_Name and a. ManNumber = b. Manager_Number
+//        SELECT * FROM DatabaseHelper.TABLE_FOLLOWING WHERE DatabaseHelper.KEY_USERID NOT IN ()
+        String notFollowingBackQuery = "SELECT DISTINCT * FROM " +
+                DatabaseHelper.TABLE_FOLLOWING + " following " +
+                "JOIN " +
+                DatabaseHelper.TABLE_FOLLOWERS + " followers " +
+                "ON " +
+                "following." + DatabaseHelper.KEY_USERID + " != followers." + DatabaseHelper.KEY_USERID;
+        Cursor curNotFollowingBack = db.rawQuery(notFollowingBackQuery, null);
+        Log.d(TAG, "getFollowingsNotFollowingBack:curNotFollowingBack.getCount()::" + curNotFollowingBack.getCount());
+
+        if (curNotFollowingBack.getCount() > 0 && curNotFollowingBack.moveToFirst()) {
+            FollowingBean followingBean = new FollowingBean();
+            do {
+                followingBean.setId(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_USERID)));
+                followingBean.setUserName(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
+                followingBean.setProfilePic(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
+                followingBean.setFullName(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_FULLNAME)));
+                arylstNotFollowingBack.add(followingBean);
+            } while (curNotFollowingBack.moveToNext());
+            db.close();
+        }
+        return arylstNotFollowingBack;
+    }
 }

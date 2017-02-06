@@ -16,6 +16,8 @@ import com.instainsight.LoginActivity;
 import com.instainsight.R;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
+import com.instainsight.followersing.NotFollowingBackActivity;
+import com.instainsight.followersing.NotFollowingMeBackActivity;
 import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
 import com.instainsight.instagram.InstagramRequest;
@@ -173,31 +175,39 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void openFollowers() {
-        startActivity(new Intent(getActivity(), FollowersActivity.class));
+        startActivity(FollowersActivity.class);
     }
 
     private void openFollowing() {
-        startActivity(new Intent(getActivity(), FollowingActivity.class));
+        startActivity(FollowingActivity.class);
     }
 
     private void openNewFollowers() {
-        startActivity(new Intent(getActivity(), FollowersActivity.class));
+        startActivity(FollowersActivity.class);
     }
 
     private void openNewFollowing() {
-        startActivity(new Intent(getActivity(), FollowingActivity.class));
+        startActivity(FollowingActivity.class);
+    }
+
+    private void startActivity(Class aClass) {
+        startActivity(new Intent(getActivity(), aClass));
     }
 
     private void openBlockedByFollowing() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_blockedbyfollowing));
+        // It will show list of users who doesn't Follow me but I follow them
+        // Get the following who are not in followers
+        startActivity(NotFollowingBackActivity.class);
     }
 
     private void openBlockedFollowers() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_blockedfollowers));
+        // It will show list of users who follow me but I don't follow them
+        // Get the followers who are not in following
+        startActivity(NotFollowingMeBackActivity.class);
     }
 
     private void openLikeGraph() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_likegraphs));
+        startActivity(LikeGraphActivity.class);
     }
 
     @Override

@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_following"
+    android:id="@+id/activity_not_following_back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.instainsight.followersing.following.FollowingActivity">
+    tools:context="com.instainsight.followersing.NotFollowingBackActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcyclrvw_following"
+        android:id="@+id/rcyclrvw_notfollowingback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical" />
 
     <TextView
-        android:id="@+id/txtvw_no_following"
+        android:id="@+id/txtvw_no_notfollowingback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/lbl_no_following"
+        android:gravity="center"
+        android:text="@string/lbl_no_notfollowingback"
         android:textColor="@android:color/black"
         android:textSize="@dimen/font_20sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>

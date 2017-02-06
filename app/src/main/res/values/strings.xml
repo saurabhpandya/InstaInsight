@@ -27,5 +27,6 @@
 
     <string name="lbl_no_followers">No New Followers</string>
     <string name="lbl_no_following">No New Following</string>
-
+    <string name="lbl_no_notfollowingback">Not found any who doesn\'t following back</string>
+    <string name="lbl_no_notfollowingmeback">Not found any to whom you are not following back</string>
 </resources>

@@ -58,9 +58,10 @@ public class LandingActivity extends BaseActivity implements
 
     private void initAd() {
         mInterstitialAd = new InterstitialAd(this);
-
+//        App ID: ca-app-pub-3477009218980648~8796752818
+//        Ad unit ID: ca-app-pub-3477009218980648/4226952413
         // set the ad unit ID
-        mInterstitialAd.setAdUnitId("KnXhHKOr6tHcxTriZlifm3D1YrpsajKLGDop3fdHGcyl525NDzNgRqEC8oXNe98U");
+        mInterstitialAd.setAdUnitId("ca-app-pub-3477009218980648/4226952413");
 
 //        AdRequest adRequest = new AdRequest.Builder()
 //                .build();

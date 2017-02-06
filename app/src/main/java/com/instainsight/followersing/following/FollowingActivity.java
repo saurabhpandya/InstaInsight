@@ -38,7 +38,7 @@ public class FollowingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following);
         initActionbar();
-        setTitle(R.string.lbl_newfollowers);
+        setTitle(R.string.lbl_newfollowing);
         getIds();
         initRecyclerView();
         getFollowingData();

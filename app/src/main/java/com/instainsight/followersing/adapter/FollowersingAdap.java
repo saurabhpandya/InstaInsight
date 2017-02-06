@@ -61,6 +61,10 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
             FollowingBean followingBean = (FollowingBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followingBean.getFullName());
             loadImage(followingBean.getProfilePic(), holder.imgvw_followersing);
+        } else if (objType.equalsIgnoreCase("NotFollowingBack")) {
+            FollowingBean followingBean = (FollowingBean) followersingList.get(position);
+            holder.txtvw_followersing_name.setText(followingBean.getFullName());
+            loadImage(followingBean.getProfilePic(), holder.imgvw_followersing);
         }
     }
 
