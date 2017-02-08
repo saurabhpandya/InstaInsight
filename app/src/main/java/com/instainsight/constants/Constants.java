@@ -34,6 +34,9 @@ public class Constants {
         public static final String RSP_FOLLOWS_FULLNAME = "full_name";
         public static final String RSP_FOLLOWS_ID = "id";
 
+        //  /users/self/media/recent
+        public static final String ENDPOINT_RECENT_MEDIA = "/users/self/media/recent"; // FOLLOWINGS
+
 
     }
 }

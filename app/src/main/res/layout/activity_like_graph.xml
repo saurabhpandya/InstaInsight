@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.instainsight.profile.LikeGraphActivity">
+    tools:context="com.instainsight.media.LikeGraphActivity">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/linechart"

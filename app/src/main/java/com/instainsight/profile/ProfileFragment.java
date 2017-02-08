@@ -22,6 +22,7 @@ import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
+import com.instainsight.media.LikeGraphActivity;
 import com.instainsight.profile.bean.UsersBean;
 import com.instainsight.profile.dao.UsersDao;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -98,12 +99,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         if (mInstagramSession.isActive()) {
 
-            InstagramUser instagramUser = mInstagramSession.getUser();
+            final InstagramUser instagramUser = mInstagramSession.getUser();
 
             txtvw_profilename.setText(instagramUser.fullName);
 
-            Glide.with(getActivity()).load(instagramUser.profilPicture).placeholder(R.drawable.defaultpic)
-                    .crossFade().into(imgvw_profilepic);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.with(getActivity()).load(instagramUser.profilPicture).placeholder(R.drawable.defaultpic)
+                            .crossFade().into(imgvw_profilepic);
+                }
+            });
+
 
             if (isConnected()) {
 

@@ -39,7 +39,7 @@ public class LandingActivity extends BaseActivity implements
 //            getWindow().setStatusBarColor(getResources().getColor(R.color.actionbar));
 
         }
-        ;
+
         getIds();
         regListner();
 //        instaInsightApp = (InstaInsightApp) getApplication();

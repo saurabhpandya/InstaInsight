@@ -49,7 +49,7 @@
 
         <activity android:name=".followersing.NotFollowingBackActivity" />
         <activity android:name=".followersing.NotFollowingMeBackActivity" />
-        <activity android:name=".profile.LikeGraphActivity"></activity>
+        <activity android:name=".media.LikeGraphActivity"></activity>
     </application>
 
 </manifest>
