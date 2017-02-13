@@ -1,13 +1,15 @@
 package com.instainsight.media;
 
+import com.instainsight.media.models.MediaBean;
 import com.instainsight.media.models.RecentMediaBean;
 import com.instainsight.models.ListResponseBean;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.networking.RestClient;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 
@@ -31,31 +33,47 @@ public class RecentMediaService {
 
     private void getRecentMediaFromAPI(final MyCallBack<ListResponseBean<RecentMediaBean>> recentMediaCallBack
             , String strRecentMedia) {
-        Call<ListResponseBean<RecentMediaBean>> recentMediaCall
-                = iMediaService.getILikedMostMedia(strRecentMedia);
-
-        recentMediaCall.enqueue(new Callback<ListResponseBean<RecentMediaBean>>() {
+        iMediaService.getILikedMostMedia(strRecentMedia).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ListResponseBean<RecentMediaBean>>() {
             @Override
-            public void onResponse(Call<ListResponseBean<RecentMediaBean>> call,
-                                   Response<ListResponseBean<RecentMediaBean>> response) {
-                if (response.isSuccessful()) {
-                    recentMediaCallBack.onSuccess(response.body());
-                } else {
-                    recentMediaCallBack.onError("Server Error!", response.errorBody().toString());
-                }
+            public void accept(ListResponseBean<RecentMediaBean> recentMediaBeanListResponseBean) throws Exception {
+                recentMediaCallBack.onSuccess(recentMediaBeanListResponseBean);
             }
-
+        }, new Consumer<Throwable>() {
             @Override
-            public void onFailure(Call<ListResponseBean<RecentMediaBean>> call, Throwable t) {
-                recentMediaCallBack.onError("Android Application Error", t.getMessage());
+            public void accept(Throwable throwable) throws Exception {
+                recentMediaCallBack.onError("Server Error!", throwable.getMessage().toString());
             }
         });
+    }
 
+    public void getRecentMediaNew(MyCallBack<ListResponseBean<MediaBean>> recentMediaCallBack,
+                                  String strRecentMedia) {
+        getRecentMediaNewFromAPI(recentMediaCallBack, strRecentMedia);
+    }
+
+    private void getRecentMediaNewFromAPI(final MyCallBack<ListResponseBean<MediaBean>> recentMediaCallBack
+            , String strRecentMedia) {
+        iMediaService.getRecentMedia(strRecentMedia).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ListResponseBean<MediaBean>>() {
+            @Override
+            public void accept(ListResponseBean<MediaBean> recentMediaBeanListResponseBean) throws Exception {
+                recentMediaCallBack.onSuccess(recentMediaBeanListResponseBean);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                recentMediaCallBack.onError("Server Error!", throwable.getMessage().toString());
+            }
+        });
     }
 
     public interface IMediaService {
         @GET
-        Call<ListResponseBean<RecentMediaBean>> getILikedMostMedia(@Url String ENDPOINT_RECENT_MEDIA);
+        Observable<ListResponseBean<RecentMediaBean>> getILikedMostMedia(@Url String ENDPOINT_RECENT_MEDIA);
+
+        @GET
+        Observable<ListResponseBean<MediaBean>> getRecentMedia(@Url String ENDPOINT_RECENT_MEDIA);
     }
 
 }

@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.instainsight.db.tables.LIKEDBYUSER;
+import com.instainsight.db.tables.MEDIA;
 import com.instainsight.db.tables.RECENTMEDIA;
+import com.instainsight.db.tables.USERS;
+import com.instainsight.db.tables.USERSELF;
 
 public class DBManager {
     private static final String TAG = "DBManager";
@@ -65,8 +68,12 @@ public class DBManager {
         @Override
         public void onCreate(final SQLiteDatabase dbObj) {
             Log.d(TAG, "Inside onCreate");
+
             dbObj.execSQL(LIKEDBYUSER.createTable());
             dbObj.execSQL(RECENTMEDIA.createTable());
+            dbObj.execSQL(USERSELF.createTable());
+            dbObj.execSQL(USERS.createTable());
+            dbObj.execSQL(MEDIA.createTable());
         }
 
         @Override
@@ -74,6 +81,9 @@ public class DBManager {
             dbVersion = newVersion;
             dbObj.execSQL(LIKEDBYUSER.dropTable());
             dbObj.execSQL(RECENTMEDIA.dropTable());
+            dbObj.execSQL(USERSELF.dropTable());
+            dbObj.execSQL(USERS.dropTable());
+            dbObj.execSQL(MEDIA.dropTable());
             onCreate(dbObj);
         }
     }

@@ -6,6 +6,8 @@ package com.instainsight.networking;
 
 import android.util.Log;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -34,6 +36,7 @@ public class RestClient {
                 .baseUrl(baseUrl)
 //                .client(okClient)
 //                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
         Log.d(TAG, "restClient:" + mClient);

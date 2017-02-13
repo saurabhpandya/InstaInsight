@@ -46,28 +46,28 @@ public class MediaDao {
                         JSONObject jsnObjImages = jsnObjData.getJSONObject(DatabaseHelper.KEY_MEDIA_IMAGES);
                         if (jsnObjImages.has(DatabaseHelper.KEY_MEDIA_STANDARDRESOLUTION)) {
                             JSONObject jsnObjStandardUrl = jsnObjImages.getJSONObject(DatabaseHelper.KEY_MEDIA_STANDARDRESOLUTION);
-                            if (jsnObjStandardUrl.has(DatabaseHelper.KEY_MEDIA_IMAGEURL))
-                                mediaBean.setImageurl(jsnObjStandardUrl.getString(DatabaseHelper.KEY_MEDIA_IMAGEURL));
+//                            if (jsnObjStandardUrl.has(DatabaseHelper.KEY_MEDIA_IMAGEURL))
+//                                mediaBean.setImageurl(jsnObjStandardUrl.getString(DatabaseHelper.KEY_MEDIA_IMAGEURL));
                         }
                     }
                     if (jsnObjData.has(DatabaseHelper.KEY_MEDIA_LIKES)) {
                         JSONObject jsnObjLikes = jsnObjData.getJSONObject(DatabaseHelper.KEY_MEDIA_LIKES);
-                        if (jsnObjLikes.has(DatabaseHelper.KEY_MEDIA_LIKESCOUNT))
-                            mediaBean.setLikes(jsnObjLikes.getString(DatabaseHelper.KEY_MEDIA_LIKESCOUNT));
+//                        if (jsnObjLikes.has(DatabaseHelper.KEY_MEDIA_LIKESCOUNT))
+//                            mediaBean.setLikes(jsnObjLikes.getString(DatabaseHelper.KEY_MEDIA_LIKESCOUNT));
                     }
 
                     if (jsnObjData.has(DatabaseHelper.KEY_MEDIA_USER)) {
                         JSONObject jsnObjUser = jsnObjData.getJSONObject(DatabaseHelper.KEY_MEDIA_USER);
-                        if (jsnObjUser.has(DatabaseHelper.KEY_MEDIA_USERID))
-                            mediaBean.setUserid(jsnObjUser.getString(DatabaseHelper.KEY_MEDIA_USERID));
+//                        if (jsnObjUser.has(DatabaseHelper.KEY_MEDIA_USERID))
+//                            mediaBean.setUserid(jsnObjUser.getString(DatabaseHelper.KEY_MEDIA_USERID));
                     }
                     if (jsnObjData.has(DatabaseHelper.KEY_MEDIA_CREATEDTIME))
                         mediaBean.setCreated_time(jsnObjData.getString(DatabaseHelper.KEY_MEDIA_CREATEDTIME));
 
                     if (jsnObjData.has(DatabaseHelper.KEY_MEDIA_COMMENTS)) {
                         JSONObject jsnObjCommentCounts = jsnObjData.getJSONObject(DatabaseHelper.KEY_MEDIA_COMMENTS);
-                        if (jsnObjCommentCounts.has(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT))
-                            mediaBean.setComments(jsnObjCommentCounts.getString(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT));
+//                        if (jsnObjCommentCounts.has(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT))
+//                            mediaBean.setComments(jsnObjCommentCounts.getString(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT));
                     }
 
                     if (jsnObjData.has(DatabaseHelper.KEY_MEDIA_LINK))
@@ -90,12 +90,12 @@ public class MediaDao {
             ContentValues values = new ContentValues();
 
             values.put(DatabaseHelper.KEY_MEDIA_MEDIAID_, mediaBean.getMediaId());
-            values.put(DatabaseHelper.KEY_MEDIA_USERID, mediaBean.getUserid());
+//            values.put(DatabaseHelper.KEY_MEDIA_USERID, mediaBean.getUserid());
             values.put(DatabaseHelper.KEY_MEDIA_TYPE, mediaBean.getType());
-            values.put(DatabaseHelper.KEY_MEDIA_IMAGEURL_, mediaBean.getImageurl());
-            values.put(DatabaseHelper.KEY_MEDIA_LIKESCOUNT_, mediaBean.getLikes());
+//            values.put(DatabaseHelper.KEY_MEDIA_IMAGEURL_, mediaBean.getImageurl());
+//            values.put(DatabaseHelper.KEY_MEDIA_LIKESCOUNT_, mediaBean.getLikes());
             values.put(DatabaseHelper.KEY_MEDIA_CREATEDTIME, mediaBean.getCreated_time());
-            values.put(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT_, mediaBean.getComments());
+//            values.put(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT_, mediaBean.getComments());
             values.put(DatabaseHelper.KEY_MEDIA_LINK, mediaBean.getLink());
 
             Cursor cur = db.query(DatabaseHelper.TABLE_MEDIA, null,
@@ -128,12 +128,12 @@ public class MediaDao {
             do {
                 MediaBean mediaBean = new MediaBean();
                 mediaBean.setMediaId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_MEDIAID)));
-                mediaBean.setUserid(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_USERID)));
+//                mediaBean.setUserid(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_USERID)));
                 mediaBean.setType(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_TYPE)));
                 mediaBean.setType(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_IMAGEURL_)));
-                mediaBean.setLikes(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_LIKESCOUNT_)));
+//                mediaBean.setLikes(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_LIKESCOUNT_)));
                 mediaBean.setCreated_time(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_CREATEDTIME)));
-                mediaBean.setComments(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT_)));
+//                mediaBean.setComments(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_COMMENTSCOUNT_)));
                 mediaBean.setLink(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_MEDIA_LINK)));
                 aryLstMediaBean.add(mediaBean);
             } while (cur.moveToNext());

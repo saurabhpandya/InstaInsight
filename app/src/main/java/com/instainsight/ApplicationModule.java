@@ -10,6 +10,7 @@ import com.instainsight.instagram.InstagramSession;
 import com.instainsight.instagram.util.Cons;
 import com.instainsight.media.RecentMediaService;
 import com.instainsight.media.viewmodel.RecentMediaViewModel;
+import com.instainsight.media.viewmodel.RecentMediaViewModelNew;
 import com.instainsight.networking.RestClient;
 
 import javax.inject.Singleton;
@@ -54,6 +55,12 @@ public class ApplicationModule {
     @Singleton
     RecentMediaViewModel provideRecentMediaViewMode(RecentMediaService recentMediaService) {
         return new RecentMediaViewModel(recentMediaService, context, mInstagramSession);
+    }
+
+    @Provides
+    @Singleton
+    RecentMediaViewModelNew provideRecentMediaViewModel(RecentMediaService recentMediaService) {
+        return new RecentMediaViewModelNew(recentMediaService, context, mInstagramSession);
     }
     // Recent Media - Ends
 

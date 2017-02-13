@@ -5,9 +5,10 @@ import com.instainsight.models.ListResponseBean;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.networking.RestClient;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 
@@ -29,30 +30,44 @@ public class ILikedMostService {
     }
 
     private void getILikedMostAPI(final MyCallBack<ListResponseBean<ILikedMostBean>> iLikeMostCallBack, String urlILikedMost) {
-        Call<ListResponseBean<ILikedMostBean>> iLikedMostCall
+        Observable<ListResponseBean<ILikedMostBean>> iLikedMostCall
                 = iiLikedMostService.getILikedMostMedia(urlILikedMost);
-        iLikedMostCall.enqueue(new Callback<ListResponseBean<ILikedMostBean>>() {
-            @Override
-            public void onResponse(Call<ListResponseBean<ILikedMostBean>> call,
-                                   Response<ListResponseBean<ILikedMostBean>> response) {
 
-                if (response.isSuccessful()) {
-                    iLikeMostCallBack.onSuccess(response.body());
-                } else {
-                    iLikeMostCallBack.onError("Server Error!", response.errorBody().toString());
-                }
+        iLikedMostCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ListResponseBean<ILikedMostBean>>() {
+                    @Override
+                    public void accept(ListResponseBean<ILikedMostBean> iLikedMostBeanListResponseBean) throws Exception {
+                        iLikeMostCallBack.onSuccess(iLikedMostBeanListResponseBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        iLikeMostCallBack.onError("Server Error!", throwable.getCause().toString());
+                    }
+                });
 
-            }
-
-            @Override
-            public void onFailure(Call<ListResponseBean<ILikedMostBean>> call, Throwable t) {
-                iLikeMostCallBack.onError("Android Application Error", t.getMessage());
-            }
-        });
+//        iLikedMostCall.enqueue(new Callback<ListResponseBean<ILikedMostBean>>() {
+//            @Override
+//            public void onResponse(Call<ListResponseBean<ILikedMostBean>> call,
+//                                   Response<ListResponseBean<ILikedMostBean>> response) {
+//
+//                if (response.isSuccessful()) {
+//                    iLikeMostCallBack.onSuccess(response.body());
+//                } else {
+//                    iLikeMostCallBack.onError("Server Error!", response.errorBody().toString());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ListResponseBean<ILikedMostBean>> call, Throwable t) {
+//                iLikeMostCallBack.onError("Android Application Error", t.getMessage());
+//            }
+//        });
     }
 
     public interface IILikedMostService {
         @GET
-        Call<ListResponseBean<ILikedMostBean>> getILikedMostMedia(@Url String ENDPOINT_MEDIALIKED);
+        Observable<ListResponseBean<ILikedMostBean>> getILikedMostMedia(@Url String ENDPOINT_MEDIALIKED);
     }
 }

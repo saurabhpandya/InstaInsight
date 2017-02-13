@@ -143,7 +143,7 @@ public class LikeGraphActivity extends BaseActivity implements
 
         float xMax = 0f;
         if (aryLstMedia != null && aryLstMedia.size() > 0) {
-            xMax = Float.parseFloat(aryLstMedia.get(0).getLikes());
+            xMax = Float.parseFloat(aryLstMedia.get(0).getLikesBean().getCount());
         }
         leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
@@ -187,7 +187,7 @@ public class LikeGraphActivity extends BaseActivity implements
             if (i >= 7)
                 break;
 
-            values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikes())));
+            values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
         }
 
 //        values.add(new Entry(0, 5));
