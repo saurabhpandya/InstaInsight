@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.instainsight.constants.Constants;
 import com.instainsight.db.DatabaseHelper;
-import com.instainsight.media.bean.MediaBean;
+import com.instainsight.media.models.MediaBean;
 
 import org.json.JSONArray;
 import org.json.JSONException;

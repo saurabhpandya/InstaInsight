@@ -18,6 +18,7 @@ import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
+import com.instainsight.ilikedmost.ILikedMostActivity;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
 import com.instainsight.profile.bean.UsersBean;
@@ -186,10 +187,12 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void openMyTopLikes() {
         Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_my_top_likes));
+
     }
 
     private void openWhoILikeMost() {
         Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_who_i_like_most));
+        startActivity(ILikedMostActivity.class);
     }
 
     private void openPopularFollower() {
@@ -198,6 +201,10 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void openGhostFollower() {
         Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_ghost_followers));
+    }
+
+    private void startActivity(Class aClass) {
+        startActivity(new Intent(getActivity(), aClass));
     }
 
 }

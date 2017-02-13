@@ -39,7 +39,7 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
 
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
         Glide.with(mContext).load(strUrl).placeholder(R.drawable.defaultlist)
-                .crossFade().into(imgvw_prflpc);
+                .dontAnimate().into(imgvw_prflpc);
     }
 
     @Override

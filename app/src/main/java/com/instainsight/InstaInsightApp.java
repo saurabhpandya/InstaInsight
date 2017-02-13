@@ -24,6 +24,7 @@ public class InstaInsightApp extends Application {
     private static InstagramSession mInstagramSession;
     private static Instagram mInstagram;
 //    public UsersBean usersBean;
+private ApplicationComponent mComponent;
 
     public static synchronized InstaInsightApp getInstance() {
         return mInstance;
@@ -48,6 +49,10 @@ public class InstaInsightApp extends Application {
         super.onCreate();
         mInstance = this;
 
+        mComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(getResources().getString(R.string.font_roboto_regular))
 //                .setDefaultFontPath("OLDENGL.TTF")
@@ -55,6 +60,10 @@ public class InstaInsightApp extends Application {
                 .build());
 
 //        usersBean = new UsersBean();
+    }
+
+    public ApplicationComponent getComponent() {
+        return mComponent;
     }
 
 //    public UsersBean getUserBeanObserver() {

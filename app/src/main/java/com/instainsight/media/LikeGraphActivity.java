@@ -31,8 +31,8 @@ import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
-import com.instainsight.media.bean.MediaBean;
 import com.instainsight.media.dao.MediaDao;
+import com.instainsight.media.models.MediaBean;
 
 import org.apache.http.NameValuePair;
 

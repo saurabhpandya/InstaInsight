@@ -11,6 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_FOLLOWERS = "Followers";
     public static final String TABLE_FOLLOWING = "Following";
     public static final String TABLE_MEDIA = "Media";
+    public static final String TABLE_LIKEDBYUSER = "LikedByUser";
 
     // column names for TABLE_USERS
     public static final String KEY_BIO = "bio";
@@ -18,7 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_NEWFOLLOWERCOUNT = "new_followed_by";
     public static final String KEY_FOLLOWINGCOUNT = "follows";
     public static final String KEY_NEWFOLLOWINGCOUNT = "new_follows";
-
 
     // Common column names for TABLE_USERS, TABLE_FOLLOWERS & TABLE_FOLLOWING
     public static final String KEY_USERID = "id";
@@ -45,6 +45,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_MEDIA_COMMENTSCOUNT = "count";
     public static final String KEY_MEDIA_COMMENTSCOUNT_ = "comments_count";
     public static final String KEY_MEDIA_LINK = "link";
+
+    public static final String KEY_LIKEDBYUSER_MEDIAID = "id";
+    public static final String KEY_LIKEDBYUSER_MEDIAID_ = "link";
 
     public static final String CREATEMEDIA = "CREATE TABLE " + TABLE_MEDIA + " ("
             + KEY_MEDIA_MEDIAID_ + " TEXT,"

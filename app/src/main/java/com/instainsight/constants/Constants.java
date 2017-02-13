@@ -35,8 +35,27 @@ public class Constants {
         public static final String RSP_FOLLOWS_ID = "id";
 
         //  /users/self/media/recent
-        public static final String ENDPOINT_RECENT_MEDIA = "/users/self/media/recent"; // FOLLOWINGS
+        public static final String ENDPOINT_RECENT_MEDIA = "/users/self/media/recent"; // RECENT MEDIA
+        public static final String ENDPOINT_RECENT_MEDIA_DAG = "users/self/media/recent?access_token="; // RECENT MEDIA
+        // /users/self/media/liked
+        public static final String ENDPOINT_MEDIALIKED = "users/self/media/liked?access_token="; // MEDIA LIKED BY USER
 
-
+        public static final String RSP_MEDIALIKED_MEDIAID = "id";
+        public static final String RSP_MEDIALIKED_TYPE = "type";
+        public static final String RSP_MEDIALIKED_LINK = "link";
+        public static final String RSP_MEDIALIKED_CREATEDTIME = "created_time";
+        public static final String RSP_MEDIALIKED_COMMENTS = "comments";
+        public static final String RSP_MEDIALIKED_COMMENTSCOUNT = "count";
+        public static final String RSP_MEDIALIKED_LIKES = "likes";
+        public static final String RSP_MEDIALIKED_LIKESCOUNT = "count";
+        public static final String RSP_MEDIALIKED_IMAGES = "images";
+        public static final String RSP_MEDIALIKED_STANDARDRESOLUTION = "standard_resolution";
+        public static final String RSP_MEDIALIKED_URL = "url";
+        public static final String RSP_MEDIALIKED_USER = "user";
+        public static final String RSP_MEDIALIKED_USERID = "id";
+        public static final String RSP_MEDIALIKED_USERFULLNAME = "full_name";
+        public static final String RSP_MEDIALIKED_USERUSERNAME = "username";
+        public static final String RSP_MEDIALIKED_USERPROFILEPIC = "profile_picture";
     }
+
 }

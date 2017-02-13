@@ -1,4 +1,4 @@
-package com.instainsight.media.bean;
+package com.instainsight.media.models;
 
 /**
  * Created by SONY on 07-02-2017.
