@@ -3,6 +3,8 @@ package com.instainsight;
 import android.app.Application;
 import android.content.Context;
 
+import com.instainsight.followersing.OtherUserService;
+import com.instainsight.followersing.viewmodel.OtherUserViewModel;
 import com.instainsight.ilikedmost.ILikedMostService;
 import com.instainsight.ilikedmost.viewmodel.ILikedMostViewModel;
 import com.instainsight.instagram.Instagram;
@@ -78,5 +80,18 @@ public class ApplicationModule {
     }
     // ILikedMost - Ends
 
+    // OtherUsers - Starts
+    @Provides
+    @Singleton
+    OtherUserService otherUserService(RestClient restClient) {
+        return new OtherUserService(restClient);
+    }
+
+    @Provides
+    @Singleton
+    OtherUserViewModel otherUserViewModel(OtherUserService otherUserService) {
+        return new OtherUserViewModel(otherUserService, context, mInstagramSession);
+    }
+    // OtherUsers - Ends
 
 }

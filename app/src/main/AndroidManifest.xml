@@ -51,7 +51,8 @@
         <activity android:name=".followersing.NotFollowingMeBackActivity" />
         <activity android:name=".media.LikeGraphActivity" />
         <activity android:name=".ilikedmost.ILikedMostActivity" />
-        <activity android:name=".media.LikeGraphActivityNew"></activity>
+        <activity android:name=".media.LikeGraphActivityNew" />
+        <activity android:name=".followersing.OtherUserActivity"></activity>
     </application>
 
 </manifest>

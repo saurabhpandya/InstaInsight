@@ -1,5 +1,6 @@
 package com.instainsight;
 
+import com.instainsight.followersing.OtherUserActivity;
 import com.instainsight.ilikedmost.ILikedMostActivity;
 import com.instainsight.media.LikeGraphActivityNew;
 
@@ -17,4 +18,5 @@ public interface ApplicationComponent {
 
     void inject(LikeGraphActivityNew likeGraphActivityNew);
 
+    void inject(OtherUserActivity otherUserActivity);
 }

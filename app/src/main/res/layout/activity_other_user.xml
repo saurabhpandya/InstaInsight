@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="otherUserViewModel"
+            type="com.instainsight.followersing.viewmodel.OtherUserViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/activity_other_user"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.instainsight.followersing.OtherUserActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyclrvw_otheruser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/txtvw_no_otheruser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/lbl_no_followers"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/font_20sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

@@ -18,6 +18,7 @@ import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.followersing.NotFollowingBackActivity;
 import com.instainsight.followersing.NotFollowingMeBackActivity;
+import com.instainsight.followersing.OtherUserActivity;
 import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
 import com.instainsight.instagram.InstagramRequest;
@@ -177,7 +178,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void openFollowers() {
-        startActivity(FollowersActivity.class);
+        startActivity(OtherUserActivity.class);
     }
 
     private void openFollowing() {

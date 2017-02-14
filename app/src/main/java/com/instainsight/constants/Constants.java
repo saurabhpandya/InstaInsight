@@ -25,9 +25,11 @@ public class Constants {
 
         //  /users/self/follows
         public static final String ENDPOINT_FOLLOWS = "/users/self/follows"; // FOLLOWINGS
+        public static final String ENDPOINT_FOLLOWS_DAG = "/users/self/follows?access_token="; // FOLLOWINGS
 
         //  /users/self/followed-by
         public static final String ENDPOINT_FOLLOWEDBY = "/users/self/followed-by"; // FOLLOWERS
+        public static final String ENDPOINT_FOLLOWEDBY_DAG = "users/self/followed-by?access_token="; // FOLLOWERS
 
         public static final String RSP_FOLLOWS_USERNAME = "username";
         public static final String RSP_FOLLOWS_PROFILEPIC = "profile_picture";

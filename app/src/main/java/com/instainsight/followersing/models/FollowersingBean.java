@@ -1,10 +1,10 @@
-package com.instainsight.followersing.bean;
+package com.instainsight.followersing.models;
 
 /**
  * Created by SONY on 19-12-2016.
  */
 
-public class Followersing {
+public class FollowersingBean {
 
     private String userName;
     private String profilePic;
