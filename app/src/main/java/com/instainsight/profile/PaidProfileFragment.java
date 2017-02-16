@@ -150,10 +150,10 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lnrlyt_pp_followers:
-                openFollowers();
+//                openFollowers();
                 break;
             case R.id.lnrlyt_pp_following:
-                openFollowing();
+//                openFollowing();
                 break;
             case R.id.lnrlyt_pp_profileviewer:
                 openProfileViewer();

@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/dimen_10dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,6 +16,7 @@
             android:id="@+id/imgvw_followersing"
             android:layout_width="@dimen/dimen_50dp"
             android:layout_height="@dimen/dimen_50dp"
+            android:layout_margin="@dimen/_5sdp"
             android:src="@drawable/defaultlist"
             app:civ_border_width="1dp"
             app:civ_shadow="false"
@@ -25,8 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:layout_weight="1"
             android:text="-"
             android:textColor="@android:color/black"
@@ -36,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginRight="@dimen/_10sdp"
             android:background="@drawable/unfollow"
             android:gravity="center" />
     </LinearLayout>

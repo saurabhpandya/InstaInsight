@@ -62,7 +62,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_weight="0.5"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -97,7 +97,6 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_weight="0.5"
-                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -151,10 +150,12 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fadeScrollbars="false"
             android:fillViewport="true"
-            android:padding="@dimen/dimen_10dp"
+            android:overScrollMode="never"
             android:scrollbars="none">
 
             <!--android:layout_marginBottom="?attr/actionBarSize"-->
@@ -178,7 +179,7 @@
                     android:id="@+id/lnrlyt_pp_profileviewer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin">
 
@@ -226,7 +227,7 @@
                     android:id="@+id/lnrlyt_pp_mytoplikes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin">
 
@@ -275,7 +276,7 @@
                     android:id="@+id/lnrlyt_pp_whoilikemost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin">
 
@@ -304,7 +305,7 @@
                     android:id="@+id/lnrlyt_pp_popularfollower"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin">
 
@@ -333,7 +334,7 @@
                     android:id="@+id/lnrlyt_pp_ghostfollower"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:padding="@dimen/activity_horizontal_margin">
 

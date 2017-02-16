@@ -154,10 +154,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lnrlyt_followers:
-                openFollowers();
+//                openFollowers();
                 break;
             case R.id.lnrlyt_following:
-                openFollowing();
+//                openFollowing();
                 break;
             case R.id.lnrlyt_newfollowers:
                 openNewFollowers();

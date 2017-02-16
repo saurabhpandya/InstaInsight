@@ -18,9 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="@string/lbl_no_notfollowingback"
+        android:text="@string/lbl_no_data_found"
         android:textColor="@android:color/black"
         android:textSize="@dimen/font_20sp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

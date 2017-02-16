@@ -107,6 +107,7 @@ public class DBQueries {
         long retVal = 0;
         ContentValues initialValues;
         readWriteLock.writeLock().lock();
+        manager.getDB().beginTransaction();
         for (int i = 0; i < columnDetails.size(); i++) {
             initialValues = new ContentValues();
             for (Map.Entry<String, Object> entry : columnDetails.get(i).entrySet()) {
@@ -144,6 +145,8 @@ public class DBQueries {
             }
             //Toast.makeText(context, "retVal: "+retVal, Toast.LENGTH_SHORT).show();
         }
+        manager.getDB().setTransactionSuccessful();
+        manager.getDB().endTransaction();
         readWriteLock.writeLock().unlock();
         return retVal;
     }
@@ -152,6 +155,7 @@ public class DBQueries {
         long retVal = 0;
         ContentValues initialValues;
         readWriteLock.writeLock().lock();
+        manager.getDB().beginTransaction();
         for (int i = 0; i < columnDetails.size(); i++) {
             initialValues = new ContentValues();
             for (Map.Entry<String, Object> entry : columnDetails.get(i).entrySet()) {
@@ -189,6 +193,8 @@ public class DBQueries {
             }
             //Toast.makeText(context, "retVal: "+retVal, Toast.LENGTH_SHORT).show();
         }
+        manager.getDB().setTransactionSuccessful();
+        manager.getDB().endTransaction();
         readWriteLock.writeLock().unlock();
         return retVal;
     }
@@ -197,6 +203,7 @@ public class DBQueries {
         long retVal = 0;
         ContentValues initialValues;
         readWriteLock.writeLock().lock();
+        manager.getDB().beginTransaction();
         for (int i = 0; i < columnDetails.size(); i++) {
             initialValues = new ContentValues();
             for (Map.Entry<String, Object> entry : columnDetails.get(i).entrySet()) {
@@ -220,6 +227,8 @@ public class DBQueries {
             retVal = manager.getDB().insert(tableName, null, initialValues);
             //Toast.makeText(context, "retVal: "+retVal, Toast.LENGTH_SHORT).show();
         }
+        manager.getDB().setTransactionSuccessful();
+        manager.getDB().endTransaction();
         readWriteLock.writeLock().unlock();
         return retVal;
     }
