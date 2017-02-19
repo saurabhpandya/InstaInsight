@@ -26,7 +26,13 @@ public class OtherUserActivity extends ViewModelActivity {
         initActionbar();
         activityOtherUserBinding = DataBindingUtil.setContentView(this, R.layout.activity_other_user);
         activityOtherUserBinding.setOtherUserViewModel(otherUserViewModel);
+        getUsers();
+
+    }
+
+    private void getUsers() {
         otherUserViewModel.getFollowedBy();
+        otherUserViewModel.getFollows();
     }
 
     @Override

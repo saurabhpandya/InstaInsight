@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
-import com.instainsight.LoginActivity;
 import com.instainsight.R;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.Utils.Utility;
@@ -19,6 +18,7 @@ import com.instainsight.followersing.adapter.FollowersingAdap;
 import com.instainsight.followersing.followers.dao.FollowersDao;
 import com.instainsight.followersing.following.dao.FollowingDao;
 import com.instainsight.instagram.InstagramRequest;
+import com.instainsight.login.LoginActivity;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONException;

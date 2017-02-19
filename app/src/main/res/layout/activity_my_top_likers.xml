@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="myTopLikers"
+            type="com.instainsight.mytoplikers.viewmodel.MyTopLikersViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/activity_my_top_likers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyclrvw_my_top_likers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/txtvw_no_my_top_likers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/lbl_no_data_found"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/font_20sp"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/prgsbr_my_top_likers"
+            style="?android:progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

@@ -1,14 +1,20 @@
 package com.instainsight.followersing.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by SONY on 19-12-2016.
  */
 
 public class FollowersingBean {
 
+    @JsonProperty("username")
     private String userName;
+    @JsonProperty("profile_picture")
     private String profilePic;
+    @JsonProperty("full_name")
     private String fullName;
+    @JsonProperty("id")
     private String id;
 
     public String getUserName() {

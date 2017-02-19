@@ -7,20 +7,24 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.BaseFragment;
-import com.instainsight.LoginActivity;
 import com.instainsight.R;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
+import com.instainsight.ghostfollowers.GhostFollowersActivity;
 import com.instainsight.ilikedmost.ILikedMostActivity;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
+import com.instainsight.login.LoginActivity;
+import com.instainsight.mostpopularfollowers.MostPopularFollowersActivity;
+import com.instainsight.mytoplikers.MyTopLikersActivity;
 import com.instainsight.profile.bean.UsersBean;
 import com.instainsight.profile.dao.UsersDao;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -38,6 +42,7 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
     private String TAG = ProfileFragment.class.getSimpleName();
 
     private CircularImageView imgvw_pp_profilepic;
+    private ImageView imgvw_buy;
     private TextView txtvw_pp_profilename, txtvw_pp_followercount, txtvw_pp_followingcount;
     private LinearLayout lnrlyt_pp_followers, lnrlyt_pp_following, lnrlyt_pp_profileviewer,
             lnrlyt_pp_mytoplikes, lnrlyt_pp_whoilikemost, lnrlyt_pp_popularfollower,
@@ -70,7 +75,7 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
     private void getIds() {
         imgvw_pp_profilepic = (CircularImageView) vwPaidProfile.findViewById(R.id.imgvw_pp_profilepic);
         txtvw_pp_profilename = (TextView) vwPaidProfile.findViewById(R.id.txtvw_pp_profilename);
-
+        imgvw_buy = (ImageView) vwPaidProfile.findViewById(R.id.imgvw_buy);
         lnrlyt_pp_followers = (LinearLayout) vwPaidProfile.findViewById(R.id.lnrlyt_pp_followers);
         lnrlyt_pp_following = (LinearLayout) vwPaidProfile.findViewById(R.id.lnrlyt_pp_following);
 
@@ -93,6 +98,7 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
         lnrlyt_pp_whoilikemost.setOnClickListener(this);
         lnrlyt_pp_popularfollower.setOnClickListener(this);
         lnrlyt_pp_ghostfollower.setOnClickListener(this);
+        imgvw_buy.setOnClickListener(this);
     }
 
     private void getUserData() {
@@ -101,9 +107,9 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 
             InstagramUser instagramUser = mInstagramSession.getUser();
 
-            txtvw_pp_profilename.setText(instagramUser.fullName);
+            txtvw_pp_profilename.setText(instagramUser.getUserBean().getFullName());
 
-            Glide.with(getActivity()).load(instagramUser.profilPicture).placeholder(R.drawable.defaultpic)
+            Glide.with(mContext).load(instagramUser.getUserBean().getProfilPicture()).placeholder(R.drawable.defaultpic)
                     .crossFade().into(imgvw_pp_profilepic);
 
             if (isConnected()) {
@@ -126,20 +132,20 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 
                             @Override
                             public void onError(String error) {
-                                Utility.showToast(getActivity(), error);
+                                Utility.showToast(mContext, error);
 //                                instaInsightApp.getUserBeanObserver().setUpdate(true);
                             }
                         });
             } else {
-                UsersDao usersDao = new UsersDao(getActivity());
-                UsersBean usersBean = usersDao.getUserDetails(instagramUser.id);
+                UsersDao usersDao = new UsersDao(mContext);
+                UsersBean usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
                 txtvw_pp_followercount.setText(usersBean.getFollowerCount());
                 txtvw_pp_followingcount.setText(usersBean.getFollowingCount());
 
             }
         } else {
-            Utility.showToast(getActivity(), "Could not authentication, need to log in again");
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Utility.showToast(mContext, "Could not authentication, need to log in again");
+            Intent intent = new Intent(mContext, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             getActivity().finish();
@@ -170,7 +176,15 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
             case R.id.lnrlyt_pp_ghostfollower:
                 openGhostFollower();
                 break;
+            case R.id.imgvw_buy:
+                openInAppPurchase();
+                break;
+            default:
         }
+    }
+
+    private void openInAppPurchase() {
+        Utility.showToast(mContext, "Work in progress");
     }
 
     private void openFollowers() {
@@ -186,21 +200,23 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void openMyTopLikes() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_my_top_likes));
-
+//        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_my_top_likes));
+        startActivity(MyTopLikersActivity.class);
     }
 
     private void openWhoILikeMost() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_who_i_like_most));
+//        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_who_i_like_most));
         startActivity(ILikedMostActivity.class);
     }
 
     private void openPopularFollower() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_popular_followers));
+//        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_popular_followers));
+        startActivity(MostPopularFollowersActivity.class);
     }
 
     private void openGhostFollower() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_ghost_followers));
+//        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_ghost_followers));
+        startActivity(GhostFollowersActivity.class);
     }
 
     private void startActivity(Class aClass) {

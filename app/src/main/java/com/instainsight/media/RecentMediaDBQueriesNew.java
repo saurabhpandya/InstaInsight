@@ -168,8 +168,7 @@ public class RecentMediaDBQueriesNew {
                 null, // selection args
                 null, // group by
                 null, // having
-                MEDIA.CREATEDTIME + " desc", // order by
-                null // limit
+                MEDIA.CREATEDTIME + " DESC" // order by
         );
         /*query(RECENTMEDIA.TABLE_NAME, null, null, null, null, null, RECENTMEDIA.LIKEDBYUSER_CREATEDTIME + " desc");*/
 

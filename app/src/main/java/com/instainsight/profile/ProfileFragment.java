@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.BaseFragment;
-import com.instainsight.LoginActivity;
 import com.instainsight.R;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
@@ -23,6 +22,7 @@ import com.instainsight.followersing.followers.FollowersActivity;
 import com.instainsight.followersing.following.FollowingActivity;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.media.LikeGraphActivityNew;
 import com.instainsight.profile.bean.UsersBean;
 import com.instainsight.profile.dao.UsersDao;
@@ -102,9 +102,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             final InstagramUser instagramUser = mInstagramSession.getUser();
 
-            txtvw_profilename.setText(instagramUser.fullName);
+            txtvw_profilename.setText(instagramUser.getUserBean().getFullName());
 
-            Glide.with(getActivity()).load(instagramUser.profilPicture).placeholder(R.drawable.defaultpic)
+            Glide.with(getActivity()).load(instagramUser.getUserBean().getProfilPicture()).placeholder(R.drawable.defaultpic)
                     .dontAnimate().into(imgvw_profilepic);
 
             if (isConnected()) {
@@ -134,7 +134,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         });
             } else {
                 UsersDao usersDao = new UsersDao(getActivity());
-                UsersBean usersBean = usersDao.getUserDetails(instagramUser.id);
+                UsersBean usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
 
                 txtvw_followercount.setText(usersBean.getFollowerCount());
                 txtvw_followingcount.setText(usersBean.getFollowingCount());

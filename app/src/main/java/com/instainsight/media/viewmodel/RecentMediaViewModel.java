@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.instainsight.LoginActivity;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.instagram.InstagramSession;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.media.RecentMediaDBQueries;
 import com.instainsight.media.RecentMediaEvent;
 import com.instainsight.media.RecentMediaService;

@@ -1,5 +1,7 @@
 package com.instainsight.constants;
 
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_ENDPOINT_URL;
+
 /**
  * Created by SONY on 17-12-2016.
  */
@@ -25,11 +27,13 @@ public class Constants {
 
         //  /users/self/follows
         public static final String ENDPOINT_FOLLOWS = "/users/self/follows"; // FOLLOWINGS
-        public static final String ENDPOINT_FOLLOWS_DAG = "/users/self/follows?access_token="; // FOLLOWINGS
+        public static final String ENDPOINT_FOLLOWS_DAG = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/follows?"; // FOLLOWINGS
 
         //  /users/self/followed-by
         public static final String ENDPOINT_FOLLOWEDBY = "/users/self/followed-by"; // FOLLOWERS
-        public static final String ENDPOINT_FOLLOWEDBY_DAG = "users/self/followed-by?access_token="; // FOLLOWERS
+        public static final String ENDPOINT_FOLLOWEDBY_DAG = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/followed-by?"; // FOLLOWERS
 
         public static final String RSP_FOLLOWS_USERNAME = "username";
         public static final String RSP_FOLLOWS_PROFILEPIC = "profile_picture";
@@ -38,9 +42,27 @@ public class Constants {
 
         //  /users/self/media/recent
         public static final String ENDPOINT_RECENT_MEDIA = "/users/self/media/recent"; // RECENT MEDIA
-        public static final String ENDPOINT_RECENT_MEDIA_DAG = "users/self/media/recent?access_token="; // RECENT MEDIA
+        public static final String ENDPOINT_RECENT_MEDIA_DAG = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/media/recent?"; // RECENT MEDIA
         // /users/self/media/liked
-        public static final String ENDPOINT_MEDIALIKED = "users/self/media/liked?access_token="; // MEDIA LIKED BY USER
+        public static final String ENDPOINT_MEDIALIKED = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/media/liked?access_token="; // MEDIA LIKED BY USER
+
+        // media/{media-id}/likes?access_token=ACCESS-TOKEN
+        public static final String ENDPOINT_MEDIALIKES = DAGGER_API_BASE_ENDPOINT_URL
+                + "media/{media-id}/likes?access_token="; // MEDIA LIKES BY OTHER USER
+
+        //        users/user-id
+        public static final String ENDPOINT_USERINFOBYID = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/{user-id}/?access_token="; // USER INFO BY USER ID
+
+        // media/{media-id}/likes?
+        public static final String ENDPOINT_LIKESBYMEDIAID = DAGGER_API_BASE_ENDPOINT_URL
+                + "media/{media-id}/likes?"; // Likes by media-id
+
+        // media/{media-id}/comments?
+        public static final String ENDPOINT_COMMENTSBYMEDIAID = DAGGER_API_BASE_ENDPOINT_URL
+                + "media/{media-id}/comments?"; // Comments by media-id
 
         public static final String RSP_MEDIALIKED_MEDIAID = "id";
         public static final String RSP_MEDIALIKED_TYPE = "type";

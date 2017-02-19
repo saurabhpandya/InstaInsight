@@ -31,6 +31,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.inject.Inject;
 
@@ -53,6 +55,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         activityLikeGraphNewBinding = DataBindingUtil.setContentView(this, R.layout.activity_like_graph_new);
         activityLikeGraphNewBinding.setRecentMedia(recentMediaViewModel);
         activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.VISIBLE);
+        activityLikeGraphNewBinding.linechart.setVisibility(View.GONE);
         recentMediaViewModel.getRecentMediaLikes();
     }
 
@@ -97,8 +100,10 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             ArrayList<MediaBean> arylstRecentMedia = recentMediaEvent.getAryLstMedia();
             Log.d(TAG, "onEvent::arylstRecentMedia:" + arylstRecentMedia.size());
             init(arylstRecentMedia);
+            activityLikeGraphNewBinding.linechart.setVisibility(View.VISIBLE);
             activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.GONE);
         } else {
+            activityLikeGraphNewBinding.linechart.setVisibility(View.VISIBLE);
             activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.GONE);
         }
     }
@@ -212,7 +217,16 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         // mChart.invalidate();
     }
 
-    private void setData(ArrayList<MediaBean> aryLstLikes) {
+    private void setData(ArrayList<MediaBean> aryLstLikes1) {
+
+        ArrayList<MediaBean> aryLstLikes = aryLstLikes1;
+
+        Collections.sort(aryLstLikes, new Comparator<MediaBean>() {
+            @Override
+            public int compare(MediaBean mediaBean, MediaBean t1) {
+                return mediaBean.getLikesBean().getCount().compareTo(t1.getLikesBean().getCount());
+            }
+        });
 
         ArrayList<Entry> values = new ArrayList<Entry>();
 
@@ -221,6 +235,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
                 break;
             values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
         }
+
 
 //        values.add(new Entry(0, 5));
 //        values.add(new Entry(1, 10));

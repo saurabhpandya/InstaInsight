@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.instainsight.LoginActivity;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.instagram.InstagramSession;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.media.MediaEvent;
 import com.instainsight.media.RecentMediaDBQueriesNew;
 import com.instainsight.media.RecentMediaEvent;
@@ -76,7 +76,7 @@ public class RecentMediaViewModelNew extends BaseViewModel implements IViewModel
                         Log.d(TAG, "getRecentMediaLikes:onError: header:" + header + " & message:" + message);
                         EventBus.getDefault().post(new RecentMediaEvent());
                     }
-                }, strBldrILikeMostUrl.toString());
+                }, mInstagramSession.getAccessToken());
             } else {
                 getRecentMediaLikesFromDB();
             }

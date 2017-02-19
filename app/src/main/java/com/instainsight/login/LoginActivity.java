@@ -1,17 +1,26 @@
-package com.instainsight;
+package com.instainsight.login;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import com.instainsight.InstaInsightApp;
+import com.instainsight.R;
 import com.instainsight.Utils.Utility;
+import com.instainsight.ViewModelActivity;
+import com.instainsight.databinding.ActivityLoginBinding;
 import com.instainsight.instagram.Instagram;
 import com.instainsight.instagram.InstagramUser;
+import com.instainsight.login.viewmodel.LoginViewModel;
 import com.instainsight.profile.LandingActivity;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+import javax.inject.Inject;
 
+public class LoginActivity extends ViewModelActivity {
+
+    @Inject
+    LoginViewModel loginViewModel;
     private String TAG = LoginActivity.class.getSimpleName();
     private Instagram.InstagramAuthListener mAuthListener = new Instagram.InstagramAuthListener() {
         @Override
@@ -32,44 +41,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     };
 
-    private RelativeLayout rltv_connectwithinstagram;
+    private ActivityLoginBinding activityLoginBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((InstaInsightApp) getApplication()).getComponent().inject(LoginActivity.this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        getIds();
-        regListners();
+        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        activityLoginBinding.setLoginViewModel(loginViewModel);
     }
 
-    private void getIds() {
-        rltv_connectwithinstagram = (RelativeLayout) findViewById(R.id.rltv_connectwithinstagram);
+    public void authUser(View v) {
+        loginViewModel.authenticateUser(mInstagram, mAuthListener);
     }
 
-    private void regListners() {
-        rltv_connectwithinstagram.setOnClickListener(this);
-    }
-
-    private void authenticateUser() {
-        mInstagram.authorize(mAuthListener);
+    @Override
+    protected void createViewModel() {
+        mViewModel = loginViewModel;
     }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         super.onNetworkConnectionChanged(isConnected);
-        Utility.showConnectivitySnack(rltv_connectwithinstagram, isConnected);
+        Utility.showConnectivitySnack(activityLoginBinding.rltvConnectwithinstagram, isConnected);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rltv_connectwithinstagram:
-                if (isConnected())
-                    authenticateUser();
-                else
-                    Utility.showConnectivitySnack(rltv_connectwithinstagram, isConnected);
-                break;
-            default:
-        }
-    }
 }

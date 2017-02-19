@@ -3,6 +3,7 @@ package com.instainsight.media;
 import com.instainsight.media.models.MediaBean;
 import com.instainsight.media.models.RecentMediaBean;
 import com.instainsight.models.ListResponseBean;
+import com.instainsight.models.UserBean;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.networking.RestClient;
 
@@ -11,7 +12,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
+
+import static com.instainsight.constants.Constants.WebFields.ENDPOINT_MEDIALIKES;
+import static com.instainsight.constants.Constants.WebFields.ENDPOINT_RECENT_MEDIA_DAG;
 
 /**
  * Created by SONY on 12-02-2017.
@@ -68,12 +74,30 @@ public class RecentMediaService {
         });
     }
 
+    public Observable<ListResponseBean<MediaBean>> getMediaToGetTopLikers(String access_token) {
+        return iMediaService.getRecentMediaToGetTopLikers(access_token)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<ListResponseBean<UserBean>> getRecentMediaTopLikers(String mediaId, String accessToken) {
+        return iMediaService.getRecentMediaTopLikers(mediaId, accessToken)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
     public interface IMediaService {
         @GET
         Observable<ListResponseBean<RecentMediaBean>> getILikedMostMedia(@Url String ENDPOINT_RECENT_MEDIA);
 
-        @GET
-        Observable<ListResponseBean<MediaBean>> getRecentMedia(@Url String ENDPOINT_RECENT_MEDIA);
+        @GET(ENDPOINT_RECENT_MEDIA_DAG)
+        Observable<ListResponseBean<MediaBean>> getRecentMedia(@Query("access_token") String accessToken);
+
+        @GET(ENDPOINT_RECENT_MEDIA_DAG)
+        Observable<ListResponseBean<MediaBean>> getRecentMediaToGetTopLikers(@Query("access_token") String accessToken);
+
+        @GET(ENDPOINT_MEDIALIKES)
+        Observable<ListResponseBean<UserBean>> getRecentMediaTopLikers(@Path("media-id") String mediaId,
+                                                                       @Query("access_token") String accessToken);
+
     }
 
 }

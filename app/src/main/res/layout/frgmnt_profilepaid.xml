@@ -145,6 +145,14 @@
             <!--android:src="@drawable/ic_user"-->
             <!--android:visibility="gone" />-->
 
+            <ImageView
+                android:id="@+id/imgvw_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/_15sdp"
+                android:src="@drawable/buy" />
+
         </RelativeLayout>
 
         <ScrollView
@@ -243,7 +251,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_10dp"
                         android:layout_weight="1"
-                        android:text="@string/lbl_my_top_likes"
+                        android:text="@string/lbl_my_top_likers"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/font_16sp" />
 

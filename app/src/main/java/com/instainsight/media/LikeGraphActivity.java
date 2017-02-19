@@ -25,12 +25,12 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.instainsight.BaseActivity;
-import com.instainsight.LoginActivity;
 import com.instainsight.R;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.media.dao.MediaDao;
 import com.instainsight.media.models.MediaBean;
 

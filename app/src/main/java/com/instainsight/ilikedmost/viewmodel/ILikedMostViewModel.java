@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.instainsight.LoginActivity;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.ilikedmost.ILikeMostDBQueries;
@@ -13,6 +12,7 @@ import com.instainsight.ilikedmost.ILikedMostEvent;
 import com.instainsight.ilikedmost.ILikedMostService;
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.instainsight.instagram.InstagramSession;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.models.ListResponseBean;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.viewmodels.BaseViewModel;
@@ -95,7 +95,7 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
     private void getILikedMostFromDB() {
         ILikeMostDBQueries iLikeMostDBQueries = new ILikeMostDBQueries(mContext);
         try {
-            Utility.makeObservable(iLikeMostDBQueries.getILikedMost(mInstagramSession.getUser().id))
+            Utility.makeObservable(iLikeMostDBQueries.getILikedMost(mInstagramSession.getUser().getUserBean().getId()))
                     .subscribe(new Consumer<ArrayList<ILikedMostBean>>() {
                         @Override
                         public void accept(ArrayList<ILikedMostBean> iLikedMostBeen) throws Exception {
@@ -113,7 +113,7 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
         ILikeMostDBQueries iLikeMostDBQueries = new ILikeMostDBQueries(mContext);
         for (int i = 0; i < arylstILikedMost.size(); i++) {
             ILikedMostBean iLikedMostBean = arylstILikedMost.get(i);
-            iLikedMostBean.setLikedUserId(mInstagramSession.getUser().id);
+            iLikedMostBean.setLikedUserId(mInstagramSession.getUser().getUserBean().getId());
             arylstILikedMost.set(i, iLikedMostBean);
         }
         try {

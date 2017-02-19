@@ -1,20 +1,12 @@
 package com.instainsight.instagram;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.instainsight.instagram.util.Cons;
+
+import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -23,12 +15,14 @@ import com.instainsight.instagram.util.Cons;
  * @author Lorensius W. L. T <lorenz@londatiga.net>
  */
 public class Instagram {
-    private Context mContext;
 
+    @Inject
+    InstagramServices instagramServices;
+    private String TAG = Instagram.class.getSimpleName();
+    private Context mContext;
     private InstagramDialog mDialog;
     private InstagramAuthListener mListener;
     private InstagramSession mSession;
-
     private String mClientId;
     private String mClientSecret;
     private String mRedirectUri;
@@ -76,10 +70,11 @@ public class Instagram {
      * Authorize user.
      *
      * @param listener Auth listner
+     * @param instagramServices
      */
-    public void authorize(InstagramAuthListener listener) {
+    public void authorize(InstagramAuthListener listener, InstagramServices instagramServices) {
         mListener = listener;
-
+        this.instagramServices = instagramServices;
         mDialog.show();
     }
 
@@ -107,79 +102,22 @@ public class Instagram {
      * @param code
      */
     private void retreiveAccessToken(String code) {
-        new AccessTokenTask(code).execute();
-    }
+        instagramServices.getInstagramUser(mClientId, mClientSecret, mRedirectUri, code)
+                .subscribe(new Consumer<InstagramUser>() {
+                    @Override
+                    public void accept(InstagramUser instagramUser) throws Exception {
+                        mSession.store(instagramUser);
 
-    public class AccessTokenTask extends AsyncTask<URL, Integer, Long> {
-        ProgressDialog progressDlg;
-        InstagramUser user;
-        String code;
+                        mListener.onSuccess(instagramUser);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
 
-        public AccessTokenTask(String code) {
-            this.code = code;
-
-            progressDlg = new ProgressDialog(mContext);
-
-            progressDlg.setMessage("Getting access token...");
-        }
-
-        protected void onCancelled() {
-            progressDlg.cancel();
-        }
-
-        protected void onPreExecute() {
-            progressDlg.show();
-        }
-
-        protected Long doInBackground(URL... urls) {
-            long result = 0;
-
-            try {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(5);
-
-                params.add(new BasicNameValuePair("client_id", mClientId));
-                params.add(new BasicNameValuePair("client_secret", mClientSecret));
-                params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-                params.add(new BasicNameValuePair("redirect_uri", mRedirectUri));
-                params.add(new BasicNameValuePair("code", code));
-
-                InstagramRequest request = new InstagramRequest();
-                String response = request.post(Cons.ACCESS_TOKEN_URL, params);
-
-                if (!response.equals("")) {
-                    JSONObject jsonObj = (JSONObject) new JSONTokener(response).nextValue();
-                    JSONObject jsonUser = jsonObj.getJSONObject("user");
-
-                    user = new InstagramUser();
-
-                    user.accessToken = jsonObj.getString("access_token");
-
-                    user.id = jsonUser.getString("id");
-                    user.username = jsonUser.getString("username");
-                    user.fullName = jsonUser.getString("full_name");
-                    user.profilPicture = jsonUser.getString("profile_picture");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-        }
-
-        protected void onPostExecute(Long result) {
-            progressDlg.dismiss();
-
-            if (user != null) {
-                mSession.store(user);
-
-                mListener.onSuccess(user);
-            } else {
-                mListener.onError("Failed to get access token");
-            }
-        }
+//        new AccessTokenTask(code).execute();
     }
 
     public interface InstagramAuthListener {
@@ -189,4 +127,76 @@ public class Instagram {
 
         public abstract void onCancel();
     }
+
+//    public class AccessTokenTask extends AsyncTask<URL, Integer, Long> {
+//        ProgressDialog progressDlg;
+//        InstagramUser user;
+//        String code;
+//
+//        public AccessTokenTask(String code) {
+//            this.code = code;
+//
+//            progressDlg = new ProgressDialog(mContext);
+//
+//            progressDlg.setMessage("Getting access token...");
+//        }
+//
+//        protected void onCancelled() {
+//            progressDlg.cancel();
+//        }
+//
+//        protected void onPreExecute() {
+//            progressDlg.show();
+//        }
+//
+//        protected Long doInBackground(URL... urls) {
+//            long result = 0;
+//
+//            try {
+//                List<NameValuePair> params = new ArrayList<NameValuePair>(5);
+//
+//                params.add(new BasicNameValuePair("client_id", mClientId));
+//                params.add(new BasicNameValuePair("client_secret", mClientSecret));
+//                params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+//                params.add(new BasicNameValuePair("redirect_uri", mRedirectUri));
+//                params.add(new BasicNameValuePair("code", code));
+//
+//                InstagramRequest request = new InstagramRequest();
+//                String response = request.post(Cons.ACCESS_TOKEN_URL, params);
+//
+//                if (!response.equals("")) {
+//                    JSONObject jsonObj = (JSONObject) new JSONTokener(response).nextValue();
+//                    JSONObject jsonUser = jsonObj.getJSONObject("user");
+//
+//                    user = new InstagramUser();
+//
+//                    user.accessToken = jsonObj.getString("access_token");
+//
+//                    user.id = jsonUser.getString("id");
+//                    user.username = jsonUser.getString("username");
+//                    user.fullName = jsonUser.getString("full_name");
+//                    user.profilPicture = jsonUser.getString("profile_picture");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return result;
+//        }
+//
+//        protected void onProgressUpdate(Integer... progress) {
+//        }
+//
+//        protected void onPostExecute(Long result) {
+//            progressDlg.dismiss();
+//
+//            if (user != null) {
+//                mSession.store(user);
+//
+//                mListener.onSuccess(user);
+//            } else {
+//                mListener.onError("Failed to get access token");
+//            }
+//        }
+//    }
 }

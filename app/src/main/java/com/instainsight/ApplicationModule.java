@@ -5,14 +5,21 @@ import android.content.Context;
 
 import com.instainsight.followersing.OtherUserService;
 import com.instainsight.followersing.viewmodel.OtherUserViewModel;
+import com.instainsight.ghostfollowers.GhostFollowersServices;
+import com.instainsight.ghostfollowers.viewmodel.GhostFollowersViewModel;
 import com.instainsight.ilikedmost.ILikedMostService;
 import com.instainsight.ilikedmost.viewmodel.ILikedMostViewModel;
 import com.instainsight.instagram.Instagram;
+import com.instainsight.instagram.InstagramServices;
 import com.instainsight.instagram.InstagramSession;
 import com.instainsight.instagram.util.Cons;
+import com.instainsight.login.viewmodel.LoginViewModel;
 import com.instainsight.media.RecentMediaService;
 import com.instainsight.media.viewmodel.RecentMediaViewModel;
 import com.instainsight.media.viewmodel.RecentMediaViewModelNew;
+import com.instainsight.mostpopularfollowers.MostPopularFollowersServices;
+import com.instainsight.mostpopularfollowers.viewmodel.MostPopularFollowersViewModel;
+import com.instainsight.mytoplikers.viewmodel.MyTopLikersViewModel;
 import com.instainsight.networking.RestClient;
 
 import javax.inject.Singleton;
@@ -45,6 +52,18 @@ public class ApplicationModule {
         return new RestClient(Cons.DAGGER_API_BASE_URL);
     }
 
+    // Recent Media - Starts
+    @Provides
+    @Singleton
+    InstagramServices provideInstagramServices(RestClient restClient) {
+        return new InstagramServices(restClient);
+    }
+
+    @Provides
+    @Singleton
+    LoginViewModel provideLoginViewMode(InstagramServices instagramServices) {
+        return new LoginViewModel(instagramServices, context, mInstagramSession);
+    }
 
     // Recent Media - Starts
     @Provides
@@ -63,6 +82,12 @@ public class ApplicationModule {
     @Singleton
     RecentMediaViewModelNew provideRecentMediaViewModel(RecentMediaService recentMediaService) {
         return new RecentMediaViewModelNew(recentMediaService, context, mInstagramSession);
+    }
+
+    @Provides
+    @Singleton
+    MyTopLikersViewModel provideMyTopLikersViewModel(RecentMediaService recentMediaService) {
+        return new MyTopLikersViewModel(recentMediaService, context, mInstagramSession);
     }
     // Recent Media - Ends
 
@@ -93,5 +118,30 @@ public class ApplicationModule {
         return new OtherUserViewModel(otherUserService, context, mInstagramSession);
     }
     // OtherUsers - Ends
+
+    @Provides
+    @Singleton
+    MostPopularFollowersServices mostPopularFollowersServices(RestClient restClient) {
+        return new MostPopularFollowersServices(restClient);
+    }
+
+    @Provides
+    @Singleton
+    MostPopularFollowersViewModel mostPopularFollowersViewModel(MostPopularFollowersServices mostPopularFollowersServices) {
+        return new MostPopularFollowersViewModel(mostPopularFollowersServices, context, mInstagramSession);
+    }
+
+    @Provides
+    @Singleton
+    GhostFollowersServices ghostFollowersServices(RestClient restClient) {
+        return new GhostFollowersServices(restClient);
+    }
+
+    @Provides
+    @Singleton
+    GhostFollowersViewModel ghostFollowersViewModel(GhostFollowersServices ghostFollowersServices) {
+        return new GhostFollowersViewModel(ghostFollowersServices, context, mInstagramSession);
+    }
+
 
 }

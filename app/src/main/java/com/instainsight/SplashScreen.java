@@ -8,6 +8,7 @@ import android.view.WindowManager;
 
 import com.instainsight.followersing.followers.dao.FollowersDao;
 import com.instainsight.followersing.following.dao.FollowingDao;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.profile.LandingActivity;
 
 import static com.instainsight.constants.Constants.SPLASH_TIME;

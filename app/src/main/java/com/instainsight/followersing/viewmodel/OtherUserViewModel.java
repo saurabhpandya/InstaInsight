@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.instainsight.LoginActivity;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.followersing.OtherUserService;
 import com.instainsight.followersing.models.FollowersingBean;
 import com.instainsight.instagram.InstagramSession;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.models.ListResponseBean;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.viewmodels.BaseViewModel;
@@ -107,8 +107,8 @@ public class OtherUserViewModel extends BaseViewModel implements IViewModel {
 
         otherUserService.getFollows(new MyCallBack<ListResponseBean<FollowersingBean>>() {
             @Override
-            public void onSuccess(ListResponseBean<FollowersingBean> response) {
-
+            public void onSuccess(ListResponseBean<FollowersingBean> arylstFollows) {
+                Log.d(TAG, "getFollows:" + arylstFollows.getData().size());
             }
 
             @Override
