@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
@@ -33,6 +34,7 @@ public class NotFollowingMeBackActivity extends BaseActivity {
     private TextView txtvw_no_notfollowingmeback;
     private FollowersingAdap mAdapter;
     private ArrayList<Object> arylstNotFollowingMeBack;
+    private ProgressBar prgsbr_notfollowingmeback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class NotFollowingMeBackActivity extends BaseActivity {
     private void getIds() {
         rcyclrvw_notfollowingmeback = (RecyclerView) findViewById(R.id.rcyclrvw_notfollowingmeback);
         txtvw_no_notfollowingmeback = (TextView) findViewById(R.id.txtvw_no_notfollowingmeback);
+        prgsbr_notfollowingmeback = (ProgressBar) findViewById(R.id.prgsbr_notfollowingmeback);
     }
 
     private void initRecyclerView() {
@@ -74,6 +77,7 @@ public class NotFollowingMeBackActivity extends BaseActivity {
     private void getFollowersData() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
+                prgsbr_notfollowingmeback.setVisibility(View.VISIBLE);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", Constants.WebFields.ENDPOINT_FOLLOWEDBY, new ArrayList<NameValuePair>(),
                         new InstagramRequest.InstagramRequestListener() {
@@ -246,6 +250,7 @@ public class NotFollowingMeBackActivity extends BaseActivity {
         FollowersDao followersDao = new FollowersDao(NotFollowingMeBackActivity.this);
         ArrayList<Object> arylstNotFollowingBack = followersDao.getFollowersToWhomNotFollowing();
         setData(arylstNotFollowingBack);
+        prgsbr_notfollowingmeback.setVisibility(View.GONE);
     }
 
     private void setData(ArrayList<Object> arylstNotFollowingBack) {

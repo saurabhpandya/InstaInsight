@@ -17,9 +17,10 @@ import com.instainsight.models.UserBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import io.reactivex.Observable;
 
 /**
  * Created by SONY on 11-02-2017.
@@ -41,13 +42,17 @@ public class ILikeMostDBQueries {
         manager.open();
     }
 
-    public Callable<ArrayList<ILikedMostBean>> saveILikedMost(final ArrayList<ILikedMostBean> arylstILikedMost) {
-        return new Callable<ArrayList<ILikedMostBean>>() {
-            @Override
-            public ArrayList<ILikedMostBean> call() throws Exception {
-                return saveILikedMostToDB(arylstILikedMost);
-            }
-        };
+//    public Callable<ArrayList<ILikedMostBean>> saveILikedMost(final ArrayList<ILikedMostBean> arylstILikedMost) {
+//        return new Callable<ArrayList<ILikedMostBean>>() {
+//            @Override
+//            public ArrayList<ILikedMostBean> call() throws Exception {
+//                return saveILikedMostToDB(arylstILikedMost);
+//            }
+//        };
+//    }
+
+    public Observable<ArrayList<ILikedMostBean>> saveILikedMost(final ArrayList<ILikedMostBean> arylstILikedMost) {
+        return Observable.just(saveILikedMostToDB(arylstILikedMost));
     }
 
     private ArrayList<ILikedMostBean> saveILikedMostToDB(ArrayList<ILikedMostBean> arylstILikedMost) {
@@ -80,14 +85,19 @@ public class ILikeMostDBQueries {
         return getILikedMostFromDB(accessTokenOwnedUserId);
     }
 
-    public Callable<ArrayList<ILikedMostBean>> getILikedMost(final String accessTokenOwnedUserId) {
-        return new Callable<ArrayList<ILikedMostBean>>() {
-            @Override
-            public ArrayList<ILikedMostBean> call() throws Exception {
-                return getILikedMostFromDB(accessTokenOwnedUserId);
-            }
-        };
+//    public Callable<ArrayList<ILikedMostBean>> getILikedMost(final String accessTokenOwnedUserId) {
+//        return new Callable<ArrayList<ILikedMostBean>>() {
+//            @Override
+//            public ArrayList<ILikedMostBean> call() throws Exception {
+//                return getILikedMostFromDB(accessTokenOwnedUserId);
+//            }
+//        };
+//    }
+
+    public Observable<ArrayList<ILikedMostBean>> getILikedMost(final String accessTokenOwnedUserId) {
+        return Observable.just(getILikedMostFromDB(accessTokenOwnedUserId));
     }
+
 
     private ArrayList<ILikedMostBean> getILikedMostFromDB(String accessTokenUserId) {
         ArrayList<ILikedMostBean> arylstILikedMost = new ArrayList<ILikedMostBean>();

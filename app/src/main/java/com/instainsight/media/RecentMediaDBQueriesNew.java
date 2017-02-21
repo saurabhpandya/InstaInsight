@@ -20,9 +20,10 @@ import com.instainsight.models.VideosBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import io.reactivex.Observable;
 
 
 /**
@@ -46,13 +47,8 @@ public class RecentMediaDBQueriesNew {
         manager.open();
     }
 
-    public Callable<ArrayList<MediaBean>> saveRecentMedia(final ArrayList<MediaBean> arylstRecentMedia) {
-        return new Callable<ArrayList<MediaBean>>() {
-            @Override
-            public ArrayList<MediaBean> call() throws Exception {
-                return saveRecentMediaToDb(arylstRecentMedia);
-            }
-        };
+    public Observable<ArrayList<MediaBean>> saveRecentMedia(final ArrayList<MediaBean> arylstRecentMedia) {
+        return Observable.just(saveRecentMediaToDb(arylstRecentMedia));
     }
 
     private ArrayList<MediaBean> saveRecentMediaToDb(ArrayList<MediaBean> arylstRecentMedia) {
@@ -147,13 +143,8 @@ public class RecentMediaDBQueriesNew {
         return getRecentMediaFromDb();
     }
 
-    public Callable<ArrayList<MediaBean>> getRecentMedia() {
-        return new Callable<ArrayList<MediaBean>>() {
-            @Override
-            public ArrayList<MediaBean> call() throws Exception {
-                return getRecentMediaFromDb();
-            }
-        };
+    public Observable<ArrayList<MediaBean>> getRecentMedia() {
+        return Observable.just(getRecentMediaFromDb());
     }
 
     private ArrayList<MediaBean> getRecentMediaFromDb() {

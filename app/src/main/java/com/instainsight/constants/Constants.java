@@ -54,7 +54,7 @@ public class Constants {
 
         //        users/user-id
         public static final String ENDPOINT_USERINFOBYID = DAGGER_API_BASE_ENDPOINT_URL
-                + "users/{user-id}/?access_token="; // USER INFO BY USER ID
+                + "users/{user-id}?"; // USER INFO BY USER ID
 
         // media/{media-id}/likes?
         public static final String ENDPOINT_LIKESBYMEDIAID = DAGGER_API_BASE_ENDPOINT_URL

@@ -1,5 +1,6 @@
 package com.instainsight.profile;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,6 +54,10 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 //    private InstaInsightApp instaInsightApp;
 
     private Context mContext;
+
+    private ProgressDialog pd;
+    private UsersDao usersDao;
+    private boolean showPd = true;
 
     @Nullable
     @Override
@@ -112,8 +117,20 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
             Glide.with(mContext).load(instagramUser.getUserBean().getProfilPicture()).placeholder(R.drawable.defaultpic)
                     .crossFade().into(imgvw_pp_profilepic);
 
-            if (isConnected()) {
+            usersDao = new UsersDao(mContext);
+            UsersBean usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
+            if (usersBean != null) {
+                txtvw_pp_followercount.setText(usersBean.getFollowerCount());
+                txtvw_pp_followingcount.setText(usersBean.getFollowingCount());
+                showPd = false;
+            }
 
+            if (isConnected()) {
+                pd = new ProgressDialog(mContext);
+                pd.setMessage("Please wait...");
+                pd.setIndeterminate(true);
+                if (showPd)
+                    pd.show();
 //                instaInsightApp.getUserBeanObserver().setUpdate(false);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", Constants.WebFields.ENDPOINT_USERSELF, new ArrayList<NameValuePair>(),
@@ -127,18 +144,22 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
 //                                instaInsightApp.getUserBeanObserver().setUpdate(true);
                                 txtvw_pp_followercount.setText(usersBean.getFollowerCount());
                                 txtvw_pp_followingcount.setText(usersBean.getFollowingCount());
+                                if (showPd)
+                                    pd.dismiss();
 
                             }
 
                             @Override
                             public void onError(String error) {
+                                if (showPd)
+                                    pd.dismiss();
                                 Utility.showToast(mContext, error);
 //                                instaInsightApp.getUserBeanObserver().setUpdate(true);
                             }
                         });
             } else {
                 UsersDao usersDao = new UsersDao(mContext);
-                UsersBean usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
+                usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
                 txtvw_pp_followercount.setText(usersBean.getFollowerCount());
                 txtvw_pp_followingcount.setText(usersBean.getFollowingCount());
 

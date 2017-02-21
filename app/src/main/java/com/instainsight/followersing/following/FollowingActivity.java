@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
@@ -32,6 +33,7 @@ public class FollowingActivity extends BaseActivity {
     private TextView txtvw_no_following;
     private FollowersingAdap mAdapter;
     private ArrayList<Object> arylstFollowing;
+    private ProgressBar prgsbr_following;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class FollowingActivity extends BaseActivity {
     private void getIds() {
         rcyclrvw_following = (RecyclerView) findViewById(R.id.rcyclrvw_following);
         txtvw_no_following = (TextView) findViewById(R.id.txtvw_no_following);
+        prgsbr_following = (ProgressBar) findViewById(R.id.prgsbr_following);
     }
 
     private void initRecyclerView() {
@@ -68,6 +71,7 @@ public class FollowingActivity extends BaseActivity {
     private void getFollowingData() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
+                prgsbr_following.setVisibility(View.VISIBLE);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", Constants.WebFields.ENDPOINT_FOLLOWEDBY, new ArrayList<NameValuePair>(),
                         new InstagramRequest.InstagramRequestListener() {
@@ -87,6 +91,7 @@ public class FollowingActivity extends BaseActivity {
                                     rcyclrvw_following.setVisibility(View.GONE);
                                     txtvw_no_following.setVisibility(View.VISIBLE);
                                 }
+                                prgsbr_following.setVisibility(View.GONE);
 
 //                            mAdapter = new FollowersingAdap(FollowingActivity.this, arylstFollowing, "Following");
 //                            rcyclrvw_following.setAdapter(mAdapter);
@@ -106,6 +111,7 @@ public class FollowingActivity extends BaseActivity {
 
                             @Override
                             public void onError(String error) {
+                                prgsbr_following.setVisibility(View.GONE);
                                 Utility.showToast(FollowingActivity.this, error);
                             }
                         });

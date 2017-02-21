@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
@@ -33,6 +34,7 @@ public class NotFollowingBackActivity extends BaseActivity {
     private TextView txtvw_no_notfollowingback;
     private FollowersingAdap mAdapter;
     private ArrayList<Object> arylstNotFollowingBack;
+    private ProgressBar prgsbr_notfollowingback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class NotFollowingBackActivity extends BaseActivity {
     private void getIds() {
         rcyclrvw_notfollowingback = (RecyclerView) findViewById(R.id.rcyclrvw_notfollowingback);
         txtvw_no_notfollowingback = (TextView) findViewById(R.id.txtvw_no_notfollowingback);
+        prgsbr_notfollowingback = (ProgressBar) findViewById(R.id.prgsbr_notfollowingback);
     }
 
     private void initRecyclerView() {
@@ -70,6 +73,7 @@ public class NotFollowingBackActivity extends BaseActivity {
         FollowingDao followingDao = new FollowingDao(NotFollowingBackActivity.this);
         ArrayList<Object> arylstNotFollowingBack = followingDao.getFollowingsNotFollowingBack();
         setData(arylstNotFollowingBack);
+        prgsbr_notfollowingback.setVisibility(View.GONE);
     }
 
     private void setData(ArrayList<Object> arylstNotFollowingBack) {
@@ -87,6 +91,7 @@ public class NotFollowingBackActivity extends BaseActivity {
     private void getFollowersData() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
+                prgsbr_notfollowingback.setVisibility(View.VISIBLE);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", Constants.WebFields.ENDPOINT_FOLLOWEDBY, new ArrayList<NameValuePair>(),
                         new InstagramRequest.InstagramRequestListener() {

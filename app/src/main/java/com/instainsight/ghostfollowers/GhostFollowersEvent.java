@@ -16,6 +16,16 @@ public class GhostFollowersEvent {
     private ArrayList<CommentsBean> arylstComments;
     private ArrayList<FollowerBean> arylstFollowers;
 
+    private ArrayList<FollowerBean> arylstLikesCommentsFollowers;
+
+    public ArrayList<FollowerBean> getArylstLikesCommentsFollowers() {
+        return arylstLikesCommentsFollowers;
+    }
+
+    public void setArylstLikesCommentsFollowers(ArrayList<FollowerBean> arylstLikesCommentsFollowers) {
+        this.arylstLikesCommentsFollowers = arylstLikesCommentsFollowers;
+    }
+
     public ArrayList<LikesBean> getArylstLikes() {
         return arylstLikes;
     }

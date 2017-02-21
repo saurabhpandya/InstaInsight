@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
@@ -32,6 +33,7 @@ public class FollowersActivity extends BaseActivity {
     private TextView txtvw_no_followers;
     private FollowersingAdap mAdapter;
     private ArrayList<Object> arylstFollowers;
+    private ProgressBar prgsbr_followers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class FollowersActivity extends BaseActivity {
     private void getIds() {
         rcyclrvw_follower = (RecyclerView) findViewById(R.id.rcyclrvw_follower);
         txtvw_no_followers = (TextView) findViewById(R.id.txtvw_no_followers);
+        prgsbr_followers = (ProgressBar) findViewById(R.id.prgsbr_followers);
     }
 
     private void initRecyclerView() {
@@ -68,11 +71,13 @@ public class FollowersActivity extends BaseActivity {
     private void getFollowersData() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
+                prgsbr_followers.setVisibility(View.VISIBLE);
                 InstagramRequest request = new InstagramRequest(mInstagramSession.getAccessToken());
                 request.createRequest("GET", WebFields.ENDPOINT_FOLLOWEDBY, new ArrayList<NameValuePair>(),
                         new InstagramRequest.InstagramRequestListener() {
                             @Override
                             public void onSuccess(String response) {
+
                                 FollowersDao followersDao = new FollowersDao(FollowersActivity.this);
                                 arylstFollowers = followersDao.getFollowers(response);
                                 followersDao.saveFollowers(arylstFollowers);
@@ -88,7 +93,7 @@ public class FollowersActivity extends BaseActivity {
                                     rcyclrvw_follower.setVisibility(View.GONE);
                                     txtvw_no_followers.setVisibility(View.VISIBLE);
                                 }
-
+                                prgsbr_followers.setVisibility(View.GONE);
 //                            mAdapter = new FollowersingAdap(FollowersActivity.this, arylstFollowers, "Follower");
 //                            rcyclrvw_follower.setAdapter(mAdapter);
                                 JSONObject jsnObjRsps = null;
@@ -107,6 +112,7 @@ public class FollowersActivity extends BaseActivity {
                             @Override
                             public void onError(String error) {
                                 Utility.showToast(FollowersActivity.this, error);
+                                prgsbr_followers.setVisibility(View.GONE);
                             }
                         }
 

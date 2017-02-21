@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -78,60 +79,124 @@ public class GhostFollowersViewModel extends BaseViewModel implements IViewModel
                         });
 
                 ghostFollowersServices.getRecentMedia(mInstagramSession.getAccessToken())
-                        .concatMap(new Function<ListResponseBean<MediaBean>, Observable<ListResponseBean<LikesBean>>>() {
+                        .flatMap(new Function<ListResponseBean<MediaBean>, Observable<MediaBean>>() {
                             @Override
-                            public Observable<ListResponseBean<LikesBean>> apply(
-                                    ListResponseBean<MediaBean> mediaBeanListResponseBean) throws Exception {
-                                Log.d(TAG, "mediaBeanListResponseBean:" + mediaBeanListResponseBean.getData().size());
-
-                                for (MediaBean mediaBean : mediaBeanListResponseBean.getData()) {
-
-                                    ghostFollowersServices.getCommentsByMediaId(mediaBean.getMediaId()
-                                            , mInstagramSession.getAccessToken())
-                                            .subscribe(new Consumer<ListResponseBean<CommentsBean>>() {
-                                                @Override
-                                                public void accept(ListResponseBean<CommentsBean> commentsBeanListResponseBean) throws Exception {
-                                                    Log.d(TAG, "commentsBeanListResponseBean:"
-                                                            + commentsBeanListResponseBean.getData().size());
-                                                    if (commentsBeanListResponseBean.getData().size() > 0) {
-                                                        ArrayList<CommentsBean> arylstComments = new ArrayList<CommentsBean>();
-                                                        arylstComments.addAll(commentsBeanListResponseBean.getData());
-                                                        GhostFollowersEvent ghostFollowersEvent
-                                                                = new GhostFollowersEvent();
-                                                        ghostFollowersEvent.setArylstComments(arylstComments);
-                                                        EventBus.getDefault().post(ghostFollowersEvent);
-                                                    }
-                                                }
-                                            });
-
-                                    ghostFollowersServices.getLikesByMediaId(mediaBean.getMediaId()
-                                            , mInstagramSession.getAccessToken())
-                                            .subscribe(new Consumer<ListResponseBean<LikesBean>>() {
-                                                @Override
-                                                public void accept(ListResponseBean<LikesBean> likesBeanListResponseBean) throws Exception {
-                                                    Log.d(TAG, "likesBeanListResponseBean:" + likesBeanListResponseBean.getData().size());
-                                                    if (likesBeanListResponseBean.getData().size() > 0) {
-                                                        ArrayList<LikesBean> arylstLikes = new ArrayList<LikesBean>();
-                                                        arylstLikes.addAll(likesBeanListResponseBean.getData());
-                                                        GhostFollowersEvent ghostFollowersEvent
-                                                                = new GhostFollowersEvent();
-                                                        ghostFollowersEvent.setArylstLikes(arylstLikes);
-                                                        EventBus.getDefault().post(ghostFollowersEvent);
-                                                    }
-                                                }
-                                            });
-                                }
-
-
-                                return Observable.just(new ListResponseBean<LikesBean>());
+                            public Observable<MediaBean> apply(ListResponseBean<MediaBean> mediaBeanListResponseBean) throws Exception {
+                                return Observable.fromIterable(mediaBeanListResponseBean.getData());
                             }
-                        }).subscribe(new Consumer<ListResponseBean<LikesBean>>() {
+                        })
+                        .flatMap(new Function<MediaBean, Observable<ArrayList<FollowerBean>>>() {
+                            @Override
+                            public Observable<ArrayList<FollowerBean>> apply(MediaBean mediaBean) throws Exception {
+                                Log.d(TAG, "mediaBean:" + mediaBean.getMediaId());
+                                return Observable.zip(ghostFollowersServices.getCommentsByMediaId(mediaBean.getMediaId()
+                                        , mInstagramSession.getAccessToken()),
+                                        ghostFollowersServices.getLikesByMediaId(mediaBean.getMediaId()
+                                                , mInstagramSession.getAccessToken()),
+                                        new BiFunction<ListResponseBean<CommentsBean>, ListResponseBean<LikesBean>, ArrayList<FollowerBean>>() {
+                                            @Override
+                                            public ArrayList<FollowerBean>
+                                            apply(ListResponseBean<CommentsBean> commentsBeanListResponseBean,
+                                                  ListResponseBean<LikesBean> likesBeanListResponseBean) throws Exception {
+                                                Log.d(TAG, "commentsBeanListResponseBean new:" + commentsBeanListResponseBean.getData().size());
+                                                Log.d(TAG, "likesBeanListResponseBean new:" + likesBeanListResponseBean.getData().size());
+                                                ArrayList<FollowerBean> arylstFollowersBean = new ArrayList<FollowerBean>();
+
+                                                for (CommentsBean commentsBean : commentsBeanListResponseBean.getData()) {
+                                                    Log.d(TAG, "commentsBean new:" + commentsBean.getFrom().getId());
+                                                    FollowerBean followerBean = new FollowerBean();
+                                                    followerBean.setId(commentsBean.getFrom().getId());
+                                                    followerBean.setFullName(commentsBean.getFrom().getFull_name());
+                                                    followerBean.setProfilePic(commentsBean.getFrom().getProfile_picture());
+                                                    followerBean.setUserName(commentsBean.getFrom().getUsername());
+                                                    arylstFollowersBean.add(followerBean);
+                                                }
+
+                                                for (LikesBean likesBean : likesBeanListResponseBean.getData()) {
+                                                    Log.d(TAG, "likesBean new:" + likesBean.getId());
+                                                    FollowerBean followerBean = new FollowerBean();
+                                                    followerBean.setId(likesBean.getId());
+                                                    followerBean.setFullName(likesBean.getFirst_name() + " " + likesBean.getLast_name());
+                                                    followerBean.setProfilePic("");
+                                                    followerBean.setUserName(likesBean.getUsername());
+                                                    arylstFollowersBean.add(followerBean);
+                                                }
+
+                                                return arylstFollowersBean;
+                                            }
+                                        });
+                            }
+                        }).subscribe(new Consumer<ArrayList<FollowerBean>>() {
                     @Override
-                    public void accept(ListResponseBean<LikesBean> likesBeanListResponseBean) throws Exception {
-                        if (likesBeanListResponseBean.getData() != null)
-                            Log.d(TAG, "likesBeanListResponseBean:" + likesBeanListResponseBean.getData().size());
+                    public void accept(ArrayList<FollowerBean> followerBeen) throws Exception {
+                        Log.d(TAG, "followerBeen new:" + followerBeen.size());
+                        GhostFollowersEvent ghostFollowersEvent
+                                = new GhostFollowersEvent();
+                        ghostFollowersEvent.setArylstLikesCommentsFollowers(followerBeen);
+                        EventBus.getDefault().post(ghostFollowersEvent);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                     }
                 });
+
+//                ghostFollowersServices.getRecentMedia(mInstagramSession.getAccessToken())
+//                        .concatMap(new Function<ListResponseBean<MediaBean>, Observable<ListResponseBean<LikesBean>>>() {
+//                            @Override
+//                            public Observable<ListResponseBean<LikesBean>> apply(
+//                                    ListResponseBean<MediaBean> mediaBeanListResponseBean) throws Exception {
+//                                Log.d(TAG, "mediaBeanListResponseBean:" + mediaBeanListResponseBean.getData().size());
+//
+//                                for (MediaBean mediaBean : mediaBeanListResponseBean.getData()) {
+//
+//                                    ghostFollowersServices.getCommentsByMediaId(mediaBean.getMediaId()
+//                                            , mInstagramSession.getAccessToken())
+//                                            .subscribe(new Consumer<ListResponseBean<CommentsBean>>() {
+//                                                @Override
+//                                                public void accept(ListResponseBean<CommentsBean> commentsBeanListResponseBean) throws Exception {
+//                                                    Log.d(TAG, "commentsBeanListResponseBean:"
+//                                                            + commentsBeanListResponseBean.getData().size());
+//                                                    if (commentsBeanListResponseBean.getData().size() > 0) {
+//                                                        ArrayList<CommentsBean> arylstComments = new ArrayList<CommentsBean>();
+//                                                        arylstComments.addAll(commentsBeanListResponseBean.getData());
+//                                                        GhostFollowersEvent ghostFollowersEvent
+//                                                                = new GhostFollowersEvent();
+//                                                        ghostFollowersEvent.setArylstComments(arylstComments);
+//                                                        EventBus.getDefault().post(ghostFollowersEvent);
+//                                                    }
+//                                                }
+//                                            });
+//
+//                                    ghostFollowersServices.getLikesByMediaId(mediaBean.getMediaId()
+//                                            , mInstagramSession.getAccessToken())
+//                                            .subscribe(new Consumer<ListResponseBean<LikesBean>>() {
+//                                                @Override
+//                                                public void accept(ListResponseBean<LikesBean> likesBeanListResponseBean) throws Exception {
+//                                                    Log.d(TAG, "likesBeanListResponseBean:" + likesBeanListResponseBean.getData().size());
+//                                                    if (likesBeanListResponseBean.getData().size() > 0) {
+//                                                        ArrayList<LikesBean> arylstLikes = new ArrayList<LikesBean>();
+//                                                        arylstLikes.addAll(likesBeanListResponseBean.getData());
+//                                                        GhostFollowersEvent ghostFollowersEvent
+//                                                                = new GhostFollowersEvent();
+//                                                        ghostFollowersEvent.setArylstLikes(arylstLikes);
+//                                                        EventBus.getDefault().post(ghostFollowersEvent);
+//                                                    }
+//                                                }
+//                                            });
+//                                }
+//
+//
+//                                return Observable.just(new ListResponseBean<LikesBean>());
+//                            }
+//                        }).subscribe(new Consumer<ListResponseBean<LikesBean>>() {
+//                    @Override
+//                    public void accept(ListResponseBean<LikesBean> likesBeanListResponseBean) throws Exception {
+//                        if (likesBeanListResponseBean.getData() != null)
+//                            Log.d(TAG, "likesBeanListResponseBean:" + likesBeanListResponseBean.getData().size());
+//                    }
+//                });
 
             } else {
             }

@@ -89,6 +89,14 @@ public class MostPopularFollowersViewModel extends BaseViewModel implements IVie
                                                     mostPopularFollowersEvent.setMostPopularFollowers(otherUsersBeanList);
                                                     EventBus.getDefault().post(mostPopularFollowersEvent);
                                                 }
+                                            }, new Consumer<Throwable>() {
+                                                @Override
+                                                public void accept(Throwable throwable) throws Exception {
+                                                    throwable.printStackTrace();
+                                                    MostPopularFollowersEvent mostPopularFollowersEvent
+                                                            = new MostPopularFollowersEvent();
+                                                    EventBus.getDefault().post(mostPopularFollowersEvent);
+                                                }
                                             });
                                 }
 

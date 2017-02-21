@@ -82,7 +82,7 @@ public class ILikedMostActivity extends ViewModelActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ILikedMostEvent iLikedMostEvent) {
-        if (iLikedMostEvent != null && iLikedMostEvent.getArylstILikedMost() != null) {
+        if (iLikedMostEvent != null && iLikedMostEvent.getArylstILikedMost() != null && iLikedMostEvent.getArylstILikedMost().size() > 0) {
             ArrayList<ILikedMostBean> arylstILikedMost = iLikedMostEvent.getArylstILikedMost();
             Log.d(TAG, "onEvent::arylstILikedMost:" + arylstILikedMost.size());
             mAdapter.addFollowersing(arylstILikedMost);

@@ -23,8 +23,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -34,6 +32,7 @@ public class GhostFollowersActivity extends ViewModelActivity {
     GhostFollowersViewModel ghostFollowersViewModel;
     ActivityGhostFollowersBinding activityGhostFollowersBinding;
     GhostFollowersAdap mAdapter;
+
     private ArrayList<LikesBean> arylstLikes = new ArrayList<>();
     private ArrayList<CommentsBean> arylstComments = new ArrayList<>();
     private ArrayList<FollowerBean> arylstFollowers = new ArrayList<>();
@@ -41,6 +40,7 @@ public class GhostFollowersActivity extends ViewModelActivity {
     private ArrayList<String> likesUsers;
     private ArrayList<String> commentsUsers;
     private ArrayList<String> arylstLikesCommentsUsers = new ArrayList<>();
+    private ArrayList<FollowerBean> arylstLikesCommentsFollowers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,50 +102,97 @@ public class GhostFollowersActivity extends ViewModelActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(GhostFollowersEvent ghostFollowersEvent) {
-        if (ghostFollowersEvent.getArylstComments() != null) {
-            commentsUsers = new ArrayList<>();
-            arylstComments.addAll(ghostFollowersEvent.getArylstComments());
-            Log.d(TAG, "arylstComments:" + arylstComments.size());
-            for (CommentsBean commentsBean : arylstComments) {
-                commentsUsers.add(commentsBean.getFrom().getId());
-                arylstLikesCommentsUsers.addAll(commentsUsers);
-            }
-        }
-        if (ghostFollowersEvent.getArylstLikes() != null) {
-            likesUsers = new ArrayList<>();
-            arylstLikes.addAll(ghostFollowersEvent.getArylstLikes());
-            Log.d(TAG, "arylstLikes:" + arylstLikes.size());
-            for (LikesBean likesBean : arylstLikes) {
-                likesUsers.add(likesBean.getId());
-                arylstLikesCommentsUsers.addAll(likesUsers);
-            }
-        }
 
         if (ghostFollowersEvent.getArylstFollowers() != null) {
             arylstFollowers.addAll(ghostFollowersEvent.getArylstFollowers());
             Log.d(TAG, "arylstFollowers:" + arylstFollowers.size());
         }
 
-        Set<String> uniqueLikesCommentsUsers = new HashSet<>(arylstLikesCommentsUsers);
-        arylstLikesCommentsUsers = new ArrayList<>(uniqueLikesCommentsUsers);
-        Log.d(TAG, "arylstLikesCommentsUsers:" + arylstLikesCommentsUsers.toString());
+        if (ghostFollowersEvent.getArylstLikesCommentsFollowers() != null) {
+            arylstLikesCommentsFollowers.addAll(ghostFollowersEvent.getArylstLikesCommentsFollowers());
+            Log.d(TAG, "arylstLikesCommentsFollowers:" + arylstLikesCommentsFollowers.size());
+
+        }
+
+        addUserToRecyclerView(arylstFollowers, arylstLikesCommentsFollowers);
+
+//        for (FollowerBean followerBean : arylstFollowers) {
+//            for (FollowerBean unique : arylstLikesCommentsFollowers) {
+//                if (!unique.getId().equalsIgnoreCase(followerBean.getId())) {
+//                    Log.d(TAG, "addUserToRecyclerView:followerBean.getId():" + followerBean.getId());
+//                    Log.d(TAG, "addUserToRecyclerView:unique.getId():" + unique.getId());
+//
+//                } else {
+//                    continue;
+//                }
+//            }
+//        }
 
 
+    }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(GhostFollowersEvent ghostFollowersEvent) {
+//        if (ghostFollowersEvent.getArylstComments() != null) {
+//            commentsUsers = new ArrayList<>();
+//            arylstComments.addAll(ghostFollowersEvent.getArylstComments());
+//            Log.d(TAG, "arylstComments:" + arylstComments.size());
+//            for (CommentsBean commentsBean : arylstComments) {
+//                commentsUsers.add(commentsBean.getFrom().getId());
+//                arylstLikesCommentsUsers.addAll(commentsUsers);
+//            }
+//        }
+//        if (ghostFollowersEvent.getArylstLikes() != null) {
+//            likesUsers = new ArrayList<>();
+//            arylstLikes.addAll(ghostFollowersEvent.getArylstLikes());
+//            Log.d(TAG, "arylstLikes:" + arylstLikes.size());
+//            for (LikesBean likesBean : arylstLikes) {
+//                likesUsers.add(likesBean.getId());
+//                arylstLikesCommentsUsers.addAll(likesUsers);
+//            }
+//        }
+//
+//        if (ghostFollowersEvent.getArylstFollowers() != null) {
+//            arylstFollowers.addAll(ghostFollowersEvent.getArylstFollowers());
+//            Log.d(TAG, "arylstFollowers:" + arylstFollowers.size());
+//        }
+//
+//        Set<String> uniqueLikesCommentsUsers = new HashSet<>(arylstLikesCommentsUsers);
+//        arylstLikesCommentsUsers = new ArrayList<>(uniqueLikesCommentsUsers);
+//        Log.d(TAG, "arylstLikesCommentsUsers:" + arylstLikesCommentsUsers.toString());
+//
+//
+//        for (FollowerBean followerBean : arylstFollowers) {
+//            for (String unique : arylstLikesCommentsUsers) {
+//                if (!unique.equalsIgnoreCase(followerBean.getId())) {
+//                    Log.d(TAG, "addUserToRecyclerView:followerBean.getId():" + followerBean.getId());
+//                    Log.d(TAG, "addUserToRecyclerView:unique:" + unique);
+//                    addUserToRecyclerView(followerBean);
+//                } else {
+//                    continue;
+//                }
+//            }
+//        }
+//    }
+
+    private void addUserToRecyclerView(ArrayList<FollowerBean> arylstFollowers, ArrayList<FollowerBean> arylstLikesCommentsFollowers) {
+        ArrayList<FollowerBean> tempFollowers = new ArrayList<>();
         for (FollowerBean followerBean : arylstFollowers) {
-            for (String unique : arylstLikesCommentsUsers) {
-                if (!unique.equalsIgnoreCase(followerBean.getId())) {
-                    Log.d(TAG, "addUserToRecyclerView:followerBean.getId():" + followerBean.getId());
-                    Log.d(TAG, "addUserToRecyclerView:unique:" + unique);
-                    addUserToRecyclerView(followerBean);
-                } else {
-                    continue;
-                }
+            if (!arylstLikesCommentsFollowers.contains(followerBean)) {
+                tempFollowers.add(followerBean);
             }
         }
-    }
 
-    private void addUserToRecyclerView(FollowerBean followerBean) {
-        mAdapter.addGhostFollowers(followerBean);
+        for (FollowerBean followerBean : tempFollowers) {
+            Log.d(TAG, "addUserToRecyclerView:" + followerBean.getId());
+        }
+
+        mAdapter.addGhostFollowers(tempFollowers);
         mAdapter.notifyDataSetChanged();
     }
+
+//    private void addUserToRecyclerView(FollowerBean followerBean) {
+//        mAdapter.addGhostFollowers(followerBean);
+//        mAdapter.notifyDataSetChanged();
+//    }
 }

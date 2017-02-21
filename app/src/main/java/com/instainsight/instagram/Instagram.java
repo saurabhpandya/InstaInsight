@@ -56,11 +56,13 @@ public class Instagram {
             @Override
             public void onError(String error) {
                 mListener.onError(error);
+                resetSession();
             }
 
             @Override
             public void onCancel() {
                 mListener.onCancel();
+                resetSession();
 
             }
         });
@@ -69,7 +71,7 @@ public class Instagram {
     /**
      * Authorize user.
      *
-     * @param listener Auth listner
+     * @param listener          Auth listner
      * @param instagramServices
      */
     public void authorize(InstagramAuthListener listener, InstagramServices instagramServices) {

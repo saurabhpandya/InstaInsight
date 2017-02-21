@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.instainsight.Utils.Utility;
-import com.instainsight.constants.Constants;
 import com.instainsight.instagram.InstagramSession;
 import com.instainsight.login.LoginActivity;
 import com.instainsight.media.MediaEvent;
@@ -61,9 +60,9 @@ public class RecentMediaViewModelNew extends BaseViewModel implements IViewModel
     public void getRecentMediaLikes() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
-                StringBuilder strBldrILikeMostUrl = new StringBuilder()
-                        .append(Constants.WebFields.ENDPOINT_RECENT_MEDIA_DAG)
-                        .append(mInstagramSession.getAccessToken());
+//                StringBuilder strBldrILikeMostUrl = new StringBuilder()
+//                        .append(Constants.WebFields.ENDPOINT_RECENT_MEDIA_DAG)
+//                        .append(mInstagramSession.getAccessToken());
                 recentMediaService.getRecentMediaNew(new MyCallBack<ListResponseBean<MediaBean>>() {
                     @Override
                     public void onSuccess(ListResponseBean<MediaBean> arylstRecentMedia) {
@@ -91,35 +90,27 @@ public class RecentMediaViewModelNew extends BaseViewModel implements IViewModel
 
     private void setRecentMediaToDB(ArrayList<MediaBean> arylstRecentMedia) {
         RecentMediaDBQueriesNew recentMediaDBQueries = new RecentMediaDBQueriesNew(mContext);
-        try {
-            Utility.makeObservable(recentMediaDBQueries.saveRecentMedia(arylstRecentMedia))
-                    .subscribe(new Consumer<ArrayList<MediaBean>>() {
-                        @Override
-                        public void accept(ArrayList<MediaBean> mediaBeen) throws Exception {
-                            MediaEvent mediaEvent = new MediaEvent();
-                            mediaEvent.setAryLstMedia(mediaBeen);
-                            EventBus.getDefault().post(mediaEvent);
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        recentMediaDBQueries.saveRecentMedia(arylstRecentMedia)
+                .subscribe(new Consumer<ArrayList<MediaBean>>() {
+                    @Override
+                    public void accept(ArrayList<MediaBean> mediaBeen) throws Exception {
+                        MediaEvent mediaEvent = new MediaEvent();
+                        mediaEvent.setAryLstMedia(mediaBeen);
+                        EventBus.getDefault().post(mediaEvent);
+                    }
+                });
     }
 
     private void getRecentMediaLikesFromDB() {
         RecentMediaDBQueriesNew recentMediaDBQueries = new RecentMediaDBQueriesNew(mContext);
-        try {
-            Utility.makeObservable(recentMediaDBQueries.getRecentMedia())
-                    .subscribe(new Consumer<ArrayList<MediaBean>>() {
-                        @Override
-                        public void accept(ArrayList<MediaBean> recentMediaBeen) throws Exception {
-                            MediaEvent recentMediaEvent = new MediaEvent();
-                            recentMediaEvent.setAryLstMedia(recentMediaBeen);
-                            EventBus.getDefault().post(recentMediaEvent);
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        recentMediaDBQueries.getRecentMedia()
+                .subscribe(new Consumer<ArrayList<MediaBean>>() {
+                    @Override
+                    public void accept(ArrayList<MediaBean> recentMediaBeen) throws Exception {
+                        MediaEvent recentMediaEvent = new MediaEvent();
+                        recentMediaEvent.setAryLstMedia(recentMediaBeen);
+                        EventBus.getDefault().post(recentMediaEvent);
+                    }
+                });
     }
 }

@@ -95,7 +95,7 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
     private void getILikedMostFromDB() {
         ILikeMostDBQueries iLikeMostDBQueries = new ILikeMostDBQueries(mContext);
         try {
-            Utility.makeObservable(iLikeMostDBQueries.getILikedMost(mInstagramSession.getUser().getUserBean().getId()))
+            iLikeMostDBQueries.getILikedMost(mInstagramSession.getUser().getUserBean().getId())
                     .subscribe(new Consumer<ArrayList<ILikedMostBean>>() {
                         @Override
                         public void accept(ArrayList<ILikedMostBean> iLikedMostBeen) throws Exception {
@@ -117,7 +117,7 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
             arylstILikedMost.set(i, iLikedMostBean);
         }
         try {
-            Utility.makeObservable(iLikeMostDBQueries.saveILikedMost(arylstILikedMost))
+            iLikeMostDBQueries.saveILikedMost(arylstILikedMost)
                     .subscribe(new Consumer<ArrayList<ILikedMostBean>>() {
                         @Override
                         public void accept(ArrayList<ILikedMostBean> iLikedMostBeen) throws Exception {

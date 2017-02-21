@@ -27,13 +27,13 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/lbl_no_data_found"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/font_20sp"
             android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/prgsbr_ilikedmost"
-            style="?android:progressBarStyleSmall"
+            style="?android:progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

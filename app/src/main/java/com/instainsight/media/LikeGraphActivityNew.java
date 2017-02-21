@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -100,10 +99,12 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             ArrayList<MediaBean> arylstRecentMedia = recentMediaEvent.getAryLstMedia();
             Log.d(TAG, "onEvent::arylstRecentMedia:" + arylstRecentMedia.size());
             init(arylstRecentMedia);
+            activityLikeGraphNewBinding.txtvwNoLikegraph.setVisibility(View.GONE);
             activityLikeGraphNewBinding.linechart.setVisibility(View.VISIBLE);
             activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.GONE);
         } else {
-            activityLikeGraphNewBinding.linechart.setVisibility(View.VISIBLE);
+            activityLikeGraphNewBinding.txtvwNoLikegraph.setVisibility(View.VISIBLE);
+            activityLikeGraphNewBinding.linechart.setVisibility(View.GONE);
             activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.GONE);
         }
     }
@@ -115,7 +116,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         activityLikeGraphNewBinding.linechart.getDescription().setEnabled(false);
 
         // enable touch gestures
-        activityLikeGraphNewBinding.linechart.setTouchEnabled(true);
+        activityLikeGraphNewBinding.linechart.setTouchEnabled(false);
 
         // enable scaling and dragging
         activityLikeGraphNewBinding.linechart.setDragEnabled(false);
@@ -125,6 +126,8 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         activityLikeGraphNewBinding.linechart.setPinchZoom(false);
+        activityLikeGraphNewBinding.linechart.setBackgroundColor(Color.parseColor("#DD3A5B"));
+        activityLikeGraphNewBinding.linechart.setNoDataTextColor(getResources().getColor(android.R.color.darker_gray));
 
         // set an alternative background color
         // mChart.setBackgroundColor(Color.GRAY);
@@ -136,36 +139,39 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 //        mChart.setMarker(mv); // Set the marker to the chart
 
         // x-axis limit line
-        LimitLine llXAxis = new LimitLine(10f, "Index 10");
-        llXAxis.setLineWidth(4f);
-        llXAxis.enableDashedLine(10f, 10f, 0f);
-        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        llXAxis.setTextSize(10f);
-
+//        LimitLine llXAxis = new LimitLine(10f, "");
+//        llXAxis.setLineWidth(4f);
+//        llXAxis.enableDashedLine(10f, 10f, 0f);
+//        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//        llXAxis.setTextSize(10f);
+//
         XAxis xAxis = activityLikeGraphNewBinding.linechart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
-        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
+//        xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
+//        xAxis.addLimitLine(llXAxis); // add x-axis limit line
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawLabels(false);
 
 
 //        Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
-        LimitLine ll1 = new LimitLine(20f, "Upper Limit");
-        ll1.setLineWidth(4f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll1.setTextSize(10f);
+//        LimitLine ll1 = new LimitLine(20f, "");
+//        ll1.setLineWidth(4f);
+//        ll1.enableDashedLine(10f, 10f, 0f);
+//        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+//        ll1.setTextSize(10f);
 //        ll1.setTypeface(tf);
 
-        LimitLine ll2 = new LimitLine(0f, "Lower Limit");
-        ll2.setLineWidth(4f);
-        ll2.enableDashedLine(10f, 10f, 0f);
-        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        ll2.setTextSize(10f);
+//        LimitLine ll2 = new LimitLine(0f, "");
+//        ll2.setLineWidth(4f);
+//        ll2.enableDashedLine(10f, 10f, 0f);
+//        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//        ll2.setTextSize(10f);
 //        ll2.setTypeface(tf);
 
         YAxis leftAxis = activityLikeGraphNewBinding.linechart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+
 //        leftAxis.addLimitLine(ll1);
 //        leftAxis.addLimitLine(ll2);
 
@@ -188,7 +194,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
-
+        leftAxis.setDrawAxisLine(true);
         // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(true);
 
@@ -211,7 +217,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         Legend l = activityLikeGraphNewBinding.linechart.getLegend();
 
         // modify the legend ...
-        l.setForm(Legend.LegendForm.LINE);
+        l.setForm(Legend.LegendForm.NONE);
 
         // // dont forget to refresh the drawing
         // mChart.invalidate();
@@ -229,11 +235,16 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         });
 
         ArrayList<Entry> values = new ArrayList<Entry>();
-
-        for (int i = 0; i < aryLstLikes.size(); i++) {
-            if (i >= 7)
-                break;
-            values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
+        if (aryLstLikes.size() > 7) {
+            for (int i = 0; i < aryLstLikes.size(); i++) {
+                if (i >= 7)
+                    break;
+                values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
+            }
+        } else {
+            for (int i = 0; i < aryLstLikes.size(); i++) {
+                values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
+            }
         }
 
 
@@ -259,17 +270,19 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             activityLikeGraphNewBinding.linechart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
+            set1 = new LineDataSet(values, "");
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
+            set1.setColor(Color.parseColor("#ffdd3aad"));
+            set1.setCircleColor(Color.WHITE);
             set1.setLineWidth(1f);
             set1.setCircleRadius(3f);
+            set1.setDrawCircles(false);
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(9f);
+            set1.setDrawValues(false);
             set1.setDrawFilled(true);
             set1.setFormLineWidth(1f);
             set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
@@ -292,6 +305,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
             // set data
             activityLikeGraphNewBinding.linechart.setData(data);
+
         }
     }
 }

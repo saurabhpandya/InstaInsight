@@ -1,6 +1,7 @@
 package com.instainsight;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -24,8 +25,7 @@ public class SplashScreen extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
-        removeOldFollowers();
-        removeOldFollowing();
+        new RemoveOldFollowersFollowing().execute();
         showSplash();
     }
 
@@ -40,7 +40,6 @@ public class SplashScreen extends BaseActivity {
     }
 
     private void showSplash() {
-
 
         new Handler().postDelayed(new Runnable() {
                                       /*
@@ -64,6 +63,16 @@ public class SplashScreen extends BaseActivity {
                                       }
                                   }
                 , SPLASH_TIME);
+    }
+
+    public class RemoveOldFollowersFollowing extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            removeOldFollowers();
+            removeOldFollowing();
+            return null;
+        }
     }
 
 }

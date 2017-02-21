@@ -28,6 +28,11 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
         this.ghostFollowersList = ghostFollowersList;
     }
 
+    public void addGhostFollowers(ArrayList<FollowerBean> arylstGhostFollower) {
+        this.ghostFollowersList = new ArrayList<>();
+        this.ghostFollowersList.addAll(arylstGhostFollower);
+    }
+
     public void addGhostFollowers(FollowerBean ghostFollower) {
         this.ghostFollowersList.add(ghostFollower);
     }
