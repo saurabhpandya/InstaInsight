@@ -3,10 +3,11 @@ package com.instainsight;
 import com.instainsight.followersing.OtherUserActivity;
 import com.instainsight.ghostfollowers.GhostFollowersActivity;
 import com.instainsight.ilikedmost.ILikedMostActivity;
+import com.instainsight.likegraph.LikeGraphActivityNew;
 import com.instainsight.login.LoginActivity;
-import com.instainsight.media.LikeGraphActivityNew;
 import com.instainsight.mostpopularfollowers.MostPopularFollowersActivity;
 import com.instainsight.mytoplikers.MyTopLikersActivity;
+import com.instainsight.whoviewedprofile.WhoViewedProfileActivity;
 
 import javax.inject.Singleton;
 
@@ -18,6 +19,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {ApplicationModule.class})
 public interface ApplicationComponent {
+    void inject(WhoViewedProfileActivity whoViewedProfileActivity);
+
     void inject(GhostFollowersActivity ghostFollowersActivity);
 
     void inject(MostPopularFollowersActivity mostPopularFollowersActivity);

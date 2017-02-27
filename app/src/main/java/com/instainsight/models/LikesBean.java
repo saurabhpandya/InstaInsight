@@ -5,13 +5,13 @@ package com.instainsight.models;
  */
 
 public class LikesBean {
-    private String count;
+    private int count;
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 }

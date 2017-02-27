@@ -57,6 +57,7 @@ public class RecentMediaViewModelNew extends BaseViewModel implements IViewModel
         mActivity = value;
     }
 
+
     public void getRecentMediaLikes() {
         if (mInstagramSession.isActive()) {
             if (isConnected()) {

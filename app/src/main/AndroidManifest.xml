@@ -51,11 +51,12 @@
         <activity android:name=".followersing.NotFollowingMeBackActivity" />
         <activity android:name=".media.LikeGraphActivity" />
         <activity android:name=".ilikedmost.ILikedMostActivity" />
-        <activity android:name=".media.LikeGraphActivityNew" />
+        <activity android:name=".likegraph.LikeGraphActivityNew" />
         <activity android:name=".followersing.OtherUserActivity" />
         <activity android:name=".mytoplikers.MyTopLikersActivity" />
         <activity android:name=".mostpopularfollowers.MostPopularFollowersActivity" />
-        <activity android:name=".ghostfollowers.GhostFollowersActivity"></activity>
+        <activity android:name=".ghostfollowers.GhostFollowersActivity" />
+        <activity android:name=".whoviewedprofile.WhoViewedProfileActivity"></activity>
     </application>
 
 </manifest>

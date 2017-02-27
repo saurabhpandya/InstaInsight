@@ -28,6 +28,7 @@ import com.instainsight.mostpopularfollowers.MostPopularFollowersActivity;
 import com.instainsight.mytoplikers.MyTopLikersActivity;
 import com.instainsight.profile.bean.UsersBean;
 import com.instainsight.profile.dao.UsersDao;
+import com.instainsight.whoviewedprofile.WhoViewedProfileActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.apache.http.NameValuePair;
@@ -217,7 +218,8 @@ public class PaidProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void openProfileViewer() {
-        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_prfl_vwrs));
+//        Utility.showToast(getActivity(), getActivity().getResources().getString(R.string.lbl_prfl_vwrs));
+        startActivity(WhoViewedProfileActivity.class);
     }
 
     private void openMyTopLikes() {

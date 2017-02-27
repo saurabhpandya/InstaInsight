@@ -1,4 +1,4 @@
-package com.instainsight.media;
+package com.instainsight.likegraph;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -23,21 +23,19 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import io.reactivex.Observable;
-
-
 /**
- * Created by SONY on 12-02-2017.
+ * Created by SONY on 23-02-2017.
  */
 
-public class RecentMediaDBQueriesNew {
+public class LikeGraphDBQueries {
 
-    private String TAG = RecentMediaDBQueriesNew.class.getSimpleName();
+    private String TAG = LikeGraphDBQueries.class.getSimpleName();
+
     private Context mContext;
     private DBManager manager;
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public RecentMediaDBQueriesNew(Context context) {
+    public LikeGraphDBQueries(Context context) {
         mContext = context;
         getDBInstance();
     }
@@ -47,19 +45,20 @@ public class RecentMediaDBQueriesNew {
         manager.open();
     }
 
-    public Observable<ArrayList<MediaBean>> saveRecentMedia(final ArrayList<MediaBean> arylstRecentMedia) {
-        return Observable.just(saveRecentMediaToDb(arylstRecentMedia));
-    }
-
-    private ArrayList<MediaBean> saveRecentMediaToDb(ArrayList<MediaBean> arylstRecentMedia) {
+    public ArrayList<MediaBean> saveGraphDataToDb(ArrayList<MediaBean> arylstRecentMedia) {
         readWriteLock.readLock().lock();
         ArrayList<Map<String, Object>> columnDetails = new ArrayList<>();
 
+        int count = 0;
+
         for (MediaBean bean : arylstRecentMedia) {
+            if (count > 6)
+                break;
+            count++;
             Map<String, Object> valuesMap = new HashMap<>();
 
             valuesMap.put(MEDIA.ATTRIBUTION, bean.getAttribution());
-            valuesMap.put(MEDIA.LIKES_COUNT, bean.getLikesBean().getCount());
+            valuesMap.put(MEDIA.LIKES_COUNT, "" + bean.getLikesBean().getCount());
             valuesMap.put(MEDIA.USERHASLIKED, bean.getUser_has_liked());
 
             if (bean.getLocationBean() != null) {
@@ -140,27 +139,28 @@ public class RecentMediaDBQueriesNew {
         long insertedRows = dbQueries.insertUpdateValuesToRECENTMEDIA(MEDIA.TABLE_NAME, columnDetails);
         Log.d(TAG, "saveRecentMediaToDb:insertUpdateValues::" + insertedRows);
         readWriteLock.readLock().unlock();
-        return getRecentMediaFromDb();
+        return getLikeGraphFromDb();
     }
 
-    public Observable<ArrayList<MediaBean>> getRecentMedia() {
-        return Observable.just(getRecentMediaFromDb());
-    }
-
-    private ArrayList<MediaBean> getRecentMediaFromDb() {
+    public ArrayList<MediaBean> getLikeGraphFromDb() {
         ArrayList<MediaBean> arylstILikedMost = new ArrayList<MediaBean>();
         readWriteLock.readLock().lock();
 
         Cursor cursor = manager.getDB().query(
-//                true, // distinct
+//                false, // distinct
                 MEDIA.TABLE_NAME, // table name
                 null, // projection
                 null, // selection
                 null, // selection args
                 null, // group by
                 null, // having
-                MEDIA.CREATEDTIME + " DESC" // order by
+                MEDIA.CREATEDTIME + " DESC", // order by,
+                "7"
         );
+
+//        Cursor cursor = manager.getDB().rawQuery("SELECT * FROM (SELECT * FROM " + MEDIA.TABLE_NAME
+//                + " ORDER BY " + MEDIA.CREATEDTIME + " DESC LIMIT 7) ORDER BY " + MEDIA.LIKES_COUNT + " ASC;", null);
+
         /*query(RECENTMEDIA.TABLE_NAME, null, null, null, null, null, RECENTMEDIA.LIKEDBYUSER_CREATEDTIME + " desc");*/
 
         int count = cursor.getCount();
@@ -174,7 +174,7 @@ public class RecentMediaDBQueriesNew {
                 LikesBean likesBean = new LikesBean();
                 likesBean.setCount(cursor.getInt(cursor.getColumnIndex(MEDIA.LIKES_COUNT)));
                 data.setLikesBean(likesBean);
-
+                Log.d(TAG, "getLikeGraphFromDb:LikeCount:" + likesBean.getCount());
                 data.setUser_has_liked(cursor.getString(cursor.getColumnIndex(MEDIA.USERHASLIKED)));
 
                 LocationBean locationBean = new LocationBean();

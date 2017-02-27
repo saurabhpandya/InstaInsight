@@ -64,6 +64,39 @@ public class Constants {
         public static final String ENDPOINT_COMMENTSBYMEDIAID = DAGGER_API_BASE_ENDPOINT_URL
                 + "media/{media-id}/comments?"; // Comments by media-id
 
+
+        public static final String ENDPOINT_LIKEGRAPH = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/media/recent?";
+
+        /**
+         * Who Viewed Profile
+         * -> Fetch followers,
+         * -> Fetch Every Follower's recent posts,
+         * - Filter users_in_photo for the logged in user in follower's post
+         * -> Fetch Logged in user's recent posts,
+         * - Fetch comments made
+         * - Fetch commented user
+         * -> Fetch Logged in user's recent posts,
+         * - Fetch Likes made
+         * - Fetch Likes user
+         */
+
+        // Followers
+        public static final String ENDPOINT_WHOVIEWEDPROFILE_FOLLOWERS = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/followed-by?";
+        // Follower's Recent Posts
+        public static final String ENDPOINT_WHOVIEWEDPROFILE_FOLLOWERS_RECENTPOST = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/{user-id}/media/recent/?";
+        // User's Recent Posts
+        public static final String ENDPOINT_WHOVIEWEDPROFILE_USERS_RECENTPOST = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/self/media/recent/?";
+        // Recent post Comments
+        public static final String ENDPOINT_WHOVIEWEDPROFILE_RECENTPOST_COMMENTS = DAGGER_API_BASE_ENDPOINT_URL
+                + "media/{media-id}/comments?";
+        // Recent post Likes
+        public static final String ENDPOINT_WHOVIEWEDPROFILE_RECENTPOST_LIKES = DAGGER_API_BASE_ENDPOINT_URL
+                + "media/{media-id}/likes?";
+
         public static final String RSP_MEDIALIKED_MEDIAID = "id";
         public static final String RSP_MEDIALIKED_TYPE = "type";
         public static final String RSP_MEDIALIKED_LINK = "link";

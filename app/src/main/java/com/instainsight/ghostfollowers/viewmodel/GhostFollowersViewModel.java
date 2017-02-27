@@ -116,7 +116,10 @@ public class GhostFollowersViewModel extends BaseViewModel implements IViewModel
                                                     Log.d(TAG, "likesBean new:" + likesBean.getId());
                                                     FollowerBean followerBean = new FollowerBean();
                                                     followerBean.setId(likesBean.getId());
-                                                    followerBean.setFullName(likesBean.getFirst_name() + " " + likesBean.getLast_name());
+                                                    if (likesBean.getFirst_name() != null && likesBean.getLast_name() != null)
+                                                        followerBean.setFullName(likesBean.getFirst_name() + " " + likesBean.getLast_name());
+                                                    else if (likesBean.getFull_name() != null)
+                                                        followerBean.setFullName(likesBean.getFull_name());
                                                     followerBean.setProfilePic("");
                                                     followerBean.setUserName(likesBean.getUsername());
                                                     arylstFollowersBean.add(followerBean);

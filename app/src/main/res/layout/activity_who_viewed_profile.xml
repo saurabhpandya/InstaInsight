@@ -4,33 +4,35 @@
     <data>
 
         <variable
-            name="likeGraph"
-            type="com.instainsight.likegraph.viewmodel.LikeGraphViewModel" />
+            name="whoViewedProfile"
+            type="com.instainsight.whoviewedprofile.viewmodel.WhoViewedProfileViewModel" />
     </data>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/linechart"
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_who_viewed_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.instainsight.whoviewedprofile.WhoViewedProfileActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyclrvw_who_viewed_profile"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_250sdp"
-            android:layout_centerInParent="true"
-            android:visibility="visible" />
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
 
         <TextView
-            android:id="@+id/txtvw_no_likegraph"
+            android:id="@+id/txtvw_who_viewed_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/lbl_no_data_found"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/font_20sp"
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/prgsbr_likegraph"
+            android:id="@+id/prgsbr_who_viewed_profile"
             style="?android:progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,6 +41,4 @@
             android:visibility="gone" />
 
     </RelativeLayout>
-
-
 </layout>

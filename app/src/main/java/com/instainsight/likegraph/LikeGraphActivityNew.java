@@ -1,10 +1,12 @@
-package com.instainsight.media;
+package com.instainsight.likegraph;
 
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,12 +24,8 @@ import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityLikeGraphNewBinding;
+import com.instainsight.likegraph.viewmodel.LikeGraphViewModel;
 import com.instainsight.media.models.MediaBean;
-import com.instainsight.media.viewmodel.RecentMediaViewModelNew;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,10 +33,12 @@ import java.util.Comparator;
 
 import javax.inject.Inject;
 
+import io.reactivex.functions.Consumer;
+
 public class LikeGraphActivityNew extends ViewModelActivity {
 
     @Inject
-    public RecentMediaViewModelNew recentMediaViewModel;
+    public LikeGraphViewModel likeGraphViewModel;
     private String TAG = LikeGraphActivityNew.class.getSimpleName();
     private ActivityLikeGraphNewBinding activityLikeGraphNewBinding;
     private int[] mColors = new int[]{
@@ -52,12 +52,20 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         setTitle(R.string.lbl_likegraphs);
         initActionbar();
         activityLikeGraphNewBinding = DataBindingUtil.setContentView(this, R.layout.activity_like_graph_new);
-        activityLikeGraphNewBinding.setRecentMedia(recentMediaViewModel);
+        activityLikeGraphNewBinding.setLikeGraph(likeGraphViewModel);
         activityLikeGraphNewBinding.prgsbrLikegraph.setVisibility(View.VISIBLE);
         activityLikeGraphNewBinding.linechart.setVisibility(View.GONE);
-        recentMediaViewModel.getRecentMediaLikes();
+        getLikeGraphData();
     }
 
+    public void getLikeGraphData() {
+        likeGraphViewModel.getLikeGraphData().subscribe(new Consumer<ArrayList<MediaBean>>() {
+            @Override
+            public void accept(ArrayList<MediaBean> arylstLikeGraph) throws Exception {
+                showGraphData(arylstLikeGraph);
+            }
+        });
+    }
 
     private void initActionbar() {
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
@@ -67,7 +75,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
     @Override
     protected void createViewModel() {
-        mViewModel = recentMediaViewModel;
+        mViewModel = likeGraphViewModel;
     }
 
     @Override
@@ -83,20 +91,21 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
     @Override
     protected void onStart() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(MediaEvent recentMediaEvent) {
-        if (recentMediaEvent != null && recentMediaEvent.getAryLstMedia() != null) {
-            ArrayList<MediaBean> arylstRecentMedia = recentMediaEvent.getAryLstMedia();
+    //    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(MediaEvent recentMediaEvent) {
+    public void showGraphData(ArrayList<MediaBean> arylstLikeGraph) {
+        if (arylstLikeGraph != null && arylstLikeGraph.size() > 0) {
+            ArrayList<MediaBean> arylstRecentMedia = arylstLikeGraph;
             Log.d(TAG, "onEvent::arylstRecentMedia:" + arylstRecentMedia.size());
             init(arylstRecentMedia);
             activityLikeGraphNewBinding.txtvwNoLikegraph.setVisibility(View.GONE);
@@ -152,7 +161,6 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         xAxis.setDrawAxisLine(false);
         xAxis.setDrawLabels(false);
 
-
 //        Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
 //        LimitLine ll1 = new LimitLine(20f, "");
@@ -187,7 +195,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
         float xMax = 0f;
         if (aryLstMedia != null && aryLstMedia.size() > 0) {
-            xMax = Float.parseFloat(aryLstMedia.get(0).getLikesBean().getCount());
+            xMax = aryLstMedia.get(0).getLikesBean().getCount();
         }
         leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
@@ -195,6 +203,8 @@ public class LikeGraphActivityNew extends ViewModelActivity {
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
         leftAxis.setDrawAxisLine(true);
+        leftAxis.setTextColor(Color.WHITE);
+
         // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(true);
 
@@ -226,11 +236,12 @@ public class LikeGraphActivityNew extends ViewModelActivity {
     private void setData(ArrayList<MediaBean> aryLstLikes1) {
 
         ArrayList<MediaBean> aryLstLikes = aryLstLikes1;
-
+//        Collections.reverse(aryLstLikes);
         Collections.sort(aryLstLikes, new Comparator<MediaBean>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(MediaBean mediaBean, MediaBean t1) {
-                return mediaBean.getLikesBean().getCount().compareTo(t1.getLikesBean().getCount());
+                return Integer.compare(mediaBean.getLikesBean().getCount(), t1.getLikesBean().getCount());
             }
         });
 
@@ -239,11 +250,11 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             for (int i = 0; i < aryLstLikes.size(); i++) {
                 if (i >= 7)
                     break;
-                values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
+                values.add(new Entry(i, aryLstLikes.get(i).getLikesBean().getCount()));
             }
         } else {
             for (int i = 0; i < aryLstLikes.size(); i++) {
-                values.add(new Entry(i, Integer.parseInt(aryLstLikes.get(i).getLikesBean().getCount())));
+                values.add(new Entry(i, aryLstLikes.get(i).getLikesBean().getCount()));
             }
         }
 
@@ -279,10 +290,11 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             set1.setCircleColor(Color.WHITE);
             set1.setLineWidth(1f);
             set1.setCircleRadius(3f);
-            set1.setDrawCircles(false);
+            set1.setDrawCircles(true);
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(9f);
-            set1.setDrawValues(false);
+            set1.setDrawValues(true);
+            set1.setValueTextColor(Color.WHITE);
             set1.setDrawFilled(true);
             set1.setFormLineWidth(1f);
             set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));

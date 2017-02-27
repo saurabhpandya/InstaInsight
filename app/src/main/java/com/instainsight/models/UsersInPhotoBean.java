@@ -16,5 +16,19 @@ public class UsersInPhotoBean {
     @JsonProperty("position")
     private PositionBean positionBean;
 
+    public UserBean getUserBean() {
+        return userBean;
+    }
 
+    public void setUserBean(UserBean userBean) {
+        this.userBean = userBean;
+    }
+
+    public PositionBean getPositionBean() {
+        return positionBean;
+    }
+
+    public void setPositionBean(PositionBean positionBean) {
+        this.positionBean = positionBean;
+    }
 }

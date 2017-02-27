@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.instainsight.db.tables.LIKEDBYUSER;
 import com.instainsight.db.tables.MEDIA;
+import com.instainsight.db.tables.PROFILEVIEWER;
 import com.instainsight.db.tables.RECENTMEDIA;
 import com.instainsight.db.tables.USERS;
 import com.instainsight.db.tables.USERSELF;
@@ -15,7 +16,7 @@ import com.instainsight.db.tables.USERSELF;
 public class DBManager {
     private static final String TAG = "DBManager";
     private static final String DB_NAME = "InstaInsight";
-    private static int dbVersion = 2;
+    private static int dbVersion = 3;
 
     private static DBManager adapter;
 
@@ -68,7 +69,7 @@ public class DBManager {
         @Override
         public void onCreate(final SQLiteDatabase dbObj) {
             Log.d(TAG, "Inside onCreate");
-
+            dbObj.execSQL(PROFILEVIEWER.createTable());
             dbObj.execSQL(LIKEDBYUSER.createTable());
             dbObj.execSQL(RECENTMEDIA.createTable());
             dbObj.execSQL(USERSELF.createTable());
@@ -79,6 +80,7 @@ public class DBManager {
         @Override
         public void onUpgrade(final SQLiteDatabase dbObj, final int oldVersion, final int newVersion) {
             dbVersion = newVersion;
+            dbObj.execSQL(PROFILEVIEWER.dropTable());
             dbObj.execSQL(LIKEDBYUSER.dropTable());
             dbObj.execSQL(RECENTMEDIA.dropTable());
             dbObj.execSQL(USERSELF.dropTable());

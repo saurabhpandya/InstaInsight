@@ -247,5 +247,8 @@ public class DBQueries {
         return count;
     }
 
+    public long deleteTable(String tableName) {
+        return manager.getDB().delete(tableName, null, null);
+    }
 
 }

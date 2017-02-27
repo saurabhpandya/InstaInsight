@@ -132,7 +132,7 @@ public class ILikeMostDBQueries {
                 imagesBean.setStandardResolution(standardResolution);
                 data.setImagesBean(imagesBean);
                 LikesBean likesBean = new LikesBean();
-                likesBean.setCount(cursor.getString(cursor.getColumnIndex(LIKEDBYUSER.LIKEDBYUSER_LIKESCOUNT)));
+                likesBean.setCount(cursor.getInt(cursor.getColumnIndex(LIKEDBYUSER.LIKEDBYUSER_LIKESCOUNT)));
                 data.setLikesBean(likesBean);
                 data.setLikedUserId(cursor.getString(cursor.getColumnIndex(LIKEDBYUSER.LIKEDBYUSER_USERID)));
                 data.setCreated_time(cursor.getString(cursor.getColumnIndex(LIKEDBYUSER.LIKEDBYUSER_CREATEDTIME)));

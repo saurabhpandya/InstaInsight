@@ -13,6 +13,8 @@ import com.instainsight.instagram.Instagram;
 import com.instainsight.instagram.InstagramServices;
 import com.instainsight.instagram.InstagramSession;
 import com.instainsight.instagram.util.Cons;
+import com.instainsight.likegraph.LikeGraphService;
+import com.instainsight.likegraph.viewmodel.LikeGraphViewModel;
 import com.instainsight.login.viewmodel.LoginViewModel;
 import com.instainsight.media.RecentMediaService;
 import com.instainsight.media.viewmodel.RecentMediaViewModel;
@@ -21,6 +23,8 @@ import com.instainsight.mostpopularfollowers.MostPopularFollowersServices;
 import com.instainsight.mostpopularfollowers.viewmodel.MostPopularFollowersViewModel;
 import com.instainsight.mytoplikers.viewmodel.MyTopLikersViewModel;
 import com.instainsight.networking.RestClient;
+import com.instainsight.whoviewedprofile.WhoViewedProfileService;
+import com.instainsight.whoviewedprofile.viewmodel.WhoViewedProfileViewModel;
 
 import javax.inject.Singleton;
 
@@ -65,6 +69,20 @@ public class ApplicationModule {
         return new LoginViewModel(instagramServices, context, mInstagramSession);
     }
 
+    // LikeGraph - Starts
+    @Provides
+    @Singleton
+    LikeGraphService provideLikeGraphService(RestClient restClient) {
+        return new LikeGraphService(restClient);
+    }
+
+    @Provides
+    @Singleton
+    LikeGraphViewModel provideLikeGraphViewModel(LikeGraphService likeGraphService) {
+        return new LikeGraphViewModel(likeGraphService, context, mInstagramSession);
+    }
+    // LikeGraph - Ends
+    
     // Recent Media - Starts
     @Provides
     @Singleton
@@ -141,6 +159,18 @@ public class ApplicationModule {
     @Singleton
     GhostFollowersViewModel ghostFollowersViewModel(GhostFollowersServices ghostFollowersServices) {
         return new GhostFollowersViewModel(ghostFollowersServices, context, mInstagramSession);
+    }
+
+    @Provides
+    @Singleton
+    WhoViewedProfileService whoViewedProfileService(RestClient restClient) {
+        return new WhoViewedProfileService(restClient);
+    }
+
+    @Provides
+    @Singleton
+    WhoViewedProfileViewModel whoViewedProfileViewModel(WhoViewedProfileService whoViewedProfileService) {
+        return new WhoViewedProfileViewModel(whoViewedProfileService, context, mInstagramSession);
     }
 
 

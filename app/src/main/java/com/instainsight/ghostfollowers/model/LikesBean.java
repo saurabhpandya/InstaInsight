@@ -14,6 +14,7 @@ public class LikesBean {
     private String last_name;
     private String type;
     private String id;
+    private String full_name;
 
     public String getUsername() {
         return username;
@@ -53,5 +54,13 @@ public class LikesBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 }

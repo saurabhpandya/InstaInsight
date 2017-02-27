@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
@@ -111,7 +112,6 @@ public class GhostFollowersActivity extends ViewModelActivity {
         if (ghostFollowersEvent.getArylstLikesCommentsFollowers() != null) {
             arylstLikesCommentsFollowers.addAll(ghostFollowersEvent.getArylstLikesCommentsFollowers());
             Log.d(TAG, "arylstLikesCommentsFollowers:" + arylstLikesCommentsFollowers.size());
-
         }
 
         addUserToRecyclerView(arylstFollowers, arylstLikesCommentsFollowers);
@@ -178,17 +178,25 @@ public class GhostFollowersActivity extends ViewModelActivity {
     private void addUserToRecyclerView(ArrayList<FollowerBean> arylstFollowers, ArrayList<FollowerBean> arylstLikesCommentsFollowers) {
         ArrayList<FollowerBean> tempFollowers = new ArrayList<>();
         for (FollowerBean followerBean : arylstFollowers) {
-            if (!arylstLikesCommentsFollowers.contains(followerBean)) {
+            if (arylstLikesCommentsFollowers.size() > 0 && arylstLikesCommentsFollowers.contains(followerBean)) {
                 tempFollowers.add(followerBean);
             }
         }
 
-        for (FollowerBean followerBean : tempFollowers) {
-            Log.d(TAG, "addUserToRecyclerView:" + followerBean.getId());
+        if (tempFollowers.size() > 0) {
+//            for (FollowerBean followerBean : tempFollowers) {
+//                Log.d(TAG, "addUserToRecyclerView:" + followerBean.getId());
+//            }
+            activityGhostFollowersBinding.rcyclrvwGhostfollowers.setVisibility(View.VISIBLE);
+            activityGhostFollowersBinding.txtvwNoGhostfollowers.setVisibility(View.GONE);
+            mAdapter.addGhostFollowers(tempFollowers);
+            mAdapter.notifyDataSetChanged();
+
+        } else {
+            activityGhostFollowersBinding.rcyclrvwGhostfollowers.setVisibility(View.GONE);
+            activityGhostFollowersBinding.txtvwNoGhostfollowers.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.addGhostFollowers(tempFollowers);
-        mAdapter.notifyDataSetChanged();
     }
 
 //    private void addUserToRecyclerView(FollowerBean followerBean) {

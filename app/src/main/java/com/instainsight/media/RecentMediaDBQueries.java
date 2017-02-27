@@ -142,7 +142,7 @@ public class RecentMediaDBQueries {
                 data.setUser_has_liked(cursor.getString(cursor.getColumnIndex(RECENTMEDIA.USERHASLIKED)));
 
                 LikesBean likesBean = new LikesBean();
-                likesBean.setCount(cursor.getString(cursor.getColumnIndex(RECENTMEDIA.LIKES_COUNT)));
+                likesBean.setCount(cursor.getInt(cursor.getColumnIndex(RECENTMEDIA.LIKES_COUNT)));
                 data.setLikesBean(likesBean);
 
                 data.setMediaId(cursor.getString(cursor.getColumnIndex(RECENTMEDIA.MEDIAID)));
