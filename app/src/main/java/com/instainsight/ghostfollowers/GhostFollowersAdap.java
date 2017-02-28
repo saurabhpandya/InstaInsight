@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -22,10 +23,13 @@ import java.util.ArrayList;
 public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.MyViewHolder> {
     private ArrayList<FollowerBean> ghostFollowersList;
     private Context mContext;
+    private RelationshipStatusChangeListner relationshipStatusChangeListner;
 
-    public GhostFollowersAdap(Context context, ArrayList<FollowerBean> ghostFollowersList) {
+    public GhostFollowersAdap(Context context, ArrayList<FollowerBean> ghostFollowersList,
+                              RelationshipStatusChangeListner relationshipStatusChangeListner) {
         mContext = context;
         this.ghostFollowersList = ghostFollowersList;
+        this.relationshipStatusChangeListner = relationshipStatusChangeListner;
     }
 
     public void addGhostFollowers(ArrayList<FollowerBean> arylstGhostFollower) {
@@ -51,12 +55,23 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
     }
 
     @Override
-    public void onBindViewHolder(GhostFollowersAdap.MyViewHolder holder, int position) {
+    public void onBindViewHolder(GhostFollowersAdap.MyViewHolder holder, final int position) {
         FollowerBean ghostFollower = (FollowerBean) ghostFollowersList.get(position);
 
         holder.txtvw_followersing_name.setText(ghostFollower.getFullName());
         loadImage(ghostFollower.getProfilePic(), holder.imgvw_followersing);
+        holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                relationshipStatusChangeListner.onClickToChangeRelationStatus(position);
+            }
+        });
+    }
 
+    public void removeItem(int position) {
+        ghostFollowersList.remove(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,12 +82,14 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public CircularImageView imgvw_followersing;
         public TextView txtvw_followersing_name;
+        public TextView txtvw_followersing;
 
         public MyViewHolder(View view) {
             super(view);
 //            if (objType.equalsIgnoreCase("Follower")){
             txtvw_followersing_name = (TextView) view.findViewById(R.id.txtvw_followersing_name);
             imgvw_followersing = (CircularImageView) view.findViewById(R.id.imgvw_followersing);
+            txtvw_followersing = (TextView) view.findViewById(R.id.txtvw_followersing);
 //            }else if (objType.equalsIgnoreCase("Following")){}
 
         }

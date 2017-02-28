@@ -103,6 +103,11 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
                             iLikedMostEvent.setArylstILikedMost(iLikedMostBeen);
                             EventBus.getDefault().post(iLikedMostEvent);
                         }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            throwable.printStackTrace();
+                        }
                     });
         } catch (Exception e) {
             e.printStackTrace();

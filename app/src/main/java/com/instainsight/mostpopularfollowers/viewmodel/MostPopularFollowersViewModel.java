@@ -102,12 +102,18 @@ public class MostPopularFollowersViewModel extends BaseViewModel implements IVie
 
                                 return Observable.just(new ObjectResponseBean<OtherUsersBean>());
                             }
-                        }).subscribe(new Consumer<ObjectResponseBean<OtherUsersBean>>() {
-                    @Override
-                    public void accept(ObjectResponseBean<OtherUsersBean> otherUsersBeanListResponseBean) throws Exception {
+                        })
+                        .subscribe(new Consumer<ObjectResponseBean<OtherUsersBean>>() {
+                            @Override
+                            public void accept(ObjectResponseBean<OtherUsersBean> otherUsersBeanListResponseBean) throws Exception {
 
-                    }
-                });
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                            }
+                        });
             } else {
 
             }

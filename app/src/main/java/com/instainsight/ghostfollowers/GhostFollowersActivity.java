@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.instainsight.IRelationshipStatus;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityGhostFollowersBinding;
@@ -18,6 +20,9 @@ import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.ghostfollowers.model.CommentsBean;
 import com.instainsight.ghostfollowers.model.LikesBean;
 import com.instainsight.ghostfollowers.viewmodel.GhostFollowersViewModel;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
+import com.instainsight.networking.RestClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,7 +32,14 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class GhostFollowersActivity extends ViewModelActivity {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_ENDPOINT_URL;
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
+
+public class GhostFollowersActivity extends ViewModelActivity implements RelationshipStatusChangeListner {
 
     @Inject
     GhostFollowersViewModel ghostFollowersViewModel;
@@ -92,7 +104,7 @@ public class GhostFollowersActivity extends ViewModelActivity {
 
     private void initRecyclerView() {
         ArrayList<FollowerBean> arylstFollowers = new ArrayList<FollowerBean>();
-        mAdapter = new GhostFollowersAdap(GhostFollowersActivity.this, arylstFollowers);
+        mAdapter = new GhostFollowersAdap(GhostFollowersActivity.this, arylstFollowers, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         activityGhostFollowersBinding.rcyclrvwGhostfollowers.setLayoutManager(mLayoutManager);
         activityGhostFollowersBinding.rcyclrvwGhostfollowers.setItemAnimator(new DefaultItemAnimator());
@@ -197,6 +209,26 @@ public class GhostFollowersActivity extends ViewModelActivity {
             activityGhostFollowersBinding.txtvwNoGhostfollowers.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Override
+    public void onClickToChangeRelationStatus(final int position) {
+        RestClient restClient = new RestClient(DAGGER_API_BASE_URL + DAGGER_API_BASE_ENDPOINT_URL);
+        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
+
+        iRelationshipStatus.changeRelationshipStatus("unfollow", mInstagramSession.getAccessToken())
+                .observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                    @Override
+                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
+                        mAdapter.removeItem(position);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
 //    private void addUserToRecyclerView(FollowerBean followerBean) {

@@ -92,10 +92,14 @@ public class Constants {
                 + "users/self/media/recent/?";
         // Recent post Comments
         public static final String ENDPOINT_WHOVIEWEDPROFILE_RECENTPOST_COMMENTS = DAGGER_API_BASE_ENDPOINT_URL
-                + "media/{media-id}/comments?";
+                + "media/{media-id}/comments/?";
         // Recent post Likes
         public static final String ENDPOINT_WHOVIEWEDPROFILE_RECENTPOST_LIKES = DAGGER_API_BASE_ENDPOINT_URL
-                + "media/{media-id}/likes?";
+                + "media/{media-id}/likes/?";
+
+        // Relationship
+        public static final String ENDPOINT_RELATIONSHIP = DAGGER_API_BASE_ENDPOINT_URL
+                + "users/{user-id}/relationship/?";
 
         public static final String RSP_MEDIALIKED_MEDIAID = "id";
         public static final String RSP_MEDIALIKED_TYPE = "type";

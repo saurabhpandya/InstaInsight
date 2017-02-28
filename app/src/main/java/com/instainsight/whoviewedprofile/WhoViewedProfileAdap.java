@@ -31,9 +31,8 @@ public class WhoViewedProfileAdap extends RecyclerView.Adapter<WhoViewedProfileA
     public void addWhoViewedProfile(ArrayList<WhoViewedProfileBean> whoViewedProfileList) {
         this.whoViewedProfileList = new ArrayList<>();
         this.whoViewedProfileList = whoViewedProfileList;
-        this.whoViewedProfileList.addAll(this.whoViewedProfileList);
+//        this.whoViewedProfileList.addAll(this.whoViewedProfileList);
     }
-
 
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
         Glide.with(mContext).load(strUrl).placeholder(R.drawable.defaultlist)

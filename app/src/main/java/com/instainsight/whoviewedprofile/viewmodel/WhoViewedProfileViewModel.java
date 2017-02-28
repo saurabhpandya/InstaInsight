@@ -277,6 +277,13 @@ public class WhoViewedProfileViewModel extends BaseViewModel implements IViewMod
                             return;
                         }
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        WhoViewedProfileEvent whoViewedProfileEvent = new WhoViewedProfileEvent();
+                        EventBus.getDefault().post(whoViewedProfileEvent);
+                    }
                 });
 //                .flatMap(new Function<ArrayList<MediaBean>, Observable<ListResponseBean<MediaBean>>>() {
 //                    @Override

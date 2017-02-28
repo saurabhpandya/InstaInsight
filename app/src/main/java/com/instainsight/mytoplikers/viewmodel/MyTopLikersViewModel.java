@@ -115,13 +115,19 @@ public class MyTopLikersViewModel extends BaseViewModel implements IViewModel {
 //                                return recentMediaService.getRecentMediaTopLikers(mediaBeanListResponseBean.getData().get(0).getMediaId(), mInstagramSession.getAccessToken());
 //                                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
                             }
-                        }).subscribe(new Consumer<ListResponseBean<UserBean>>() {
-                    @Override
-                    public void accept(ListResponseBean<UserBean> userBeanListResponseBean) throws Exception {
-                        if (userBeanListResponseBean != null && userBeanListResponseBean.getData() != null)
-                            Log.d(TAG, "accept:userBeanListResponseBean::" + userBeanListResponseBean.getData().size());
-                    }
-                });
+                        })
+                        .subscribe(new Consumer<ListResponseBean<UserBean>>() {
+                            @Override
+                            public void accept(ListResponseBean<UserBean> userBeanListResponseBean) throws Exception {
+                                if (userBeanListResponseBean != null && userBeanListResponseBean.getData() != null)
+                                    Log.d(TAG, "accept:userBeanListResponseBean::" + userBeanListResponseBean.getData().size());
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                            }
+                        });
 
             } else {
                 MyTopLikersEvent myTopLikersEvent = new MyTopLikersEvent();

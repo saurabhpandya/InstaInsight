@@ -11,7 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.instainsight.BaseActivity;
+import com.instainsight.IRelationshipStatus;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
@@ -20,6 +22,9 @@ import com.instainsight.followersing.followers.dao.FollowersDao;
 import com.instainsight.followersing.following.dao.FollowingDao;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.login.LoginActivity;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
+import com.instainsight.networking.RestClient;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
@@ -27,7 +32,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NotFollowingMeBackActivity extends BaseActivity {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_ENDPOINT_URL;
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
+
+public class NotFollowingMeBackActivity extends BaseActivity implements RelationshipStatusChangeListner {
 
     private String TAG = NotFollowingMeBackActivity.class.getSimpleName();
     private RecyclerView rcyclrvw_notfollowingmeback;
@@ -61,7 +73,7 @@ public class NotFollowingMeBackActivity extends BaseActivity {
 
     private void initRecyclerView() {
         arylstNotFollowingMeBack = new ArrayList<Object>();
-        mAdapter = new FollowersingAdap(NotFollowingMeBackActivity.this, arylstNotFollowingMeBack, "NotFollowingMeBack");
+        mAdapter = new FollowersingAdap(NotFollowingMeBackActivity.this, arylstNotFollowingMeBack, "NotFollowingMeBack", this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         rcyclrvw_notfollowingmeback.setLayoutManager(mLayoutManager);
         rcyclrvw_notfollowingmeback.setItemAnimator(new DefaultItemAnimator());
@@ -274,5 +286,26 @@ public class NotFollowingMeBackActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onClickToChangeRelationStatus(final int position) {
+        RestClient restClient = new RestClient(DAGGER_API_BASE_URL + DAGGER_API_BASE_ENDPOINT_URL);
+        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
+
+        iRelationshipStatus.changeRelationshipStatus("unfollow", mInstagramSession.getAccessToken())
+                .observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                    @Override
+                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
+                        arylstNotFollowingMeBack.remove(position);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }

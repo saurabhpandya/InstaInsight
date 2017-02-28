@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.following.bean.FollowingBean;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -26,11 +27,14 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
     private List<Object> followersingList;
     private Context mContext;
     private String objType;
+    private RelationshipStatusChangeListner relationshipStatusChangeListner;
 
-    public FollowersingAdap(Context context, List<Object> followersingList, String objType) {
+    public FollowersingAdap(Context context, List<Object> followersingList, String objType,
+                            RelationshipStatusChangeListner relationshipStatusChangeListner) {
         mContext = context;
         this.followersingList = followersingList;
         this.objType = objType;
+        this.relationshipStatusChangeListner = relationshipStatusChangeListner;
     }
 
     public void addFollowersing(ArrayList<Object> followersingList) {
@@ -51,7 +55,7 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         if (objType.equalsIgnoreCase("Follower")) {
             FollowerBean followerBean = (FollowerBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followerBean.getFullName());
@@ -66,6 +70,19 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
             holder.txtvw_followersing_name.setText(followingBean.getFullName());
             loadImage(followingBean.getProfilePic(), holder.imgvw_followersing);
         }
+
+        holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                relationshipStatusChangeListner.onClickToChangeRelationStatus(position);
+            }
+        });
+
+    }
+
+    private void changeRelationshipStatus() {
+
     }
 
     @Override
@@ -76,11 +93,13 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public CircularImageView imgvw_followersing;
         public TextView txtvw_followersing_name;
+        public TextView txtvw_followersing;
 
         public MyViewHolder(View view) {
             super(view);
 //            if (objType.equalsIgnoreCase("Follower")){
             txtvw_followersing_name = (TextView) view.findViewById(R.id.txtvw_followersing_name);
+            txtvw_followersing = (TextView) view.findViewById(R.id.txtvw_followersing);
             imgvw_followersing = (CircularImageView) view.findViewById(R.id.imgvw_followersing);
 //            }else if (objType.equalsIgnoreCase("Following")){}
 
