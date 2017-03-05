@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -22,14 +23,22 @@ import java.util.ArrayList;
 public class ILikedMostAdap extends RecyclerView.Adapter<ILikedMostAdap.MyViewHolder> {
     private ArrayList<ILikedMostBean> iLikedMostList;
     private Context mContext;
+    private RelationshipStatusChangeListner relationshipStatusChangeListner;
 
-    public ILikedMostAdap(Context context, ArrayList<ILikedMostBean> iLikedMostList) {
+    public ILikedMostAdap(Context context, ArrayList<ILikedMostBean> iLikedMostList,
+                          RelationshipStatusChangeListner relationshipStatusChangeListner) {
         mContext = context;
         this.iLikedMostList = iLikedMostList;
+        this.relationshipStatusChangeListner = relationshipStatusChangeListner;
     }
 
     public void addFollowersing(ArrayList<ILikedMostBean> iLikedMostList) {
         this.iLikedMostList.addAll(iLikedMostList);
+    }
+
+    public void removeILikedMost(int position) {
+        this.iLikedMostList.remove(position);
+        notifyDataSetChanged();
     }
 
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
@@ -46,12 +55,18 @@ public class ILikedMostAdap extends RecyclerView.Adapter<ILikedMostAdap.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(ILikedMostAdap.MyViewHolder holder, int position) {
+    public void onBindViewHolder(ILikedMostAdap.MyViewHolder holder, final int position) {
 
-        ILikedMostBean iLikedMostBean = (ILikedMostBean) iLikedMostList.get(position);
+        final ILikedMostBean iLikedMostBean = (ILikedMostBean) iLikedMostList.get(position);
         holder.txtvw_followersing_name.setText(iLikedMostBean.getUsersBean().getFull_name());
         loadImage(iLikedMostBean.getUsersBean().getProfile_picture(), holder.imgvw_followersing);
-
+        holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                relationshipStatusChangeListner.onClickToChangeRelationStatus(position,
+                        iLikedMostBean.getUsersBean().getId());
+            }
+        });
     }
 
     @Override
@@ -61,12 +76,13 @@ public class ILikedMostAdap extends RecyclerView.Adapter<ILikedMostAdap.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public CircularImageView imgvw_followersing;
-        public TextView txtvw_followersing_name;
+        public TextView txtvw_followersing_name, txtvw_followersing;
 
         public MyViewHolder(View view) {
             super(view);
 //            if (objType.equalsIgnoreCase("Follower")){
             txtvw_followersing_name = (TextView) view.findViewById(R.id.txtvw_followersing_name);
+            txtvw_followersing = (TextView) view.findViewById(R.id.txtvw_followersing);
             imgvw_followersing = (CircularImageView) view.findViewById(R.id.imgvw_followersing);
 //            }else if (objType.equalsIgnoreCase("Following")){}
 

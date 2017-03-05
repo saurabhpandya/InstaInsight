@@ -34,6 +34,11 @@ public class WhoViewedProfileAdap extends RecyclerView.Adapter<WhoViewedProfileA
 //        this.whoViewedProfileList.addAll(this.whoViewedProfileList);
     }
 
+    public void removeWhoViewedProfile(int position) {
+        this.whoViewedProfileList.remove(position);
+        notifyDataSetChanged();
+    }
+
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
         Glide.with(mContext).load(strUrl).placeholder(R.drawable.defaultlist)
                 .dontAnimate().into(imgvw_prflpc);

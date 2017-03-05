@@ -6,21 +6,21 @@
     <string name="lbl_connectwithinstagram">Log in with Instagram</string>
 
     <string name="menu_freeuser">Free User</string>
-    <string name="menu_paiduser">Paid User</string>
+    <string name="menu_paiduser">Pro User</string>
 
     <string name="lbl_follower">Follower</string>
     <string name="lbl_following">Following</string>
 
     <string name="lbl_newfollowers">New Followers</string>
     <string name="lbl_newfollowing">New Following</string>
-    <string name="lbl_blockedbyfollowing">Not Following Back</string>
+    <string name="lbl_blockedbyfollowing">Unfollowers</string>
     <string name="lbl_blockedfollowers">I am not Following Back</string>
-    <string name="lbl_likegraphs">Like Graphs</string>
+    <string name="lbl_likegraphs">Like Trend</string>
 
-    <string name="lbl_prfl_vwrs">Profile Viewer</string>
+    <string name="lbl_prfl_vwrs">Profile Stalkers</string>
     <string name="lbl_my_top_likers">My Top Likers</string>
-    <string name="lbl_who_i_like_most">Who i Like Most</string>
-    <string name="lbl_popular_followers">Popular Followers</string>
+    <string name="lbl_who_i_like_most">Who I Like Most</string>
+    <string name="lbl_popular_followers">Most Popular Followers</string>
     <string name="lbl_ghost_followers">Ghost Followers</string>
 
     <string name="font_roboto_regular">Roboto-Regular.ttf</string>
@@ -31,4 +31,17 @@
     <string name="lbl_no_following">No New Following</string>
     <string name="lbl_no_notfollowingback">Not found any who doesn\'t following back</string>
     <string name="lbl_no_notfollowingmeback">Not found any to whom you are not following back</string>
+
+    <string name="subscription_period_prompt">Select your subscription period</string>
+    <string name="subscription_resignup_prompt">To reactivate your subscription, select your subscription period</string>
+    <string name="subscription_update_prompt">To change your subscription, select your new subscription period</string>
+    <string name="subscription_period_monthly">Monthly</string>
+    <string name="subscription_period_yearly">Yearly</string>
+    <string name="subscription_prompt_continue">Continue</string>
+    <string name="subscription_prompt_cancel">Cancel</string>
+    <string name="content_description_app_loading_image">App loading image</string>
+    <string name="content_description_title_image">80\'s Video Game Style Car Logo</string>
+    <string name="content_desc_gas_gauge_indicator">Gas gauge indicator</string>
+    <string name="content_desc_free_vs_premium_indicator">Free or Premium Image Indicator</string>
+
 </resources>

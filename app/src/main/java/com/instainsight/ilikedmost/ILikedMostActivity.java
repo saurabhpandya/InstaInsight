@@ -9,13 +9,18 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.instainsight.IRelationshipStatus;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityIlikedMostBinding;
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.instainsight.ilikedmost.viewmodel.ILikedMostViewModel;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
+import com.instainsight.networking.RestClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,7 +30,13 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class ILikedMostActivity extends ViewModelActivity {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
+
+public class ILikedMostActivity extends ViewModelActivity implements RelationshipStatusChangeListner {
 
     @Inject
     ILikedMostViewModel iLikedMostViewModel;
@@ -54,7 +65,7 @@ public class ILikedMostActivity extends ViewModelActivity {
 
     private void initRecyclerView() {
         ArrayList<ILikedMostBean> arylstILikedMost = new ArrayList<ILikedMostBean>();
-        mAdapter = new ILikedMostAdap(ILikedMostActivity.this, arylstILikedMost);
+        mAdapter = new ILikedMostAdap(ILikedMostActivity.this, arylstILikedMost, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         activityIlikedMostBinding.rcyclrvwIlikedmost.setLayoutManager(mLayoutManager);
         activityIlikedMostBinding.rcyclrvwIlikedmost.setItemAnimator(new DefaultItemAnimator());
@@ -106,5 +117,25 @@ public class ILikedMostActivity extends ViewModelActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onClickToChangeRelationStatus(final int position, String userId) {
+        RestClient restClient = new RestClient(DAGGER_API_BASE_URL);
+        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
+
+        iRelationshipStatus.changeRelationshipStatus("unfollow", userId, mInstagramSession.getAccessToken())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                    @Override
+                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
+                        mAdapter.removeILikedMost(position);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }

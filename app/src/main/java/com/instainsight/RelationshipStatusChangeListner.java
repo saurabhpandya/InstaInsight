@@ -5,5 +5,5 @@ package com.instainsight;
  */
 
 public interface RelationshipStatusChangeListner {
-    public void onClickToChangeRelationStatus(int position);
+    public void onClickToChangeRelationStatus(int position, String userId);
 }

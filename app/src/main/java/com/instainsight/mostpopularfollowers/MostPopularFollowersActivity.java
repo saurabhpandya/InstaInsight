@@ -8,13 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.instainsight.IRelationshipStatus;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
+import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityMostPopularFollowersBinding;
 import com.instainsight.followersing.models.OtherUsersBean;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.mostpopularfollowers.viewmodel.MostPopularFollowersViewModel;
+import com.instainsight.networking.RestClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,7 +29,13 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class MostPopularFollowersActivity extends ViewModelActivity {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
+
+public class MostPopularFollowersActivity extends ViewModelActivity implements RelationshipStatusChangeListner {
 
     @Inject
     MostPopularFollowersViewModel mostPopularFollowersViewModel;
@@ -49,7 +60,7 @@ public class MostPopularFollowersActivity extends ViewModelActivity {
 
     private void initRecyclerView() {
         ArrayList<OtherUsersBean> arylstMostPopularFollowers = new ArrayList<OtherUsersBean>();
-        mAdapter = new MostPopularFollowersAdap(MostPopularFollowersActivity.this, arylstMostPopularFollowers);
+        mAdapter = new MostPopularFollowersAdap(MostPopularFollowersActivity.this, arylstMostPopularFollowers, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         activityMostPopularFollowersBinding.rcyclrvwMostPopularFollowers.setLayoutManager(mLayoutManager);
         activityMostPopularFollowersBinding.rcyclrvwMostPopularFollowers.setItemAnimator(new DefaultItemAnimator());
@@ -113,5 +124,25 @@ public class MostPopularFollowersActivity extends ViewModelActivity {
             activityMostPopularFollowersBinding.prgsbrMostPopularFollowers.setVisibility(View.GONE);
             activityMostPopularFollowersBinding.txtvwNoMostPopularFollowers.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onClickToChangeRelationStatus(final int position, String userId) {
+        RestClient restClient = new RestClient(DAGGER_API_BASE_URL);
+        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
+
+        iRelationshipStatus.changeRelationshipStatus("unfollow", userId, mInstagramSession.getAccessToken())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                    @Override
+                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
+                        mAdapter.removeMostPopularFollower(position);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }

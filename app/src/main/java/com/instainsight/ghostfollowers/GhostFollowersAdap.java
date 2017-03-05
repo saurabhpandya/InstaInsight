@@ -64,7 +64,7 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
             @Override
             public void onClick(View view) {
 //                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
-                relationshipStatusChangeListner.onClickToChangeRelationStatus(position);
+                relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ghostFollowersList.get(position).getId());
             }
         });
     }

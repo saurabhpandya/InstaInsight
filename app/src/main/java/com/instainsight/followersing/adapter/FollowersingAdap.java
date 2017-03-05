@@ -41,6 +41,10 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
         this.followersingList.addAll(followersingList);
     }
 
+    public void removeFollowersing(int position) {
+        this.followersingList.remove(position);
+    }
+
     private void loadImage(String strUrl, ImageView imgvw_prflpc) {
         Glide.with(mContext).load(strUrl).placeholder(R.drawable.defaultlist)
                 .dontAnimate().into(imgvw_prflpc);
@@ -56,28 +60,45 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
+
+
         if (objType.equalsIgnoreCase("Follower")) {
             FollowerBean followerBean = (FollowerBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followerBean.getFullName());
             loadImage(followerBean.getProfilePic(), holder.imgvw_followersing);
 
+            holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                    relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ((FollowerBean) followersingList.get(position)).getId());
+                }
+            });
+
         } else if (objType.equalsIgnoreCase("Following")) {
             FollowingBean followingBean = (FollowingBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followingBean.getFullName());
             loadImage(followingBean.getProfilePic(), holder.imgvw_followersing);
+            holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                    relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ((FollowingBean) followersingList.get(position)).getId());
+                }
+            });
         } else if (objType.equalsIgnoreCase("NotFollowingBack")) {
             FollowingBean followingBean = (FollowingBean) followersingList.get(position);
             holder.txtvw_followersing_name.setText(followingBean.getFullName());
             loadImage(followingBean.getProfilePic(), holder.imgvw_followersing);
+            holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                    relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ((FollowingBean) followersingList.get(position)).getId());
+                }
+            });
         }
 
-        holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
-                relationshipStatusChangeListner.onClickToChangeRelationStatus(position);
-            }
-        });
 
     }
 

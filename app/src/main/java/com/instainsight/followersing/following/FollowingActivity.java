@@ -35,7 +35,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_ENDPOINT_URL;
 import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
 
 public class FollowingActivity extends BaseActivity implements RelationshipStatusChangeListner {
@@ -195,16 +194,17 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
     }
 
     @Override
-    public void onClickToChangeRelationStatus(final int position) {
-        RestClient restClient = new RestClient(DAGGER_API_BASE_URL + DAGGER_API_BASE_ENDPOINT_URL);
+    public void onClickToChangeRelationStatus(final int position, String userId) {
+        RestClient restClient = new RestClient(DAGGER_API_BASE_URL);
         IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
 
-        iRelationshipStatus.changeRelationshipStatus("unfollow", mInstagramSession.getAccessToken())
-                .observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        iRelationshipStatus.changeRelationshipStatus("unfollow", userId, mInstagramSession.getAccessToken())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
                     @Override
                     public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
                         arylstFollowing.remove(position);
+                        mAdapter.removeFollowersing(position);
                         mAdapter.notifyDataSetChanged();
                     }
                 }, new Consumer<Throwable>() {
