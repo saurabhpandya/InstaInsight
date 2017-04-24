@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.instainsight.db.tables.LIKEDBYUSER;
 import com.instainsight.db.tables.RECENTMEDIA;
+import com.instainsight.db.tables.USERS;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -191,6 +192,42 @@ public class DBQueries {
                 retVal = manager.getDB().insert(tableName, null, initialValues);
                 Log.d(TAG, "insertUpdateValues:inserted rows:" + retVal);
             }
+            //Toast.makeText(context, "retVal: "+retVal, Toast.LENGTH_SHORT).show();
+        }
+        manager.getDB().setTransactionSuccessful();
+        manager.getDB().endTransaction();
+        readWriteLock.writeLock().unlock();
+        return retVal;
+    }
+
+    public synchronized long updateFollowedBy(String tableName, ArrayList<Map<String, Object>> columnDetails) {
+        long retVal = 0;
+        ContentValues initialValues;
+        readWriteLock.writeLock().lock();
+        manager.getDB().beginTransaction();
+        for (int i = 0; i < columnDetails.size(); i++) {
+            initialValues = new ContentValues();
+            for (Map.Entry<String, Object> entry : columnDetails.get(i).entrySet()) {
+                if (entry.getValue() instanceof String)
+                    initialValues.put(entry.getKey(), (String) entry.getValue());
+                else if (entry.getValue() instanceof Integer)
+                    initialValues.put(entry.getKey(), (int) entry.getValue());
+                else if (entry.getValue() instanceof Long)
+                    initialValues.put(entry.getKey(), (long) entry.getValue());
+                else if (entry.getValue() instanceof Byte)
+                    initialValues.put(entry.getKey(), (byte) entry.getValue());
+                else if (entry.getValue() instanceof Short)
+                    initialValues.put(entry.getKey(), (short) entry.getValue());
+                else if (entry.getValue() instanceof Float)
+                    initialValues.put(entry.getKey(), (float) entry.getValue());
+                else if (entry.getValue() instanceof Double)
+                    initialValues.put(entry.getKey(), (double) entry.getValue());
+                else if (entry.getValue() instanceof Boolean)
+                    initialValues.put(entry.getKey(), (boolean) entry.getValue());
+            }
+            retVal = manager.getDB().update(tableName, initialValues
+                    , USERS.ID + " = ?"
+                    , new String[]{initialValues.get(USERS.ID).toString()});
             //Toast.makeText(context, "retVal: "+retVal, Toast.LENGTH_SHORT).show();
         }
         manager.getDB().setTransactionSuccessful();

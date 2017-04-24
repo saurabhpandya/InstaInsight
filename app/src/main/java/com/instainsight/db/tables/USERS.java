@@ -18,8 +18,11 @@ public class USERS {
     public static String MEDIA_COUNT = "media_count";
     public static String FOLLOWS_COUNT = "media_follows";
     public static String FOLLOWED_BY_COUNT = "media_followed_by";
-    public static String FOLLOWS = "follows";
-    public static String FOLLOWED_BY = "followed_by";
+    public static String FOLLOWS = "follows";   // if our user follows this user then 1 else 0
+    public static String FOLLOWED_BY = "followed_by"; // if this user follows our user then 1 else 0
+    public static String ISNEW_FOLLOWS = "isnew_follows";   // if this user is loaded for first time then 1 else 0 for follows
+    public static String ISNEW_FOLLOWED_BY = "isnew_followed_by";   // if this user is loaded for first time then 1 else 0 for followed by
+    public static String CREATEDTIME = "created_time";
 
     private static final String USERS_TBL_CREATE = (new StringBuffer())
             .append("CREATE TABLE ").append(TABLE_NAME).append(" ( ")
@@ -32,8 +35,11 @@ public class USERS {
             .append(MEDIA_COUNT).append(" TEXT, ")
             .append(FOLLOWS_COUNT).append(" TEXT, ")
             .append(FOLLOWED_BY_COUNT).append(" TEXT, ")
-            .append(FOLLOWS).append(" TEXT, ")
-            .append(FOLLOWED_BY).append(" TEXT")
+            .append(FOLLOWS).append(" TEXT DEFAULT \"0\", ")
+            .append(FOLLOWED_BY).append(" TEXT DEFAULT \"0\", ")
+            .append(ISNEW_FOLLOWS).append(" TEXT, ")
+            .append(ISNEW_FOLLOWED_BY).append(" TEXT, ")
+            .append(CREATEDTIME).append(" TEXT")
             .append(");").toString();
     private static String TAG = USERSELF.class.getSimpleName();
 

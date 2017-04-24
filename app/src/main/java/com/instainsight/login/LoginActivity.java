@@ -13,7 +13,7 @@ import com.instainsight.databinding.ActivityLoginBinding;
 import com.instainsight.instagram.Instagram;
 import com.instainsight.instagram.InstagramUser;
 import com.instainsight.login.viewmodel.LoginViewModel;
-import com.instainsight.profile.LandingActivity;
+import com.instainsight.profile.LandingActivityNew;
 
 import javax.inject.Inject;
 
@@ -25,7 +25,7 @@ public class LoginActivity extends ViewModelActivity {
     private Instagram.InstagramAuthListener mAuthListener = new Instagram.InstagramAuthListener() {
         @Override
         public void onSuccess(InstagramUser user) {
-            startActivity(new Intent(LoginActivity.this, LandingActivity.class));
+            startActivity(new Intent(LoginActivity.this, LandingActivityNew.class));
             finish();
         }
 

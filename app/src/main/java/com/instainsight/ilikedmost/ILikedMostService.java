@@ -2,6 +2,8 @@ package com.instainsight.ilikedmost;
 
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.instainsight.models.ListResponseBean;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.networking.MyCallBack;
 import com.instainsight.networking.RestClient;
 
@@ -9,8 +11,15 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
+
+import static com.instainsight.constants.Constants.WebFields.ENDPOINT_RELATIONSHIP;
 
 /**
  * Created by SONY on 11-02-2017.
@@ -64,10 +73,32 @@ public class ILikedMostService {
 //                iLikeMostCallBack.onError("Android Application Error", t.getMessage());
 //            }
 //        });
+
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> getRelationShipStatus(String userId, String accessToken) {
+        return iiLikedMostService.getRelationShipStatus(userId, accessToken)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> setRelationShipStatus(String action, String userId, String accessToken) {
+        return iiLikedMostService.setRelationshipStatus(action, userId, accessToken)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public interface IILikedMostService {
         @GET
         Observable<ListResponseBean<ILikedMostBean>> getILikedMostMedia(@Url String ENDPOINT_MEDIALIKED);
+
+        @GET(ENDPOINT_RELATIONSHIP)
+        Observable<ObjectResponseBean<RelationShipStatus>> getRelationShipStatus(@Path("user-id") String userId,
+                                                                                 @Query("access_token") String accessToken);
+
+        @POST(ENDPOINT_RELATIONSHIP)
+        @FormUrlEncoded
+        Observable<ObjectResponseBean<RelationShipStatus>> setRelationshipStatus(
+                @Field("action") String action,
+                @Path("user-id") String userId,
+                @Field("access_token") String access_token);
     }
 }

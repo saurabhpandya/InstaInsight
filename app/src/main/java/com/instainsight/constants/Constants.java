@@ -9,17 +9,67 @@ import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_ENDPOINT_URL;
 public class Constants {
 
     public static final int SPLASH_TIME = 2000;
+    public static final int ADS_DELAY = 10 * 1000;
 
     public static final String CLIENT_ID = "a1521f53d33b4dca82947358c75940da";
     public static final String CLIENT_SECRET = "8282f6ef07fb4f2cb47caf135053a11c";
     public static final String REDIRECT_URI = "http://yourcallback.com/";
+    public static final String SKU_REMOVE_ADS_MONTHLY = "remove_ads_1_month_subscription";
+    // (arbitrary) request code for th  e purchase flow
+    public static final int RC_REQUEST = 10001;
+    public static final String INAPP_BASE64KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjMBYres8lMU0" +
+            "mHP6MvSpTp7cIr06c1yy+l2bjF0f48ZjntNkaLYSdaU1U8sri3eDL3pRi6Jz+4uQltw0p8Mu/v/NZ3ZpEU" +
+            "8HZdqDf0V0qazmkNP8qHfrmP8kAcjjh5kE44Un1MfG3tLaSGQx6fLMETRvOLBkdj/n9TK397nDvx/2lqhi" +
+            "Rd2i0An1mEkwvuEtIJ3jHjwyQVMrktd/8hOimLCPDJNLz15r+Lt4SMzntshLUafhNLQeMaVnAbMTwqxiZ" +
+            "Er+eFribwU9FZ8oFArZhnpr37s6wyX3/uHfDM1P6aDNMeHmNNWGvbYcIksFCmVaD8SjBCy7RXCLrOIbjbwK/QIDAQAB";
+    //PROFILE VIEWER
+    public static final int INAPP_PROFILE_VIEWER = 1;
+    public static final String INAPP_PROFILE_VIEWER_MONTHLY = "profile_viewer_1_month";
+    public static final String INAPP_PROFILE_VIEWER_HALLFYEARLY = "profile_viewer_6_months";
+    public static final String INAPP_PROFILE_VIEWER_YEARLY = "profile_viewer_12_months";
+    //MY TOP LIKERS
+    public static final int INAPP_MY_TOP_LIKERS = 2;
+    public static final String INAPP_MY_TOP_LIKERS_MONTHLY = "my_top_likers_1_month";
+    public static final String INAPP_MY_TOP_LIKERS_HALLFYEARLY = "my_top_likers_6_months";
+    public static final String INAPP_MY_TOP_LIKERS_YEARLY = "my_top_likers_12_months";
+    //WHO I LIKED MOST
+    public static final int INAPP_WHO_I_LIKED_MOST = 3;
+    public static final String INAPP_WHO_I_LIKED_MOST_MONTHLY = "who_i_liked_most_1_month";
+    public static final String INAPP_WHO_I_LIKED_MOST_HALLFYEARLY = "who_i_liked_most_6_months";
+    public static final String INAPP_WHO_I_LIKED_MOST_YEARLY = "who_i_liked_most_12_months";
+    //MOST POPULAR FOLLOWERS
+    public static final int INAPP_MOST_POPULAR_FOLLOWERS = 4;
+    public static final String INAPP_MOST_POPULAR_FOLLOWERS_MONTHLY = "most_popular_followers_1_month";
+    public static final String INAPP_MOST_POPULAR_FOLLOWERS_HALLFYEARLY = "most_popular_followers_6_months";
+    public static final String INAPP_MOST_POPULAR_FOLLOWERS_YEARLY = "most_popular_followers_12_months";
+    //GHOST FOLLOWERS
+    public static final int INAPP_GHOST_FOLLOWERS = 5;
+    public static final String INAPP_GHOST_FOLLOWERS_MONTHLY = "ghost_followers_1_month";
+    public static final String INAPP_GHOST_FOLLOWERS_HALLFYEARLY = "ghost_followers_6_months";
+    public static final String INAPP_GHOST_FOLLOWERS_YEARLY = "ghost_followers_12_months";
+    //REMOVE ADS
+    public static final int INAPP_REMOVE_ADS = 6;
+    public static final String INAPP_REMOVE_ADS_MONTHLY = "remove_the_ad_1_month";
+    public static final String INAPP_REMOVE_ADS_HALLFYEARLY = "remove_the_ad_6_month";
+    public static final String INAPP_REMOVE_ADS_YEARLY = "remove_the_ad_12_months";
+    //UPGRADE TO PRO
+    public static final int INAPP_UPGRADE_TO_PRO = 7;
+    public static final String INAPP_UPGRADE_TO_PRO_MONTHLY = "upgrade_to_pro_1_month";
+    public static final String INAPP_UPGRADE_TO_PRO_HALLFYEARLY = "upgrade_to_pro_6_months";
+    public static final String INAPP_UPGRADE_TO_PRO_YEARLY = "upgrade_to_pro_12_months";
 
     public class WebFields {
 
         public static final String RSP_DATA = "data";
 
+        public static final String URL_ADMOBADS = "https://www.getirali.com/InstaInsight.asmx/";
+        public static final String ENDPOINT_ADMOBADS = "GetAndroidAdmobIds?";
+        public static final String TOKEN_ADMOBADS = "KnXhHKOr6tHcxTriZlifm3D1YrpsajKLGDop3fdHGcyl525NDzNgRqEC8oXNe98U";
+
+
         //    /users/self
         public static final String ENDPOINT_USERSELF = "/users/self";
+        public static final String ENDPOINT_USERSELF_DAG = DAGGER_API_BASE_ENDPOINT_URL + "users/self?";
 
         public static final String RSP_USERSELF_COUNTS = "counts";
         public static final String RSP_USERSELF_FOLLOWEDBY = "followed_by";
@@ -118,5 +168,6 @@ public class Constants {
         public static final String RSP_MEDIALIKED_USERUSERNAME = "username";
         public static final String RSP_MEDIALIKED_USERPROFILEPIC = "profile_picture";
     }
+
 
 }

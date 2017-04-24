@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="upgradeToPro"
+            type="com.instainsight.upgradetopro.viewmodel.UpgradeToProViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/activity_upgrade_to_pro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.instainsight.upgradetopro.UpgradeToProActivity">
+
+        <TextView
+            android:id="@+id/txtvw_upgradetopro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="checkPurchaseForPro"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/lbl_upgradetopro"
+            android:textSize="@dimen/_16ssp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_separator" />
+
+        <TextView
+            android:id="@+id/txtvw_removeads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="checkPurchaseForRemoveAds"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/lbl_removeads"
+            android:textSize="@dimen/_16ssp" />
+
+    </LinearLayout>
+</layout>

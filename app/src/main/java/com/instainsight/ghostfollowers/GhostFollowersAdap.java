@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.instainsight.R;
 import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.followersing.followers.bean.FollowerBean;
+import com.instainsight.models.RelationShipStatus;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
@@ -55,16 +58,45 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
     }
 
     @Override
-    public void onBindViewHolder(GhostFollowersAdap.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final GhostFollowersAdap.MyViewHolder holder, final int position) {
         FollowerBean ghostFollower = (FollowerBean) ghostFollowersList.get(position);
 
         holder.txtvw_followersing_name.setText(ghostFollower.getFullName());
         loadImage(ghostFollower.getProfilePic(), holder.imgvw_followersing);
+
+        if (ghostFollower.getRelationShipStatus() != null) {
+            holder.txtvw_followersing.setVisibility(View.VISIBLE);
+            RelationShipStatus relationShipStatus = ghostFollower.getRelationShipStatus();
+            String outRelation = relationShipStatus.getOutgoing_status();
+            if (outRelation.equalsIgnoreCase("none")) {
+                holder.txtvw_followersing.setBackgroundResource(R.drawable.purple);
+                holder.txtvw_followersing.setText(mContext.getResources().getString(R.string.lbl_follow));
+            } else if (outRelation.equalsIgnoreCase("follows")) {
+                holder.txtvw_followersing.setBackgroundResource(R.drawable.gray);
+                holder.txtvw_followersing.setText(mContext.getResources().getString(R.string.lbl_unfollow));
+            } else if (outRelation.equalsIgnoreCase("requested")) {
+                holder.txtvw_followersing.setBackgroundResource(R.drawable.gray);
+                holder.txtvw_followersing.setText(mContext.getResources().getString(R.string.lbl_unfollow));
+            }
+            holder.prgrs_followunfollow.setVisibility(View.GONE);
+        } else {
+            holder.prgrs_followunfollow.setVisibility(View.VISIBLE);
+        }
+
+        holder.rltv_followersing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
+                holder.prgrs_followunfollow.setVisibility(View.VISIBLE);
+                relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ghostFollowersList.get(position).getId());
+            }
+        });
+
         holder.txtvw_followersing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show();
-                relationshipStatusChangeListner.onClickToChangeRelationStatus(position, ghostFollowersList.get(position).getId());
+
             }
         });
     }
@@ -83,6 +115,8 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
         public CircularImageView imgvw_followersing;
         public TextView txtvw_followersing_name;
         public TextView txtvw_followersing;
+        public RelativeLayout rltv_followersing;
+        public ProgressBar prgrs_followunfollow;
 
         public MyViewHolder(View view) {
             super(view);
@@ -90,6 +124,8 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
             txtvw_followersing_name = (TextView) view.findViewById(R.id.txtvw_followersing_name);
             imgvw_followersing = (CircularImageView) view.findViewById(R.id.imgvw_followersing);
             txtvw_followersing = (TextView) view.findViewById(R.id.txtvw_followersing);
+            rltv_followersing = (RelativeLayout) view.findViewById(R.id.rltv_followersing);
+            prgrs_followunfollow = (ProgressBar) view.findViewById(R.id.prgrs_followunfollow);
 //            }else if (objType.equalsIgnoreCase("Following")){}
 
         }

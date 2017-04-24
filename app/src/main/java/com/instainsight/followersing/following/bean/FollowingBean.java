@@ -1,15 +1,25 @@
 package com.instainsight.followersing.following.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.instainsight.models.RelationShipStatus;
+
 /**
  * Created by SONY on 18-12-2016.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FollowingBean {
 
+    @JsonProperty("username")
     private String userName;
+    @JsonProperty("profile_picture")
     private String profilePic;
+    @JsonProperty("full_name")
     private String fullName;
+    @JsonProperty("id")
     private String id;
+
+    private RelationShipStatus relationShipStatus;
 
     public String getUserName() {
         return userName;
@@ -43,4 +53,11 @@ public class FollowingBean {
         this.id = id;
     }
 
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
+    }
+
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
+    }
 }

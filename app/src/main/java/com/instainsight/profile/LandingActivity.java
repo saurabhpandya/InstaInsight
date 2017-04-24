@@ -15,6 +15,7 @@ import com.instainsight.BaseActivity;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
 import com.instainsight.Utils.ConnectivityReceiver;
+import com.instainsight.Utils.Utility;
 
 public class LandingActivity extends BaseActivity implements
         ConnectivityReceiver.ConnectivityReceiverListener,
@@ -46,7 +47,8 @@ public class LandingActivity extends BaseActivity implements
 //        instaInsightApp.getUserBeanObserver().addObserver(this);
 //        selectFragment(bottomNavigationView.getMenu().getItem(0));
         selectFragment(0);
-        initAd();
+        if (!Utility.getPurchaseData(LandingActivity.this, "remove_ads_1_month_subscription"))
+            initAd();
     }
 
     private void getIds() {

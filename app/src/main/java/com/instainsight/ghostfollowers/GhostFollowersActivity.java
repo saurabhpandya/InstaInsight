@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.instainsight.IRelationshipStatus;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
 import com.instainsight.RelationshipStatusChangeListner;
@@ -22,7 +21,6 @@ import com.instainsight.ghostfollowers.model.LikesBean;
 import com.instainsight.ghostfollowers.viewmodel.GhostFollowersViewModel;
 import com.instainsight.models.ObjectResponseBean;
 import com.instainsight.models.RelationShipStatus;
-import com.instainsight.networking.RestClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,11 +30,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
 
 public class GhostFollowersActivity extends ViewModelActivity implements RelationshipStatusChangeListner {
 
@@ -96,13 +90,12 @@ public class GhostFollowersActivity extends ViewModelActivity implements Relatio
     }
 
     private void initActionbar() {
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
         getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initRecyclerView() {
-        ArrayList<FollowerBean> arylstFollowers = new ArrayList<FollowerBean>();
+        arylstFollowers = new ArrayList<FollowerBean>();
         mAdapter = new GhostFollowersAdap(GhostFollowersActivity.this, arylstFollowers, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         activityGhostFollowersBinding.rcyclrvwGhostfollowers.setLayoutManager(mLayoutManager);
@@ -126,19 +119,6 @@ public class GhostFollowersActivity extends ViewModelActivity implements Relatio
         }
 
         addUserToRecyclerView(arylstFollowers, arylstLikesCommentsFollowers);
-
-//        for (FollowerBean followerBean : arylstFollowers) {
-//            for (FollowerBean unique : arylstLikesCommentsFollowers) {
-//                if (!unique.getId().equalsIgnoreCase(followerBean.getId())) {
-//                    Log.d(TAG, "addUserToRecyclerView:followerBean.getId():" + followerBean.getId());
-//                    Log.d(TAG, "addUserToRecyclerView:unique.getId():" + unique.getId());
-//
-//                } else {
-//                    continue;
-//                }
-//            }
-//        }
-
 
     }
 
@@ -212,27 +192,59 @@ public class GhostFollowersActivity extends ViewModelActivity implements Relatio
 
     @Override
     public void onClickToChangeRelationStatus(final int position, final String userId) {
-        RestClient restClient = new RestClient(DAGGER_API_BASE_URL);
-        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
+        Log.d(TAG, "onClickToChangeRelationStatus::position:" + position + " & userId:" + userId);
 
-        iRelationshipStatus.changeRelationshipStatus("unfollow", userId, mInstagramSession.getAccessToken())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
-                    @Override
-                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
-                        arylstLikesCommentsFollowers.remove(position);
-                        mAdapter.removeItem(position);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+        if (arylstFollowers.size() > 0) {
+
+            final FollowerBean ghostFollowersBean = arylstFollowers.get(position);
+
+            String action = "";
+            if (ghostFollowersBean.getRelationShipStatus().getOutgoing_status().equalsIgnoreCase("none")) {
+                action = "follow";
+            } else if (ghostFollowersBean.getRelationShipStatus().getOutgoing_status().equalsIgnoreCase("requested")) {
+                action = "unfollow";
+            } else if (ghostFollowersBean.getRelationShipStatus().getOutgoing_status().equalsIgnoreCase("follows")) {
+                action = "unfollow";
+            }
+            ghostFollowersViewModel.changeRelationshipStatus(action, ghostFollowersBean.getId(),
+                    mInstagramSession.getAccessToken())
+                    .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                        @Override
+                        public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                            RelationShipStatus relationShipStatus = relationShipStatusBean.getData();
+
+                            ghostFollowersBean.setRelationShipStatus(relationShipStatus);
+                            arylstFollowers.set(position, ghostFollowersBean);
+                            mAdapter.notifyDataSetChanged();
+
+                            if (arylstFollowers.size() == 0) {
+                                activityGhostFollowersBinding.rcyclrvwGhostfollowers.setVisibility(View.GONE);
+                                activityGhostFollowersBinding.prgsbrGhostfollowers.setVisibility(View.GONE);
+                                activityGhostFollowersBinding.txtvwNoGhostfollowers.setVisibility(View.VISIBLE);
+                            }
+
+//                            if (relationShipStatus.getOutgoing_status().equalsIgnoreCase("none")) {
+//                                arylstFollowers.remove(position);
+////                                mAdapter.removeWhoViewedProfile(position);
+////                                mAdapter.notifyDataSetChanged();
+//                                if (arylstFollowers.size() == 0) {
+//                                    activityGhostFollowersBinding.rcyclrvwGhostfollowers.setVisibility(View.GONE);
+//                                    activityGhostFollowersBinding.prgsbrGhostfollowers.setVisibility(View.GONE);
+//                                    activityGhostFollowersBinding.txtvwNoGhostfollowers.setVisibility(View.VISIBLE);
+//                                }
+//                            } else {
+//                                ghostFollowersBean.setRelationShipStatus(relationShipStatus);
+//                                arylstFollowers.set(position, ghostFollowersBean);
+//                                mAdapter.notifyDataSetChanged();
+//                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            throwable.printStackTrace();
+                        }
+                    });
+        }
     }
 
-//    private void addUserToRecyclerView(FollowerBean followerBean) {
-//        mAdapter.addGhostFollowers(followerBean);
-//        mAdapter.notifyDataSetChanged();
-//    }
 }

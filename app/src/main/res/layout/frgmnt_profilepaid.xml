@@ -16,13 +16,14 @@
         <RelativeLayout
             android:id="@+id/rltv_pp_userinfo_pic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/base" />
+                android:layout_height="@dimen/_170sdp"
+                android:background="@color/red"
+                android:scaleType="fitXY" />
 
             <RelativeLayout
                 android:id="@+id/rltv_pp_userinfo"
@@ -151,7 +152,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_margin="@dimen/_15sdp"
-                android:src="@drawable/buy" />
+                android:src="@drawable/buy"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

@@ -68,7 +68,6 @@ public class LikeGraphActivityNew extends ViewModelActivity {
     }
 
     private void initActionbar() {
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
         getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

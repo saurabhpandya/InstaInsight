@@ -12,11 +12,13 @@ import com.instainsight.db.tables.PROFILEVIEWER;
 import com.instainsight.db.tables.RECENTMEDIA;
 import com.instainsight.db.tables.USERS;
 import com.instainsight.db.tables.USERSELF;
+import com.instainsight.db.tables.USERS_NOT_FOLLOWING_BACK;
+import com.instainsight.db.tables.USERS_UNFOLLOWERS;
 
 public class DBManager {
     private static final String TAG = "DBManager";
     private static final String DB_NAME = "InstaInsight";
-    private static int dbVersion = 3;
+    private static int dbVersion = 4;
 
     private static DBManager adapter;
 
@@ -74,6 +76,8 @@ public class DBManager {
             dbObj.execSQL(RECENTMEDIA.createTable());
             dbObj.execSQL(USERSELF.createTable());
             dbObj.execSQL(USERS.createTable());
+            dbObj.execSQL(USERS_UNFOLLOWERS.createTable());
+            dbObj.execSQL(USERS_NOT_FOLLOWING_BACK.createTable());
             dbObj.execSQL(MEDIA.createTable());
         }
 
@@ -85,6 +89,8 @@ public class DBManager {
             dbObj.execSQL(RECENTMEDIA.dropTable());
             dbObj.execSQL(USERSELF.dropTable());
             dbObj.execSQL(USERS.dropTable());
+            dbObj.execSQL(USERS_UNFOLLOWERS.dropTable());
+            dbObj.execSQL(USERS_NOT_FOLLOWING_BACK.dropTable());
             dbObj.execSQL(MEDIA.dropTable());
             onCreate(dbObj);
         }

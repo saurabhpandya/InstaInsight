@@ -1,16 +1,18 @@
 package com.instainsight;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.instainsight.followersing.followers.dao.FollowersDao;
-import com.instainsight.followersing.following.dao.FollowingDao;
+import com.crashlytics.android.Crashlytics;
+import com.instainsight.followersing.followers.FollowedByDBQueries;
+import com.instainsight.followersing.following.FollowsDBQueries;
 import com.instainsight.login.LoginActivity;
-import com.instainsight.profile.LandingActivity;
+import com.instainsight.profile.LandingActivityNew;
+
+import io.reactivex.functions.Consumer;
 
 import static com.instainsight.constants.Constants.SPLASH_TIME;
 
@@ -25,18 +27,41 @@ public class SplashScreen extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
-        new RemoveOldFollowersFollowing().execute();
+        removeOldFollowers();
+        removeOldFollowing();
         showSplash();
     }
 
     private void removeOldFollowers() {
-        FollowersDao followersDao = new FollowersDao(SplashScreen.this);
-        followersDao.removePreviousFollowers();
+        FollowedByDBQueries followedByDBQueries = new FollowedByDBQueries(SplashScreen.this);
+        followedByDBQueries.removeFollowedByFromNewFollowedBy()
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     private void removeOldFollowing() {
-        FollowingDao followingDao = new FollowingDao(SplashScreen.this);
-        followingDao.removePreviousFollowing();
+        FollowsDBQueries followsDBQueries = new FollowsDBQueries(SplashScreen.this);
+        followsDBQueries.removeFollowsFromNewFollows()
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     private void showSplash() {
@@ -52,8 +77,11 @@ public class SplashScreen extends BaseActivity {
                                           // Start your app main activity
                                           if (mInstagramSession.isActive()) {
                                               // open profile activity
-                                              Intent i = new Intent(SplashScreen.this, LandingActivity.class);
+                                              Intent i = new Intent(SplashScreen.this, LandingActivityNew.class);
                                               startActivity(i);
+                                              // TODO: Move this to where you establish a user session
+                                              logUser();
+
                                           } else {
                                               //  open login activity
                                               Intent i = new Intent(SplashScreen.this, LoginActivity.class);
@@ -65,14 +93,10 @@ public class SplashScreen extends BaseActivity {
                 , SPLASH_TIME);
     }
 
-    public class RemoveOldFollowersFollowing extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            removeOldFollowers();
-            removeOldFollowing();
-            return null;
-        }
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(mInstagramSession.getUser().getUserBean().getUsername());
     }
 
 }

@@ -10,6 +10,8 @@ import com.instainsight.ghostfollowers.model.LikesBean;
 import com.instainsight.instagram.InstagramSession;
 import com.instainsight.media.models.MediaBean;
 import com.instainsight.models.ListResponseBean;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.models.UserBean;
 import com.instainsight.models.UsersInPhotoBean;
 import com.instainsight.viewmodels.BaseViewModel;
@@ -22,8 +24,10 @@ import com.instainsight.whoviewedprofile.model.WhoViewedProfileBean;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -303,5 +307,30 @@ public class WhoViewedProfileViewModel extends BaseViewModel implements IViewMod
 //                })
 
 //                .subscribe(new)
+    }
+
+    public Single<List<WhoViewedProfileBean>> getRelationShipStatus(final ArrayList<WhoViewedProfileBean> arylstWhoViewedProfile) {
+
+        return Observable.fromIterable(arylstWhoViewedProfile)
+                .concatMap(new Function<WhoViewedProfileBean, Observable<WhoViewedProfileBean>>() {
+                    @Override
+                    public Observable<WhoViewedProfileBean> apply(WhoViewedProfileBean whoViewedProfileBean) throws Exception {
+                        return Observable.zip(Observable.just(whoViewedProfileBean),
+                                whoViewedProfileService.getRelationShipStatus(whoViewedProfileBean.getId(), mInstagramSession.getAccessToken()),
+                                new BiFunction<WhoViewedProfileBean, ObjectResponseBean<RelationShipStatus>, WhoViewedProfileBean>() {
+                                    @Override
+                                    public WhoViewedProfileBean apply(WhoViewedProfileBean whoViewedProfileBean, ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                                        whoViewedProfileBean.setRelationShipStatus(relationShipStatusBean.getData());
+                                        return whoViewedProfileBean;
+                                    }
+                                });
+                    }
+                }).toList();
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> changeRelationshipStatus(String action,
+                                                                                       String userId,
+                                                                                       String accessToken) {
+        return whoViewedProfileService.setRelationShipStatus(action, userId, accessToken);
     }
 }

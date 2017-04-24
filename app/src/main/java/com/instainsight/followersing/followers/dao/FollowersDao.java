@@ -31,8 +31,8 @@ public class FollowersDao {
         mContext = context;
     }
 
-    public ArrayList<Object> getFollowers(String strFollowers) {
-        ArrayList<Object> arylstFollowers = new ArrayList<Object>();
+    public ArrayList<FollowerBean> getFollowers(String strFollowers) {
+        ArrayList<FollowerBean> arylstFollowers = new ArrayList<>();
 
         try {
             JSONObject jsnObjData = new JSONObject(strFollowers);
@@ -66,7 +66,7 @@ public class FollowersDao {
         return arylstFollowers;
     }
 
-    public void saveFollowers(ArrayList<Object> arylstFollowers) {
+    public void saveFollowers(ArrayList<FollowerBean> arylstFollowers) {
 
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -74,7 +74,7 @@ public class FollowersDao {
             db.beginTransaction();
             ContentValues values = new ContentValues();
             for (int i = 0; i <= (arylstFollowers.size() - 1); i++) {
-                FollowerBean followerBean = (FollowerBean) arylstFollowers.get(i);
+                FollowerBean followerBean = arylstFollowers.get(i);
                 values.put(DatabaseHelper.KEY_USERID, followerBean.getId());
                 values.put(DatabaseHelper.KEY_FULLNAME, followerBean.getFullName());
                 values.put(DatabaseHelper.KEY_USERNAME, followerBean.getUserName());
@@ -109,14 +109,15 @@ public class FollowersDao {
         }
     }
 
-    public ArrayList<Object> getAllFollowers() {
+    public ArrayList<FollowerBean> getAllFollowers() {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstFollowers = new ArrayList<Object>();
+        ArrayList<FollowerBean> arylstFollowers = new ArrayList<FollowerBean>();
         Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWERS, null, null, null, null, null, null);
         if (cur.getCount() > 0 && cur.moveToFirst()) {
-            FollowerBean followerBean = new FollowerBean();
+
             do {
+                FollowerBean followerBean = new FollowerBean();
                 followerBean.setId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followerBean.setUserName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followerBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
@@ -128,15 +129,16 @@ public class FollowersDao {
         return arylstFollowers;
     }
 
-    public ArrayList<Object> getNewFollowers() {
+    public ArrayList<FollowerBean> getNewFollowers() {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstFollowers = new ArrayList<Object>();
+        ArrayList<FollowerBean> arylstFollowers = new ArrayList<FollowerBean>();
         Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWERS, null,
                 DatabaseHelper.KEY_ISNEW + "=?", new String[]{"1"}, null, null, null);
         if (cur.getCount() > 0 && cur.moveToFirst()) {
-            FollowerBean followerBean = new FollowerBean();
+
             do {
+                FollowerBean followerBean = new FollowerBean();
                 followerBean.setId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followerBean.setUserName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followerBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
@@ -149,7 +151,7 @@ public class FollowersDao {
     }
 
     public void removePreviousFollowers() {
-        ArrayList<Object> arylstFollowers = getNewFollowers();
+        ArrayList<FollowerBean> arylstFollowers = getNewFollowers();
         if (arylstFollowers != null && arylstFollowers.size() > 0) {
             DatabaseHelper dbHelper = new DatabaseHelper(mContext);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -194,11 +196,11 @@ public class FollowersDao {
         }
     }
 
-    public ArrayList<Object> getFollowersToWhomNotFollowing() {
+    public ArrayList<FollowingBean> getFollowersToWhomNotFollowing() {
         // Get the followers who are not in following
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstFollowersNotFollowing = new ArrayList<Object>();
+        ArrayList<FollowingBean> arylstFollowersNotFollowing = new ArrayList<>();
 
 //        select distinct *
 //        from old a join new b on a.ManName = b. Manager_Name and a. ManNumber = b. Manager_Number
@@ -212,8 +214,8 @@ public class FollowersDao {
         Cursor curFollowersNotFollowing = db.rawQuery(followersToWhomNotFollowingQuery, null);
         Log.d(TAG, "getFollowersToWhomNotFollowing:curFollowersNotFollowing.getCount()::" + curFollowersNotFollowing.getCount());
         if (curFollowersNotFollowing.getCount() > 0 && curFollowersNotFollowing.moveToFirst()) {
-            FollowingBean followingBean = new FollowingBean();
             do {
+                FollowingBean followingBean = new FollowingBean();
                 followingBean.setId(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followingBean.setUserName(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followingBean.setProfilePic(curFollowersNotFollowing.getString(curFollowersNotFollowing.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));

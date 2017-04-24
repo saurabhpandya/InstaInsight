@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.instainsight.constants.Constants.WebFields;
 import com.instainsight.db.DatabaseHelper;
+import com.instainsight.models.UserCountBean;
 import com.instainsight.profile.bean.UsersBean;
 
 import org.json.JSONException;
@@ -36,37 +37,37 @@ public class UsersDao {
         values.put(DatabaseHelper.KEY_USERNAME, usersBean.getUserName());
         values.put(DatabaseHelper.KEY_PROFILEPIC, usersBean.getProfilePic());
         values.put(DatabaseHelper.KEY_BIO, usersBean.getBio());
-        values.put(DatabaseHelper.KEY_FOLLOWERCOUNT, usersBean.getFollowerCount());
-        values.put(DatabaseHelper.KEY_FOLLOWINGCOUNT, usersBean.getFollowingCount());
+        values.put(DatabaseHelper.KEY_FOLLOWERCOUNT, usersBean.getUserCountBean().getFollowed_by());
+        values.put(DatabaseHelper.KEY_FOLLOWINGCOUNT, usersBean.getUserCountBean().getFollows());
 
         Cursor cur = db.query(DatabaseHelper.TABLE_USERS, null,
                 DatabaseHelper.KEY_USERID + " = ? ", new String[]{usersBean.getUserId()},
                 null, null, null);
 
         if (cur.getCount() == 0) {
-            values.put(DatabaseHelper.KEY_NEWFOLLOWERCOUNT, usersBean.getFollowerCount());
-            values.put(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT, usersBean.getFollowingCount());
+            values.put(DatabaseHelper.KEY_NEWFOLLOWERCOUNT, usersBean.getUserCountBean().getFollowed_by());
+            values.put(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT, usersBean.getUserCountBean().getFollows());
             long inserId = db.insert(DatabaseHelper.TABLE_USERS, null, values);
             Log.d(TAG, "inserted : " + inserId);
         } else {
             cur.moveToFirst();
-            int followerCount = Integer.parseInt(usersBean.getFollowerCount());
-            int followingCount = Integer.parseInt(usersBean.getFollowingCount());
+            int followerCount = Integer.parseInt(usersBean.getUserCountBean().getFollowed_by());
+            int followingCount = Integer.parseInt(usersBean.getUserCountBean().getFollows());
             int newFollowerCount = Integer.parseInt(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWERCOUNT)));
             int newFollowingCount = Integer.parseInt(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT)));
 
             if (newFollowerCount > followerCount)
-                usersBean.setNewFollowerCount(String.valueOf(newFollowerCount - followerCount));
+                usersBean.setNewFollowedByCount(String.valueOf(newFollowerCount - followerCount));
             else
-                usersBean.setNewFollowerCount("0");
+                usersBean.setNewFollowedByCount("0");
 
             if (newFollowingCount > followingCount)
-                usersBean.setNewFollowingCount(String.valueOf(newFollowingCount - followingCount));
+                usersBean.setNewFollowsCount(String.valueOf(newFollowingCount - followingCount));
             else
-                usersBean.setNewFollowingCount("0");
+                usersBean.setNewFollowsCount("0");
 
-            values.put(DatabaseHelper.KEY_NEWFOLLOWERCOUNT, usersBean.getNewFollowerCount());
-            values.put(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT, usersBean.getNewFollowingCount());
+            values.put(DatabaseHelper.KEY_NEWFOLLOWERCOUNT, usersBean.getNewFollowedByCount());
+            values.put(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT, usersBean.getNewFollowsCount());
             int updatedRecords = db.update(DatabaseHelper.TABLE_USERS, values,
                     DatabaseHelper.KEY_USERID + " = ? ",
                     new String[]{usersBean.getUserId()});
@@ -92,10 +93,14 @@ public class UsersDao {
                 usersBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
                 usersBean.setUserFullName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FULLNAME)));
                 usersBean.setBio(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_BIO)));
-                usersBean.setFollowerCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWERCOUNT)));
-                usersBean.setFollowingCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWINGCOUNT)));
-                usersBean.setNewFollowerCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWERCOUNT)));
-                usersBean.setNewFollowingCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT)));
+                String followedByCount = cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWERCOUNT));
+                String followsCount = cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWINGCOUNT));
+                UserCountBean userCountBean = new UserCountBean();
+                userCountBean.setFollowed_by(followedByCount);
+                userCountBean.setFollows(followsCount);
+                usersBean.setUserCountBean(userCountBean);
+                usersBean.setNewFollowedByCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWERCOUNT)));
+                usersBean.setNewFollowsCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT)));
             } while (cur.moveToNext());
             db.close();
         }
@@ -120,14 +125,17 @@ public class UsersDao {
                     usersBean.setBio(jsnObjData.getString(DatabaseHelper.KEY_BIO));
                 if (jsnObjData.has(WebFields.RSP_USERSELF_COUNTS)) {
                     JSONObject jsnObjDataCounts = jsnObjData.getJSONObject(WebFields.RSP_USERSELF_COUNTS);
+                    UserCountBean userCountBean = new UserCountBean();
                     if (jsnObjDataCounts.has(WebFields.RSP_USERSELF_FOLLOWEDBY))
-                        usersBean.setFollowerCount(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWEDBY));
+                        userCountBean.setFollowed_by(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWEDBY));
                     else
-                        usersBean.setFollowerCount("-");
+                        userCountBean.setFollowed_by("-");
+
                     if (jsnObjDataCounts.has(WebFields.RSP_USERSELF_FOLLOWS))
-                        usersBean.setFollowingCount(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWS));
+                        userCountBean.setFollows(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWS));
                     else
-                        usersBean.setFollowingCount("-");
+                        userCountBean.setFollows("-");
+                    usersBean.setUserCountBean(userCountBean);
                 }
             }
         } catch (JSONException je) {

@@ -2,27 +2,23 @@ package com.instainsight.mostpopularfollowers.viewmodel;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
-import com.instainsight.Utils.Utility;
 import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.models.OtherUsersBean;
 import com.instainsight.instagram.InstagramSession;
-import com.instainsight.login.LoginActivity;
 import com.instainsight.models.ListResponseBean;
 import com.instainsight.models.ObjectResponseBean;
-import com.instainsight.mostpopularfollowers.MostPopularFollowersEvent;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.mostpopularfollowers.MostPopularFollowersServices;
 import com.instainsight.viewmodels.BaseViewModel;
 import com.instainsight.viewmodels.IViewModel;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.Single;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 /**
@@ -59,71 +55,53 @@ public class MostPopularFollowersViewModel extends BaseViewModel implements IVie
         mActivity = value;
     }
 
-    public void getMostPopularFollowers() {
-        if (mInstagramSession.isActive()) {
-            if (isConnected()) {
-                mostPopularFollowersServices.getFollowers(mInstagramSession.getAccessToken())
-                        .concatMap(new Function<ListResponseBean<FollowerBean>,
-                                Observable<ObjectResponseBean<OtherUsersBean>>>() {
-                            @Override
-                            public Observable<ObjectResponseBean<OtherUsersBean>> apply(
-                                    ListResponseBean<FollowerBean> followerBeanListResponseBean) throws Exception {
-                                Log.d(TAG, "followerBeanListResponseBean::" + followerBeanListResponseBean.getData().size());
+    public Single<List<OtherUsersBean>> getMostPopularFollowers() {
 
-                                ArrayList<Observable<ListResponseBean<OtherUsersBean>>> arylstOtherUsersObservable
-                                        = new ArrayList<Observable<ListResponseBean<OtherUsersBean>>>();
-
-                                for (FollowerBean followerBean : followerBeanListResponseBean.getData()) {
-                                    mostPopularFollowersServices.getFollowersInfo(followerBean.getId()
-                                            , mInstagramSession.getAccessToken())
-                                            .subscribe(new Consumer<ObjectResponseBean<OtherUsersBean>>() {
-                                                @Override
-                                                public void accept(ObjectResponseBean<OtherUsersBean> otherUsersBeanListResponseBean)
-                                                        throws Exception {
-                                                    Log.d(TAG, "otherUsersBeanListResponseBean::"
-                                                            + otherUsersBeanListResponseBean.getData().getId());
-                                                    ArrayList<OtherUsersBean> otherUsersBeanList = new ArrayList<OtherUsersBean>();
-                                                    otherUsersBeanList.add(otherUsersBeanListResponseBean.getData());
-                                                    MostPopularFollowersEvent mostPopularFollowersEvent
-                                                            = new MostPopularFollowersEvent();
-                                                    mostPopularFollowersEvent.setMostPopularFollowers(otherUsersBeanList);
-                                                    EventBus.getDefault().post(mostPopularFollowersEvent);
-                                                }
-                                            }, new Consumer<Throwable>() {
-                                                @Override
-                                                public void accept(Throwable throwable) throws Exception {
-                                                    throwable.printStackTrace();
-                                                    MostPopularFollowersEvent mostPopularFollowersEvent
-                                                            = new MostPopularFollowersEvent();
-                                                    EventBus.getDefault().post(mostPopularFollowersEvent);
-                                                }
-                                            });
-                                }
-
-                                return Observable.just(new ObjectResponseBean<OtherUsersBean>());
-                            }
-                        })
-                        .subscribe(new Consumer<ObjectResponseBean<OtherUsersBean>>() {
-                            @Override
-                            public void accept(ObjectResponseBean<OtherUsersBean> otherUsersBeanListResponseBean) throws Exception {
-
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                throwable.printStackTrace();
-                            }
-                        });
-            } else {
-
-            }
-
-        } else {
-            Utility.showToast(mActivity, "Could not authentication, need to log in again");
-            Intent intent = new Intent(mActivity, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mActivity.startActivity(intent);
-            mActivity.finish();
-        }
+        return mostPopularFollowersServices.getFollowers(mInstagramSession.getAccessToken())
+                .concatMap(new Function<ListResponseBean<FollowerBean>, Observable<FollowerBean>>() {
+                    @Override
+                    public Observable<FollowerBean> apply(ListResponseBean<FollowerBean> followerListBean) throws Exception {
+                        return Observable.fromIterable(followerListBean.getData());
+                    }
+                })
+                .concatMap(new Function<FollowerBean, Observable<ObjectResponseBean<OtherUsersBean>>>() {
+                    @Override
+                    public Observable<ObjectResponseBean<OtherUsersBean>> apply(FollowerBean followerBean) throws Exception {
+                        return mostPopularFollowersServices.getFollowersInfo(followerBean.getId(),
+                                mInstagramSession.getAccessToken());
+                    }
+                })
+                .concatMap(new Function<ObjectResponseBean<OtherUsersBean>, Observable<OtherUsersBean>>() {
+                    @Override
+                    public Observable<OtherUsersBean> apply(ObjectResponseBean<OtherUsersBean> otherUsersBeanObjectResponseBean) throws Exception {
+                        return Observable.just(otherUsersBeanObjectResponseBean.getData());
+                    }
+                }).toList();
     }
+
+    public Single<List<OtherUsersBean>> getRelationShipStatus(final ArrayList<OtherUsersBean> arylstIlikeMost) {
+
+        return Observable.fromIterable(arylstIlikeMost)
+                .concatMap(new Function<OtherUsersBean, Observable<OtherUsersBean>>() {
+                    @Override
+                    public Observable<OtherUsersBean> apply(OtherUsersBean otherUsersBean) throws Exception {
+                        return Observable.zip(Observable.just(otherUsersBean),
+                                mostPopularFollowersServices.getRelationShipStatus(otherUsersBean.getId(), mInstagramSession.getAccessToken()),
+                                new BiFunction<OtherUsersBean, ObjectResponseBean<RelationShipStatus>, OtherUsersBean>() {
+                                    @Override
+                                    public OtherUsersBean apply(OtherUsersBean popularFollowerBean, ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                                        popularFollowerBean.setRelationShipStatus(relationShipStatusBean.getData());
+                                        return popularFollowerBean;
+                                    }
+                                });
+                    }
+                }).toList();
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> changeRelationshipStatus(String action,
+                                                                                       String userId,
+                                                                                       String accessToken) {
+        return mostPopularFollowersServices.setRelationShipStatus(action, userId, accessToken);
+    }
+
 }

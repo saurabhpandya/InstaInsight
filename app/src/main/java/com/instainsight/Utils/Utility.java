@@ -1,6 +1,7 @@
 package com.instainsight.Utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -61,6 +62,25 @@ public class Utility {
                 e.onNext(func.call());
             }
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static void clearSharedPreference(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("InstaInsight", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+    public static void setPurchaseData(Context context, String key, boolean value) {
+        SharedPreferences preferences = context.getSharedPreferences("InstaInsight", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static boolean getPurchaseData(Context context, String key) {
+        SharedPreferences preferences = context.getSharedPreferences("InstaInsight", Context.MODE_PRIVATE);
+        return preferences.getBoolean(key, false);
     }
 
 }

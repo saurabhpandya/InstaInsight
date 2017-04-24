@@ -15,14 +15,18 @@ import com.instainsight.instagram.InstagramSession;
 import com.instainsight.login.LoginActivity;
 import com.instainsight.media.models.MediaBean;
 import com.instainsight.models.ListResponseBean;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.viewmodels.BaseViewModel;
 import com.instainsight.viewmodels.IViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -211,4 +215,30 @@ public class GhostFollowersViewModel extends BaseViewModel implements IViewModel
             mActivity.finish();
         }
     }
+
+    public Single<List<FollowerBean>> getRelationShipStatus(final ArrayList<FollowerBean> arylstGhostFollowers) {
+
+        return Observable.fromIterable(arylstGhostFollowers)
+                .concatMap(new Function<FollowerBean, Observable<FollowerBean>>() {
+                    @Override
+                    public Observable<FollowerBean> apply(FollowerBean ghostFollowersBean) throws Exception {
+                        return Observable.zip(Observable.just(ghostFollowersBean),
+                                ghostFollowersServices.getRelationShipStatus(ghostFollowersBean.getId(), mInstagramSession.getAccessToken()),
+                                new BiFunction<FollowerBean, ObjectResponseBean<RelationShipStatus>, FollowerBean>() {
+                                    @Override
+                                    public FollowerBean apply(FollowerBean ghostFollowersBean, ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                                        ghostFollowersBean.setRelationShipStatus(relationShipStatusBean.getData());
+                                        return ghostFollowersBean;
+                                    }
+                                });
+                    }
+                }).toList();
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> changeRelationshipStatus(String action,
+                                                                                       String userId,
+                                                                                       String accessToken) {
+        return ghostFollowersServices.setRelationShipStatus(action, userId, accessToken);
+    }
+
 }

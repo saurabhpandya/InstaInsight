@@ -18,7 +18,9 @@ import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.followersing.adapter.FollowersingAdap;
+import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.followers.dao.FollowersDao;
+import com.instainsight.followersing.following.bean.FollowingBean;
 import com.instainsight.followersing.following.dao.FollowingDao;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.login.LoginActivity;
@@ -50,7 +52,7 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_not_following_me_back);
+        setContentView(R.layout.activity_not_following_back);
         setTitle(R.string.lbl_blockedfollowers);
         initActionbar();
         getIds();
@@ -59,15 +61,14 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
     }
 
     private void initActionbar() {
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
         getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void getIds() {
-        rcyclrvw_notfollowingmeback = (RecyclerView) findViewById(R.id.rcyclrvw_notfollowingmeback);
-        txtvw_no_notfollowingmeback = (TextView) findViewById(R.id.txtvw_no_notfollowingmeback);
-        prgsbr_notfollowingmeback = (ProgressBar) findViewById(R.id.prgsbr_notfollowingmeback);
+        rcyclrvw_notfollowingmeback = (RecyclerView) findViewById(R.id.rcyclrvw_notfollowingback);
+        txtvw_no_notfollowingmeback = (TextView) findViewById(R.id.txtvw_no_notfollowingback);
+        prgsbr_notfollowingmeback = (ProgressBar) findViewById(R.id.prgsbr_notfollowingback);
     }
 
     private void initRecyclerView() {
@@ -95,7 +96,7 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
                             @Override
                             public void onSuccess(String response) {
                                 FollowersDao followersDao = new FollowersDao(NotFollowingMeBackActivity.this);
-                                ArrayList<Object> arylstFollowers = followersDao.getFollowers(response);
+                                ArrayList<FollowerBean> arylstFollowers = followersDao.getFollowers(response);
                                 followersDao.saveFollowers(arylstFollowers);
                                 JSONObject jsnObjRsps = null;
                                 try {
@@ -142,7 +143,7 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
                     public void onSuccess(String response) {
 
                         FollowersDao followersDao = new FollowersDao(NotFollowingMeBackActivity.this);
-                        ArrayList<Object> arylstFollowers = followersDao.getFollowers(response);
+                        ArrayList<FollowerBean> arylstFollowers = followersDao.getFollowers(response);
                         followersDao.saveFollowers(arylstFollowers);
 
                         JSONObject jsnObjRsps = null;
@@ -181,7 +182,7 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
                             @Override
                             public void onSuccess(String response) {
                                 FollowingDao followingDao = new FollowingDao(NotFollowingMeBackActivity.this);
-                                ArrayList<Object> arylstFollowing = followingDao.getFollowing(response);
+                                ArrayList<FollowingBean> arylstFollowing = followingDao.getFollowing(response);
                                 followingDao.saveFollowing(arylstFollowing);
 
                                 JSONObject jsnObjRsps = null;
@@ -226,7 +227,7 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
                     public void onSuccess(String response) {
 
                         FollowingDao followingDao = new FollowingDao(NotFollowingMeBackActivity.this);
-                        ArrayList<Object> arylstFollowing = followingDao.getFollowing(response);
+                        ArrayList<FollowingBean> arylstFollowing = followingDao.getFollowing(response);
                         followingDao.saveFollowing(arylstFollowing);
 
                         JSONObject jsnObjRsps = null;
@@ -259,12 +260,12 @@ public class NotFollowingMeBackActivity extends BaseActivity implements Relation
 
     private void getNotFollowingMeBackData() {
         FollowersDao followersDao = new FollowersDao(NotFollowingMeBackActivity.this);
-        ArrayList<Object> arylstNotFollowingBack = followersDao.getFollowersToWhomNotFollowing();
+        ArrayList<FollowingBean> arylstNotFollowingBack = followersDao.getFollowersToWhomNotFollowing();
         setData(arylstNotFollowingBack);
         prgsbr_notfollowingmeback.setVisibility(View.GONE);
     }
 
-    private void setData(ArrayList<Object> arylstNotFollowingBack) {
+    private void setData(ArrayList<FollowingBean> arylstNotFollowingBack) {
         if (arylstNotFollowingBack.size() > 0) {
             mAdapter.addFollowersing(arylstNotFollowingBack);
             mAdapter.notifyDataSetChanged();

@@ -30,8 +30,8 @@ public class FollowingDao {
         mContext = context;
     }
 
-    public ArrayList<Object> getFollowing(String strFollowing) {
-        ArrayList<Object> arylstFollowing = new ArrayList<Object>();
+    public ArrayList<FollowingBean> getFollowing(String strFollowing) {
+        ArrayList<FollowingBean> arylstFollowing = new ArrayList<>();
 
         try {
             JSONObject jsnObjData = new JSONObject(strFollowing);
@@ -65,14 +65,14 @@ public class FollowingDao {
         return arylstFollowing;
     }
 
-    public void saveFollowing(ArrayList<Object> arylstFollowing) {
+    public void saveFollowing(ArrayList<FollowingBean> arylstFollowing) {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             ContentValues values = new ContentValues();
             for (int i = 0; i <= (arylstFollowing.size() - 1); i++) {
-                FollowingBean followingBean = (FollowingBean) arylstFollowing.get(i);
+                FollowingBean followingBean = arylstFollowing.get(i);
                 values.put(DatabaseHelper.KEY_USERID, followingBean.getId());
                 values.put(DatabaseHelper.KEY_FULLNAME, followingBean.getFullName());
                 values.put(DatabaseHelper.KEY_USERNAME, followingBean.getUserName());
@@ -106,14 +106,15 @@ public class FollowingDao {
         }
     }
 
-    public ArrayList<Object> getAllFollowing() {
+    public ArrayList<FollowingBean> getAllFollowing() {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstFollowing = new ArrayList<Object>();
+        ArrayList<FollowingBean> arylstFollowing = new ArrayList<>();
         Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWING, null, null, null, null, null, null);
         if (cur.getCount() > 0 && cur.moveToFirst()) {
-            FollowingBean followingBean = new FollowingBean();
+
             do {
+                FollowingBean followingBean = new FollowingBean();
                 followingBean.setId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followingBean.setUserName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followingBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
@@ -125,15 +126,16 @@ public class FollowingDao {
         return arylstFollowing;
     }
 
-    public ArrayList<Object> getNewFollowing() {
+    public ArrayList<FollowingBean> getNewFollowing() {
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstFollowing = new ArrayList<Object>();
+        ArrayList<FollowingBean> arylstFollowing = new ArrayList<>();
         Cursor cur = db.query(DatabaseHelper.TABLE_FOLLOWING, null,
                 DatabaseHelper.KEY_ISNEW + "=?", new String[]{"1"}, null, null, null);
         if (cur.getCount() > 0 && cur.moveToFirst()) {
-            FollowingBean followingBean = new FollowingBean();
+
             do {
+                FollowingBean followingBean = new FollowingBean();
                 followingBean.setId(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followingBean.setUserName(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followingBean.setProfilePic(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));
@@ -146,7 +148,7 @@ public class FollowingDao {
     }
 
     public void removePreviousFollowing() {
-        ArrayList<Object> arylstFollowing = getNewFollowing();
+        ArrayList<FollowingBean> arylstFollowing = getNewFollowing();
         if (arylstFollowing != null && arylstFollowing.size() > 0) {
             DatabaseHelper dbHelper = new DatabaseHelper(mContext);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -154,7 +156,7 @@ public class FollowingDao {
                 db.beginTransaction();
                 ContentValues values = new ContentValues();
                 for (int i = 0; i <= (arylstFollowing.size() - 1); i++) {
-                    FollowingBean followingBean = (FollowingBean) arylstFollowing.get(i);
+                    FollowingBean followingBean = arylstFollowing.get(i);
                     values.put(DatabaseHelper.KEY_USERID, followingBean.getId());
                     values.put(DatabaseHelper.KEY_FULLNAME, followingBean.getFullName());
                     values.put(DatabaseHelper.KEY_USERNAME, followingBean.getUserName());
@@ -190,11 +192,11 @@ public class FollowingDao {
         }
     }
 
-    public ArrayList<Object> getFollowingsNotFollowingBack() {
+    public ArrayList<FollowingBean> getFollowingsNotFollowingBack() {
         // Get the following who are not in followers
         DatabaseHelper dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<Object> arylstNotFollowingBack = new ArrayList<Object>();
+        ArrayList<FollowingBean> arylstNotFollowingBack = new ArrayList<>();
 
 //        select distinct *
 //        from old a join new b on a.ManName = b. Manager_Name and a. ManNumber = b. Manager_Number
@@ -209,8 +211,9 @@ public class FollowingDao {
         Log.d(TAG, "getFollowingsNotFollowingBack:curNotFollowingBack.getCount()::" + curNotFollowingBack.getCount());
 
         if (curNotFollowingBack.getCount() > 0 && curNotFollowingBack.moveToFirst()) {
-            FollowingBean followingBean = new FollowingBean();
+
             do {
+                FollowingBean followingBean = new FollowingBean();
                 followingBean.setId(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_USERID)));
                 followingBean.setUserName(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_USERNAME)));
                 followingBean.setProfilePic(curNotFollowingBack.getString(curNotFollowingBack.getColumnIndex(DatabaseHelper.KEY_PROFILEPIC)));

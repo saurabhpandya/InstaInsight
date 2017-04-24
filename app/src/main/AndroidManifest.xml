@@ -9,12 +9,12 @@
     <application
         android:name=".InstaInsightApp"
         android:allowBackup="true"
-        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--<activity android:name=".MainActivity" />-->
+
+        <!-- <activity android:name=".MainActivity" /> -->
         <activity
             android:name=".SplashScreen"
             android:theme="@style/AppThemeNoActionbarTransparentback">
@@ -23,16 +23,20 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".login.LoginActivity"
+            android:theme="@style/AppThemeNoActionbar" />
+        <activity
+            android:name=".profile.LandingActivityNew"
             android:theme="@style/AppThemeNoActionbar" />
         <activity
             android:name=".profile.LandingActivity"
             android:theme="@style/AppThemeNoActionbar" />
         <activity android:name=".followersing.followers.FollowersActivity" />
         <activity android:name=".followersing.following.FollowingActivity" />
+        <activity android:name=".followersing.followers.FollowersActivityNew" />
+        <activity android:name=".followersing.following.FollowingActivityNew" />
         <activity android:name=".BaseActivity" />
 
         <!-- Include the AdActivity configChanges and theme. -->
@@ -49,19 +53,52 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".followersing.NotFollowingBackActivity" />
-        <activity android:name=".followersing.NotFollowingMeBackActivity" />
-        <activity android:name=".media.LikeGraphActivity" />
-        <activity android:name=".ilikedmost.ILikedMostActivity" />
-        <activity android:name=".likegraph.LikeGraphActivityNew" />
-        <activity android:name=".followersing.OtherUserActivity" />
-        <activity android:name=".mytoplikers.MyTopLikersActivity" />
-        <activity android:name=".mostpopularfollowers.MostPopularFollowersActivity" />
-        <activity android:name=".ghostfollowers.GhostFollowersActivity" />
-        <activity android:name=".whoviewedprofile.WhoViewedProfileActivity" />
-        <activity android:name=".InAppPurchaseActivity">
+        <activity
+            android:name=".iamnotfollowingback.NotFollowingBackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".followersing.NotFollowingBackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".unfollowers.UnFollowersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".followersing.NotFollowingMeBackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".media.LikeGraphActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ilikedmost.ILikedMostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".likegraph.LikeGraphActivityNew"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".followersing.OtherUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mytoplikers.MyTopLikersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mostpopularfollowers.MostPopularFollowersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ghostfollowers.GhostFollowersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".whoviewedprofile.WhoViewedProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InAppPurchaseActivityNew"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".upgradetopro.UpgradeToProActivity"
+            android:screenOrientation="portrait" />
 
-        </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d8c053d3bb467fb8e38203866080397067dd414f" />
     </application>
 
 </manifest>

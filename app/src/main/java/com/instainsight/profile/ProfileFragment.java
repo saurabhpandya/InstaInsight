@@ -16,17 +16,18 @@ import com.instainsight.BaseFragment;
 import com.instainsight.R;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
-import com.instainsight.followersing.NotFollowingBackActivity;
-import com.instainsight.followersing.NotFollowingMeBackActivity;
 import com.instainsight.followersing.OtherUserActivity;
-import com.instainsight.followersing.followers.FollowersActivity;
+import com.instainsight.followersing.followers.FollowersActivityNew;
 import com.instainsight.followersing.following.FollowingActivity;
+import com.instainsight.followersing.following.FollowingActivityNew;
+import com.instainsight.iamnotfollowingback.NotFollowingBackActivity;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.instagram.InstagramUser;
 import com.instainsight.likegraph.LikeGraphActivityNew;
 import com.instainsight.login.LoginActivity;
 import com.instainsight.profile.bean.UsersBean;
 import com.instainsight.profile.dao.UsersDao;
+import com.instainsight.unfollowers.UnFollowersActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.apache.http.NameValuePair;
@@ -61,7 +62,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         vwProfile = inflater.inflate(R.layout.frgmnt_profile, container, false);
         getIds();
         regListner();
-        getUserData();
+//        getUserData();
 
         return vwProfile;
     }
@@ -112,8 +113,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             usersDao = new UsersDao(mContext);
             UsersBean usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
             if (usersBean != null) {
-                txtvw_followercount.setText(usersBean.getFollowerCount());
-                txtvw_followingcount.setText(usersBean.getFollowingCount());
+                txtvw_followercount.setText(usersBean.getUserCountBean().getFollowed_by());
+                txtvw_followingcount.setText(usersBean.getUserCountBean().getFollows());
                 showPd = false;
             }
 
@@ -140,10 +141,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                                 UsersBean usersBean = usersDao.getUserDetailsFromJson(response);
                                 usersBean = usersDao.saveUserDetails(usersBean);
 //                                instaInsightApp.getUserBeanObserver().setUpdate(true);
-                                txtvw_followercount.setText(usersBean.getFollowerCount());
-                                txtvw_followingcount.setText(usersBean.getFollowingCount());
-                                txtvw_newfollowers_count.setText(usersBean.getNewFollowerCount());
-                                txtvw_newfollowing_count.setText(usersBean.getNewFollowingCount());
+                                txtvw_followercount.setText(usersBean.getUserCountBean().getFollowed_by());
+                                txtvw_followingcount.setText(usersBean.getUserCountBean().getFollows());
+                                txtvw_newfollowers_count.setText(usersBean.getNewFollowedByCount());
+                                txtvw_newfollowing_count.setText(usersBean.getNewFollowsCount());
                             }
 
                             @Override
@@ -159,10 +160,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 UsersDao usersDao = new UsersDao(getActivity());
                 usersBean = usersDao.getUserDetails(instagramUser.getUserBean().getId());
 
-                txtvw_followercount.setText(usersBean.getFollowerCount());
-                txtvw_followingcount.setText(usersBean.getFollowingCount());
-                txtvw_newfollowers_count.setText(usersBean.getNewFollowerCount());
-                txtvw_newfollowing_count.setText(usersBean.getNewFollowingCount());
+                txtvw_followercount.setText(usersBean.getUserCountBean().getFollowed_by());
+                txtvw_followingcount.setText(usersBean.getUserCountBean().getFollows());
+                txtvw_newfollowers_count.setText(usersBean.getNewFollowedByCount());
+                txtvw_newfollowing_count.setText(usersBean.getNewFollowsCount());
             }
         } else {
             Utility.showToast(getActivity(), "Could not authentication, need to log in again");
@@ -209,11 +210,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void openNewFollowers() {
-        startActivity(FollowersActivity.class);
+        startActivity(FollowersActivityNew.class);
     }
 
     private void openNewFollowing() {
-        startActivity(FollowingActivity.class);
+        startActivity(FollowingActivityNew.class);
     }
 
     private void startActivity(Class aClass) {
@@ -223,13 +224,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void openBlockedByFollowing() {
         // It will show list of users who doesn't Follow me but I follow them
         // Get the following who are not in followers
-        startActivity(NotFollowingBackActivity.class);
+//        startActivity(NotFollowingBackActivity.class);
+        startActivity(UnFollowersActivity.class);
     }
 
     private void openBlockedFollowers() {
         // It will show list of users who follow me but I don't follow them
         // Get the followers who are not in following
-        startActivity(NotFollowingMeBackActivity.class);
+        startActivity(NotFollowingBackActivity.class);
     }
 
     private void openLikeGraph() {

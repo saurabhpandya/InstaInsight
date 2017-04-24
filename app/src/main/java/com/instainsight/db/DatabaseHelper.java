@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.instainsight.db.tables.USERS;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Table Names
@@ -99,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATEMEDIA);
         db.execSQL(CREATEFOLLOWERSTABLE);
         db.execSQL(CREATEFOLLOWINGTABLE);
-        db.execSQL(CREATEUSERSTABLE);
+        db.execSQL(USERS.createTable());
     }
 
     @Override
@@ -108,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEDIA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FOLLOWERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FOLLOWING);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL(USERS.dropTable());
         // create new tables
         onCreate(db);
     }

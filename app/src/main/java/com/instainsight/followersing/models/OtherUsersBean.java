@@ -2,6 +2,7 @@ package com.instainsight.followersing.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.models.UserCountBean;
 
 /**
@@ -20,6 +21,16 @@ public class OtherUsersBean {
     private UserCountBean userCountBean;
     private String follows;
     private String followed_by;
+
+    private RelationShipStatus relationShipStatus;
+
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
+    }
+
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
+    }
 
     public String getId() {
         return id;

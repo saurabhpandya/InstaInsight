@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.instainsight.models.CommentsBean;
 import com.instainsight.models.ImagesBean;
 import com.instainsight.models.LikesBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.models.UserBean;
 
 /**
@@ -31,6 +32,8 @@ public class ILikedMostBean {
     private UserBean usersBean;
 
     private String likedUserId;
+
+    private RelationShipStatus relationShipStatus;
 
     public String getLikedUserId() {
         return likedUserId;
@@ -102,5 +105,13 @@ public class ILikedMostBean {
 
     public void setUsersBean(UserBean usersBean) {
         this.usersBean = usersBean;
+    }
+
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
+    }
+
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
     }
 }

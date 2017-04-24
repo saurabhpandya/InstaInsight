@@ -12,6 +12,8 @@ import com.instainsight.login.LoginActivity;
 import com.instainsight.media.RecentMediaService;
 import com.instainsight.media.models.MediaBean;
 import com.instainsight.models.ListResponseBean;
+import com.instainsight.models.ObjectResponseBean;
+import com.instainsight.models.RelationShipStatus;
 import com.instainsight.models.UserBean;
 import com.instainsight.mytoplikers.MyTopLikersEvent;
 import com.instainsight.viewmodels.BaseViewModel;
@@ -20,8 +22,11 @@ import com.instainsight.viewmodels.IViewModel;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -142,5 +147,55 @@ public class MyTopLikersViewModel extends BaseViewModel implements IViewModel {
         }
     }
 
+    public Single<List<ArrayList<UserBean>>> getMyTopLikers() {
 
+        return recentMediaService.getMediaToGetTopLikers(mInstagramSession.getAccessToken())
+                .concatMap(new Function<ListResponseBean<MediaBean>, Observable<MediaBean>>() {
+                    @Override
+                    public Observable<MediaBean> apply(ListResponseBean<MediaBean> mediaList) throws Exception {
+
+                        return Observable.fromIterable(mediaList.getData());
+                    }
+                })
+                .concatMap(new Function<MediaBean, Observable<ListResponseBean<UserBean>>>() {
+                    @Override
+                    public Observable<ListResponseBean<UserBean>> apply(MediaBean mediaBean) throws Exception {
+                        Log.d(TAG, "mediaBean.getMediaId():" + mediaBean.getMediaId());
+                        return recentMediaService.getRecentMediaTopLikers(mediaBean.getMediaId(),
+                                mInstagramSession.getAccessToken());
+                    }
+                })
+                .concatMap(new Function<ListResponseBean<UserBean>, Observable<ArrayList<UserBean>>>() {
+                    @Override
+                    public Observable<ArrayList<UserBean>> apply(ListResponseBean<UserBean> userBeanListResponseBean) throws Exception {
+                        return Observable.just(userBeanListResponseBean.getData());
+                    }
+                })
+                .toList();
+    }
+
+    public Single<List<UserBean>> getRelationShipStatus(final ArrayList<UserBean> arylstTopLikers) {
+
+        return Observable.fromIterable(arylstTopLikers)
+                .concatMap(new Function<UserBean, Observable<UserBean>>() {
+                    @Override
+                    public Observable<UserBean> apply(UserBean userBean) throws Exception {
+                        return Observable.zip(Observable.just(userBean),
+                                recentMediaService.getRelationShipStatus(userBean.getId(), mInstagramSession.getAccessToken()),
+                                new BiFunction<UserBean, ObjectResponseBean<RelationShipStatus>, UserBean>() {
+                                    @Override
+                                    public UserBean apply(UserBean userBean, ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                                        userBean.setRelationshipStatus(relationShipStatusBean.getData());
+                                        return userBean;
+                                    }
+                                });
+                    }
+                }).toList();
+    }
+
+    public Observable<ObjectResponseBean<RelationShipStatus>> changeRelationshipStatus(String action,
+                                                                                       String userId,
+                                                                                       String accessToken) {
+        return recentMediaService.setRelationShipStatus(action, userId, accessToken);
+    }
 }

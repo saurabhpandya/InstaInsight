@@ -9,32 +9,31 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.instainsight.IRelationshipStatus;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
 import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
+import com.instainsight.Utils.Utility;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityIlikedMostBinding;
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.instainsight.ilikedmost.viewmodel.ILikedMostViewModel;
 import com.instainsight.models.ObjectResponseBean;
 import com.instainsight.models.RelationShipStatus;
-import com.instainsight.networking.RestClient;
+import com.instainsight.models.UserBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.instainsight.instagram.util.Cons.DAGGER_API_BASE_URL;
 
 public class ILikedMostActivity extends ViewModelActivity implements RelationshipStatusChangeListner {
 
@@ -43,6 +42,7 @@ public class ILikedMostActivity extends ViewModelActivity implements Relationshi
     ActivityIlikedMostBinding activityIlikedMostBinding;
     private String TAG = ILikedMostActivity.class.getSimpleName();
     private ILikedMostAdap mAdapter;
+    private ArrayList<ILikedMostBean> arylstILikedMost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,6 @@ public class ILikedMostActivity extends ViewModelActivity implements Relationshi
     }
 
     private void initActionbar() {
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.base));
         getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -101,11 +100,37 @@ public class ILikedMostActivity extends ViewModelActivity implements Relationshi
             activityIlikedMostBinding.rcyclrvwIlikedmost.setVisibility(View.VISIBLE);
             activityIlikedMostBinding.prgsbrIlikedmost.setVisibility(View.GONE);
             activityIlikedMostBinding.txtvwNoIlikedmost.setVisibility(View.GONE);
+            getRelationShipStatus(arylstILikedMost);
         } else {
             activityIlikedMostBinding.rcyclrvwIlikedmost.setVisibility(View.GONE);
             activityIlikedMostBinding.prgsbrIlikedmost.setVisibility(View.GONE);
             activityIlikedMostBinding.txtvwNoIlikedmost.setVisibility(View.VISIBLE);
         }
+
+    }
+
+    private void getRelationShipStatus(ArrayList<ILikedMostBean> arylstTopLikers) {
+        iLikedMostViewModel.getRelationShipStatus(arylstTopLikers)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<ILikedMostBean>>() {
+                    @Override
+                    public void accept(List<ILikedMostBean> iLikedMostBeanList) throws Exception {
+                        Log.d(TAG, "getRelationShipStatus:iLikedMostBeanList.size():" + iLikedMostBeanList.size());
+                        if (iLikedMostBeanList.size() > 0) {
+                            arylstILikedMost = new ArrayList<ILikedMostBean>();
+                            for (int i = 0; i < iLikedMostBeanList.size(); i++) {
+                                arylstILikedMost.add(iLikedMostBeanList.get(i));
+                                mAdapter.addFollowersing(arylstILikedMost);
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        Utility.showToast(getApplicationContext(), getResources().getString(R.string.tst_api_failure));
+                    }
+                });
     }
 
     @Override
@@ -121,21 +146,60 @@ public class ILikedMostActivity extends ViewModelActivity implements Relationshi
 
     @Override
     public void onClickToChangeRelationStatus(final int position, String userId) {
-        RestClient restClient = new RestClient(DAGGER_API_BASE_URL);
-        IRelationshipStatus iRelationshipStatus = restClient.create(IRelationshipStatus.class);
 
-        iRelationshipStatus.changeRelationshipStatus("unfollow", userId, mInstagramSession.getAccessToken())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
-                    @Override
-                    public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
-                        mAdapter.removeILikedMost(position);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+        if (arylstILikedMost.size() > 0) {
+
+            final ILikedMostBean iLikedMostBean = arylstILikedMost.get(position);
+
+            final UserBean iLikeMostUserBean = iLikedMostBean.getUsersBean();
+            String action = "";
+            if (iLikeMostUserBean.getRelationshipStatus().getOutgoing_status().equalsIgnoreCase("none")) {
+                action = "follow";
+            } else if (iLikeMostUserBean.getRelationshipStatus().getOutgoing_status().equalsIgnoreCase("requested")) {
+                action = "unfollow";
+            } else if (iLikeMostUserBean.getRelationshipStatus().getOutgoing_status().equalsIgnoreCase("follows")) {
+                action = "unfollow";
+            }
+            iLikedMostViewModel.changeRelationshipStatus(action, iLikeMostUserBean.getId(),
+                    mInstagramSession.getAccessToken())
+                    .subscribe(new Consumer<ObjectResponseBean<RelationShipStatus>>() {
+                        @Override
+                        public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusBean) throws Exception {
+                            RelationShipStatus relationShipStatus = relationShipStatusBean.getData();
+
+                            iLikeMostUserBean.setRelationshipStatus(relationShipStatus);
+                            iLikedMostBean.setUsersBean(iLikeMostUserBean);
+                            arylstILikedMost.set(position, iLikedMostBean);
+                            mAdapter.notifyDataSetChanged();
+
+                            if (arylstILikedMost.size() == 0) {
+                                activityIlikedMostBinding.rcyclrvwIlikedmost.setVisibility(View.GONE);
+                                activityIlikedMostBinding.prgsbrIlikedmost.setVisibility(View.GONE);
+                                activityIlikedMostBinding.txtvwNoIlikedmost.setVisibility(View.VISIBLE);
+                            }
+
+//                            if (relationShipStatus.getOutgoing_status().equalsIgnoreCase("none")) {
+////                                arylstILikedMost.remove(position);
+////                                mAdapter.removeILikedMost(position);
+////                                mAdapter.notifyDataSetChanged();
+//                                if (arylstILikedMost.size() == 0) {
+//                                    activityIlikedMostBinding.rcyclrvwIlikedmost.setVisibility(View.GONE);
+//                                    activityIlikedMostBinding.prgsbrIlikedmost.setVisibility(View.GONE);
+//                                    activityIlikedMostBinding.txtvwNoIlikedmost.setVisibility(View.VISIBLE);
+//                                }
+//                            } else {
+//                                iLikeMostUserBean.setRelationshipStatus(relationShipStatus);
+//                                iLikedMostBean.setUsersBean(iLikeMostUserBean);
+//                                arylstILikedMost.set(position, iLikedMostBean);
+//                                mAdapter.notifyDataSetChanged();
+//                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            throwable.printStackTrace();
+                        }
+                    });
+        }
     }
 }

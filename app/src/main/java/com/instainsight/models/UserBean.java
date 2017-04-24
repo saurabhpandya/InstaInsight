@@ -1,15 +1,18 @@
 package com.instainsight.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by SONY on 11-02-2017.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserBean {
 
     private String username;
     private String full_name;
     private String profile_picture;
     private String id;
+    private RelationShipStatus relationshipStatus;
 
     public String getUsername() {
         return username;
@@ -41,5 +44,13 @@ public class UserBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public RelationShipStatus getRelationshipStatus() {
+        return relationshipStatus;
+    }
+
+    public void setRelationshipStatus(RelationShipStatus relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
     }
 }

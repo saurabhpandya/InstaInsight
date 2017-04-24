@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/txtvw_followersing_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_10sdp"
@@ -35,13 +35,33 @@
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtvw_followersing"
+        <RelativeLayout
+            android:id="@+id/rltv_followersing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:background="@drawable/unfollow"
-            android:gravity="center" />
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/txtvw_followersing"
+                android:layout_width="@dimen/_65sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/gray"
+                android:gravity="center"
+                android:padding="@dimen/_4sdp"
+                android:singleLine="true"
+                android:text="@string/lbl_follow"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12sdp" />
+
+            <ProgressBar
+                android:id="@+id/prgrs_followunfollow"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:theme="@style/AppTheme.WhiteAccent" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

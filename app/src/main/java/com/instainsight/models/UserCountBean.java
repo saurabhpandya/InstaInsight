@@ -1,9 +1,12 @@
 package com.instainsight.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by SONY on 14-02-2017.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserCountBean {
     private String media;
     private String follows;

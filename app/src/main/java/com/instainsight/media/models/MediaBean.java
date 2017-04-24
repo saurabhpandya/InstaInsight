@@ -1,5 +1,6 @@
 package com.instainsight.media.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.instainsight.models.CaptionBean;
 import com.instainsight.models.CommentsBean;
@@ -16,8 +17,10 @@ import java.util.ArrayList;
  * Created by SONY on 07-02-2017.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaBean {
 
+    @JsonProperty("attribution")
     private String attribution;
     @JsonProperty("likes")
     private LikesBean likesBean;

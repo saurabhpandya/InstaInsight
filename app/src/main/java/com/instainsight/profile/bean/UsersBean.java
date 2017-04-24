@@ -1,47 +1,31 @@
 package com.instainsight.profile.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.instainsight.models.RelationShipStatus;
+import com.instainsight.models.UserCountBean;
+
 /**
  * Created by SONY on 18-12-2016.
  */
 
-public class UsersBean /*extends Observable*/ {
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UsersBean {
+    @JsonProperty("id")
     private String userId;
+    @JsonProperty("username")
     private String userName;
+    @JsonProperty("full_name")
     private String userFullName;
+    @JsonProperty("profile_picture")
     private String profilePic;
+    @JsonProperty("bio")
     private String bio;
-    private String followingCount;
-    private String followerCount;
-    private String newFollowingCount;
-    private String newFollowerCount;
-//    private boolean update;
-
-//    public boolean isUpdate() {
-//        return update;
-//    }
-//
-//    public void setUpdate(boolean update) {
-//        this.update = update;
-//        setChanged();
-//        notifyObservers();
-//    }
-
-    public String getNewFollowingCount() {
-        return newFollowingCount;
-    }
-
-    public void setNewFollowingCount(String newFollowingCount) {
-        this.newFollowingCount = newFollowingCount;
-    }
-
-    public String getNewFollowerCount() {
-        return newFollowerCount;
-    }
-
-    public void setNewFollowerCount(String newFollowerCount) {
-        this.newFollowerCount = newFollowerCount;
-    }
+    @JsonProperty("counts")
+    private UserCountBean userCountBean;
+    private RelationShipStatus relationShipStatus;
+    private String newFollowedByCount;
+    private String newFollowsCount;
 
     public String getUserId() {
         return userId;
@@ -83,19 +67,36 @@ public class UsersBean /*extends Observable*/ {
         this.bio = bio;
     }
 
-    public String getFollowingCount() {
-        return followingCount;
+    public UserCountBean getUserCountBean() {
+        return userCountBean;
     }
 
-    public void setFollowingCount(String followingCount) {
-        this.followingCount = followingCount;
+    public void setUserCountBean(UserCountBean userCountBean) {
+        this.userCountBean = userCountBean;
     }
 
-    public String getFollowerCount() {
-        return followerCount;
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
     }
 
-    public void setFollowerCount(String followerCount) {
-        this.followerCount = followerCount;
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
+    }
+
+    public String getNewFollowedByCount() {
+        return newFollowedByCount;
+    }
+
+    public void setNewFollowedByCount(String newFollowedByCount) {
+        this.newFollowedByCount = newFollowedByCount;
+    }
+
+    public String getNewFollowsCount() {
+        return newFollowsCount;
+    }
+
+    public void setNewFollowsCount(String newFollowsCount) {
+        this.newFollowsCount = newFollowsCount;
     }
 }
+

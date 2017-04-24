@@ -17,7 +17,7 @@ import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants.WebFields;
-import com.instainsight.followersing.adapter.FollowersingAdap;
+import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.followers.dao.FollowersDao;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.login.LoginActivity;
@@ -42,8 +42,8 @@ public class FollowersActivity extends BaseActivity implements RelationshipStatu
     private String TAG = FollowersActivity.class.getSimpleName();
     private RecyclerView rcyclrvw_follower;
     private TextView txtvw_no_followers;
-    private FollowersingAdap mAdapter;
-    private ArrayList<Object> arylstFollowers;
+    private FollowersAdap mAdapter;
+    private ArrayList<FollowerBean> arylstFollowers;
     private ProgressBar prgsbr_followers;
 
     @Override
@@ -70,8 +70,8 @@ public class FollowersActivity extends BaseActivity implements RelationshipStatu
     }
 
     private void initRecyclerView() {
-        arylstFollowers = new ArrayList<Object>();
-        mAdapter = new FollowersingAdap(FollowersActivity.this, arylstFollowers, "Follower", this);
+        arylstFollowers = new ArrayList<>();
+        mAdapter = new FollowersAdap(FollowersActivity.this, arylstFollowers, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         rcyclrvw_follower.setLayoutManager(mLayoutManager);
         rcyclrvw_follower.setItemAnimator(new DefaultItemAnimator());
@@ -117,7 +117,6 @@ public class FollowersActivity extends BaseActivity implements RelationshipStatu
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
                             }
 
                             @Override

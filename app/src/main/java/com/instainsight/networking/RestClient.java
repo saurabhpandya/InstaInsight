@@ -21,6 +21,7 @@ public class RestClient {
                 .build();
     }
 
+
     /**
      * Creates an implementation of the API defined by the ApiInterfaceClass
      *

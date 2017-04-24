@@ -1,5 +1,7 @@
 package com.instainsight.whoviewedprofile.model;
 
+import com.instainsight.models.RelationShipStatus;
+
 /**
  * Created by SONY on 26-02-2017.
  */
@@ -12,6 +14,7 @@ public class WhoViewedProfileBean {
     private String id;
     private String type;
     private int points;
+    private RelationShipStatus relationShipStatus;
 
     public int getPoints() {
         return points;
@@ -59,5 +62,13 @@ public class WhoViewedProfileBean {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
+    }
+
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
     }
 }

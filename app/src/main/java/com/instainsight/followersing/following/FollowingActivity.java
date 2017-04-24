@@ -17,7 +17,7 @@ import com.instainsight.RelationshipStatusChangeListner;
 import com.instainsight.Utils.DividerItemDecoration;
 import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
-import com.instainsight.followersing.adapter.FollowersingAdap;
+import com.instainsight.followersing.following.bean.FollowingBean;
 import com.instainsight.followersing.following.dao.FollowingDao;
 import com.instainsight.instagram.InstagramRequest;
 import com.instainsight.login.LoginActivity;
@@ -42,8 +42,8 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
     private String TAG = FollowingActivity.class.getSimpleName();
     private RecyclerView rcyclrvw_following;
     private TextView txtvw_no_following;
-    private FollowersingAdap mAdapter;
-    private ArrayList<Object> arylstFollowing;
+    private FollowingAdap mAdapter;
+    private ArrayList<FollowingBean> arylstFollowing;
     private ProgressBar prgsbr_following;
 
     @Override
@@ -70,8 +70,8 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
     }
 
     private void initRecyclerView() {
-        arylstFollowing = new ArrayList<Object>();
-        mAdapter = new FollowersingAdap(FollowingActivity.this, arylstFollowing, "Following", this);
+        arylstFollowing = new ArrayList<>();
+        mAdapter = new FollowingAdap(FollowingActivity.this, arylstFollowing, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         rcyclrvw_following.setLayoutManager(mLayoutManager);
         rcyclrvw_following.setItemAnimator(new DefaultItemAnimator());
@@ -96,7 +96,7 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
                                 if (arylstFollowing.size() > 0) {
                                     rcyclrvw_following.setVisibility(View.VISIBLE);
                                     txtvw_no_following.setVisibility(View.GONE);
-                                    mAdapter.addFollowersing(arylstFollowing);
+                                    mAdapter.addFollows(arylstFollowing);
                                     mAdapter.notifyDataSetChanged();
                                 } else {
                                     rcyclrvw_following.setVisibility(View.GONE);
@@ -129,7 +129,7 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
             } else {
                 FollowingDao followingDao = new FollowingDao(FollowingActivity.this);
                 arylstFollowing = followingDao.getAllFollowing();
-                mAdapter.addFollowersing(arylstFollowing);
+                mAdapter.addFollows(arylstFollowing);
                 mAdapter.notifyDataSetChanged();
             }
         } else {
@@ -154,7 +154,7 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
                         arylstFollowing = followingDao.getFollowing(response);
                         followingDao.saveFollowing(arylstFollowing);
                         arylstFollowing = followingDao.getAllFollowing();
-                        mAdapter.addFollowersing(arylstFollowing);
+                        mAdapter.addFollows(arylstFollowing);
                         mAdapter.notifyDataSetChanged();
 
                         JSONObject jsnObjRsps = null;
@@ -204,7 +204,7 @@ public class FollowingActivity extends BaseActivity implements RelationshipStatu
                     @Override
                     public void accept(ObjectResponseBean<RelationShipStatus> relationShipStatusObjectResponseBean) throws Exception {
                         arylstFollowing.remove(position);
-                        mAdapter.removeFollowersing(position);
+                        mAdapter.removeFollows(position);
                         mAdapter.notifyDataSetChanged();
                     }
                 }, new Consumer<Throwable>() {

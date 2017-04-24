@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_not_following_back"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.instainsight.followersing.NotFollowingBackActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcyclrvw_notfollowingback"
+    <data>
+
+        <variable
+            name="notFollowingBackViewModel"
+            type="com.instainsight.iamnotfollowingback.viewmodel.NotFollowingBackViewModel" />
+    </data>
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_not_following_back"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent"
+        tools:context="com.instainsight.followersing.NotFollowingMeBackActivity">
 
-    <TextView
-        android:id="@+id/txtvw_no_notfollowingback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/lbl_no_data_found"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="@dimen/font_20sp"
-        android:visibility="gone" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyclrvw_notfollowingback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
 
-    <ProgressBar
-        android:id="@+id/prgsbr_notfollowingback"
-        style="?android:progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/txtvw_no_notfollowingback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/lbl_no_data_found"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/font_20sp"
+            android:visibility="gone" />
 
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/prgsbr_notfollowingback"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+</layout>

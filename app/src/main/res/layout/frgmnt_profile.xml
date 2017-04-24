@@ -16,13 +16,14 @@
         <RelativeLayout
             android:id="@+id/rltv_userinfo_pic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/base" />
+                android:layout_height="@dimen/_170sdp"
+                android:background="@color/red"
+                android:scaleType="fitXY" />
 
             <RelativeLayout
                 android:id="@+id/rltv_userinfo"

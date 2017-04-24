@@ -96,7 +96,7 @@ public class InAppPurchaseActivity extends Activity implements IabBroadcastRecei
     static final String SKU_PREMIUM = "premium";
     static final String SKU_GAS = "gas";
     // SKU for our subscription (infinite gas)
-    static final String SKU_INFINITE_GAS_MONTHLY = "infinite_gas_monthly";
+    static final String SKU_INFINITE_GAS_MONTHLY = "remove_ads_1_month";
     static final String SKU_INFINITE_GAS_YEARLY = "infinite_gas_yearly";
     // (arbitrary) request code for the purchase flow
     static final int RC_REQUEST = 10001;
@@ -290,7 +290,7 @@ public class InAppPurchaseActivity extends Activity implements IabBroadcastRecei
          * want to make it easy for an attacker to replace the public key with one
          * of their own and then fake messages from the server.
          */
-        String base64EncodedPublicKey = "dsadasdasfsafgasfsaf";
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjMBYres8lMU0mHP6MvSpTp7cIr06c1yy+l2bjF0f48ZjntNkaLYSdaU1U8sri3eDL3pRi6Jz+4uQltw0p8Mu/v/NZ3ZpEU8HZdqDf0V0qazmkNP8qHfrmP8kAcjjh5kE44Un1MfG3tLaSGQx6fLMETRvOLBkdj/n9TK397nDvx/2lqhiRd2i0An1mEkwvuEtIJ3jHjwyQVMrktd/8hOimLCPDJNLz15r+Lt4SMzntshLUafhNLQeMaVnAbMTwqxiZEr+eFribwU9FZ8oFArZhnpr37s6wyX3/uHfDM1P6aDNMeHmNNWGvbYcIksFCmVaD8SjBCy7RXCLrOIbjbwK/QIDAQAB";
 
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)

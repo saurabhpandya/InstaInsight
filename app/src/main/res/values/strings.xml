@@ -8,12 +8,15 @@
     <string name="menu_freeuser">Free User</string>
     <string name="menu_paiduser">Pro User</string>
 
+    <string name="tab_freeuser">Free</string>
+    <string name="tab_paiduser">Pro</string>
+
     <string name="lbl_follower">Follower</string>
     <string name="lbl_following">Following</string>
 
     <string name="lbl_newfollowers">New Followers</string>
     <string name="lbl_newfollowing">New Following</string>
-    <string name="lbl_blockedbyfollowing">Unfollowers</string>
+    <string name="lbl_blockedbyfollowing">Not Following Back</string>
     <string name="lbl_blockedfollowers">I am not Following Back</string>
     <string name="lbl_likegraphs">Like Trend</string>
 
@@ -43,5 +46,21 @@
     <string name="content_description_title_image">80\'s Video Game Style Car Logo</string>
     <string name="content_desc_gas_gauge_indicator">Gas gauge indicator</string>
     <string name="content_desc_free_vs_premium_indicator">Free or Premium Image Indicator</string>
+
+    <string name="tst_api_failure">Something went wrong. Please try again..</string>
+
+    <string name="tst_no_internet">Please connect to Internet.</string>
+
+    <string name="lbl_follow">Follow</string>
+    <string name="lbl_unfollow">Unfollow</string>
+
+    <string name="lbl_go_pro">Go Pro</string>
+    <string name="lbl_upgradetopro">Upgrade to Pro</string>
+    <string name="lbl_removeads">Remove Ads</string>
+
+    <string name="inapp_subscription_1month">Monthly</string>
+    <string name="inapp_subscription_6months">Half Yearly</string>
+    <string name="inapp_subscription_1year">Yearly</string>
+
 
 </resources>

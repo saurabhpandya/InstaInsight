@@ -3,10 +3,12 @@ package com.instainsight;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.instainsight.Utils.ConnectivityReceiver;
 import com.instainsight.instagram.Instagram;
 import com.instainsight.instagram.InstagramSession;
 
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 import static com.instainsight.constants.Constants.CLIENT_ID;
@@ -47,6 +49,7 @@ private ApplicationComponent mComponent;
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mInstance = this;
 
         mComponent = DaggerApplicationComponent.builder()

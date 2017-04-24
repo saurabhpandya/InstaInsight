@@ -2,6 +2,7 @@ package com.instainsight.followersing.followers.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.instainsight.models.RelationShipStatus;
 
 /**
  * Created by SONY on 18-12-2016.
@@ -18,6 +19,16 @@ public class FollowerBean {
     private String fullName;
     @JsonProperty("id")
     private String id;
+
+    private RelationShipStatus relationShipStatus;
+
+    public RelationShipStatus getRelationShipStatus() {
+        return relationShipStatus;
+    }
+
+    public void setRelationShipStatus(RelationShipStatus relationShipStatus) {
+        this.relationShipStatus = relationShipStatus;
+    }
 
     public String getUserName() {
         return userName;

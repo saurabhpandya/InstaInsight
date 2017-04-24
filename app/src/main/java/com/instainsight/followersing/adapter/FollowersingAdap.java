@@ -37,7 +37,7 @@ public class FollowersingAdap extends RecyclerView.Adapter<FollowersingAdap.MyVi
         this.relationshipStatusChangeListner = relationshipStatusChangeListner;
     }
 
-    public void addFollowersing(ArrayList<Object> followersingList) {
+    public void addFollowersing(ArrayList<FollowingBean> followersingList) {
         this.followersingList.addAll(followersingList);
     }
 
