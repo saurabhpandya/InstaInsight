@@ -96,6 +96,7 @@ public class FollowingActivityNew extends BaseActivity implements RelationshipSt
                             @Override
                             public Observable<ArrayList<FollowingBean>> apply(ArrayList<FollowingBean> followingBeen) throws Exception {
                                 FollowsDBQueries followsDBQueries = new FollowsDBQueries(getApplicationContext());
+                                followsDBQueries.getFollowsNotInRelation(followingBeen);
                                 return followsDBQueries.saveFollows(followingBeen);
                             }
                         })

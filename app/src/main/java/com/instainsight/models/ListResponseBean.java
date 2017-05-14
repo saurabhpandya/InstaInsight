@@ -9,8 +9,7 @@ import java.util.ArrayList;
  * Created by saurabhp on 12-01-2017.
  */
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIgnoreProperties({"meta", "pagination"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListResponseBean<T> /*extends BaseResponseBean*/ {
 
     @JsonProperty("data")

@@ -36,7 +36,7 @@ public class LandingViewModel extends BaseViewModel implements IViewModel {
     private InstagramSession mInstagramSession;
     private InterstitialAd mInterstitialAd;
     private LandingServices landingServices;
-    private Handler handlerForAds = new Handler();
+    private Handler handlerForAds;
     private Runnable runnableAds = new Runnable() {
         @Override
         public void run() {
@@ -117,6 +117,7 @@ public class LandingViewModel extends BaseViewModel implements IViewModel {
 
         mInterstitialAd.setAdListener(new AdListener() {
             public void onAdLoaded() {
+                handlerForAds = new Handler();
                 handlerForAds.postDelayed(runnableAds, ADS_DELAY);
             }
         });
@@ -126,6 +127,16 @@ public class LandingViewModel extends BaseViewModel implements IViewModel {
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         }
+    }
+
+    public void doNotShowAd() {
+        if (handlerForAds != null) {
+            handlerForAds.removeCallbacks(runnableAds);
+            runnableAds = null;
+            handlerForAds = null;
+        }
+        runnableAds = null;
+        handlerForAds = null;
     }
 
 }

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaBean {
 
-    @JsonProperty("attribution")
-    private String attribution;
+    //    @JsonProperty("attribution")
+//    private String attribution;
     @JsonProperty("likes")
     private LikesBean likesBean;
     private String user_has_liked;
@@ -47,13 +47,13 @@ public class MediaBean {
     private String link;
     private String type;
 
-    public String getAttribution() {
-        return attribution;
-    }
-
-    public void setAttribution(String attribution) {
-        this.attribution = attribution;
-    }
+//    public String getAttribution() {
+//        return attribution;
+//    }
+//
+//    public void setAttribution(String attribution) {
+//        this.attribution = attribution;
+//    }
 
     public LikesBean getLikesBean() {
         return likesBean;

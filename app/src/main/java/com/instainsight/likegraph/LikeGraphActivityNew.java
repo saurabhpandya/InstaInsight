@@ -1,12 +1,11 @@
 package com.instainsight.likegraph;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,14 +21,15 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.instainsight.InstaInsightApp;
 import com.instainsight.R;
+import com.instainsight.Utils.Utility;
 import com.instainsight.ViewModelActivity;
 import com.instainsight.databinding.ActivityLikeGraphNewBinding;
 import com.instainsight.likegraph.viewmodel.LikeGraphViewModel;
+import com.instainsight.login.LoginActivity;
 import com.instainsight.media.models.MediaBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ((InstaInsightApp) getApplication()).getComponent().inject(LikeGraphActivityNew.this);
         super.onCreate(savedInstanceState);
-        setTitle(R.string.lbl_likegraphs);
+        setTitle(getResources().getString(R.string.lbl_likegraphs) + " for Last 7 Posts");
         initActionbar();
         activityLikeGraphNewBinding = DataBindingUtil.setContentView(this, R.layout.activity_like_graph_new);
         activityLikeGraphNewBinding.setLikeGraph(likeGraphViewModel);
@@ -59,12 +59,31 @@ public class LikeGraphActivityNew extends ViewModelActivity {
     }
 
     public void getLikeGraphData() {
-        likeGraphViewModel.getLikeGraphData().subscribe(new Consumer<ArrayList<MediaBean>>() {
-            @Override
-            public void accept(ArrayList<MediaBean> arylstLikeGraph) throws Exception {
-                showGraphData(arylstLikeGraph);
+        if (mInstagramSession.isActive()) {
+            if (isConnected()) {
+                likeGraphViewModel.getLikeGraphData()
+                        .subscribe(new Consumer<ArrayList<MediaBean>>() {
+                            @Override
+                            public void accept(ArrayList<MediaBean> arylstLikeGraph) throws Exception {
+                                showGraphData(arylstLikeGraph);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Utility.showToast(LikeGraphActivityNew.this, getResources().getString(R.string.tst_api_failure));
+                            }
+                        });
+
+            } else {
+                Utility.showToast(LikeGraphActivityNew.this, getResources().getString(R.string.tst_no_internet));
             }
-        });
+        } else {
+            Utility.showToast(this, "Could not authentication, need to log in again");
+            Intent intent = new Intent(LikeGraphActivityNew.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void initActionbar() {
@@ -134,7 +153,7 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         activityLikeGraphNewBinding.linechart.setPinchZoom(false);
-        activityLikeGraphNewBinding.linechart.setBackgroundColor(Color.parseColor("#DD3A5B"));
+        activityLikeGraphNewBinding.linechart.setBackgroundColor(Color.parseColor("#C90039"));
         activityLikeGraphNewBinding.linechart.setNoDataTextColor(getResources().getColor(android.R.color.darker_gray));
 
         // set an alternative background color
@@ -235,14 +254,16 @@ public class LikeGraphActivityNew extends ViewModelActivity {
     private void setData(ArrayList<MediaBean> aryLstLikes1) {
 
         ArrayList<MediaBean> aryLstLikes = aryLstLikes1;
-//        Collections.reverse(aryLstLikes);
-        Collections.sort(aryLstLikes, new Comparator<MediaBean>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public int compare(MediaBean mediaBean, MediaBean t1) {
-                return Integer.compare(mediaBean.getLikesBean().getCount(), t1.getLikesBean().getCount());
-            }
-        });
+
+        Collections.reverse(aryLstLikes);
+
+//        Collections.sort(aryLstLikes, new Comparator<MediaBean>() {
+//            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//            @Override
+//            public int compare(MediaBean mediaBean, MediaBean t1) {
+//                return Integer.compare(mediaBean.getLikesBean().getCount(), t1.getLikesBean().getCount());
+//            }
+//        });
 
         ArrayList<Entry> values = new ArrayList<Entry>();
         if (aryLstLikes.size() > 7) {
@@ -283,9 +304,9 @@ public class LikeGraphActivityNew extends ViewModelActivity {
             set1 = new LineDataSet(values, "");
 
             // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.parseColor("#ffdd3aad"));
+            set1.enableDashedLine(10f, 2f, 0f);
+            set1.enableDashedHighlightLine(10f, 2f, 0f);
+            set1.setColor(getResources().getColor(android.R.color.white));
             set1.setCircleColor(Color.WHITE);
             set1.setLineWidth(1f);
             set1.setCircleRadius(3f);

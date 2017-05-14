@@ -58,7 +58,7 @@ public class RecentMediaDBQueriesNew {
         for (MediaBean bean : arylstRecentMedia) {
             Map<String, Object> valuesMap = new HashMap<>();
 
-            valuesMap.put(MEDIA.ATTRIBUTION, bean.getAttribution());
+//            valuesMap.put(MEDIA.ATTRIBUTION, bean.getAttribution());
             valuesMap.put(MEDIA.LIKES_COUNT, bean.getLikesBean().getCount());
             valuesMap.put(MEDIA.USERHASLIKED, bean.getUser_has_liked());
 
@@ -169,7 +169,7 @@ public class RecentMediaDBQueriesNew {
             for (int i = 0; i < count; i++) {
                 MediaBean data = new MediaBean();
 
-                data.setAttribution(cursor.getString(cursor.getColumnIndex(MEDIA.ATTRIBUTION)));
+//                data.setAttribution(cursor.getString(cursor.getColumnIndex(MEDIA.ATTRIBUTION)));
 
                 LikesBean likesBean = new LikesBean();
                 likesBean.setCount(cursor.getInt(cursor.getColumnIndex(MEDIA.LIKES_COUNT)));

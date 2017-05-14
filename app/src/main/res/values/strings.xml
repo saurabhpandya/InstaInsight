@@ -58,9 +58,9 @@
     <string name="lbl_upgradetopro">Upgrade to Pro</string>
     <string name="lbl_removeads">Remove Ads</string>
 
-    <string name="inapp_subscription_1month">Monthly</string>
-    <string name="inapp_subscription_6months">Half Yearly</string>
-    <string name="inapp_subscription_1year">Yearly</string>
+    <string name="inapp_subscription_1month">Monthly for $0.99/MO</string>
+    <string name="inapp_subscription_6months">Half Yearly $0.75/MO</string>
+    <string name="inapp_subscription_1year">Yearly $0.49/MO</string>
 
 
 </resources>

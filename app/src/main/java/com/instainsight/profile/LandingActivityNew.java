@@ -28,6 +28,10 @@ import com.instainsight.db.tables.PROFILEVIEWER;
 import com.instainsight.db.tables.RECENTMEDIA;
 import com.instainsight.db.tables.USERS;
 import com.instainsight.db.tables.USERSELF;
+import com.instainsight.db.tables.USERS_FOLLOWEDBY;
+import com.instainsight.db.tables.USERS_FOLLOWS;
+import com.instainsight.db.tables.USERS_NOT_FOLLOWING_BACK;
+import com.instainsight.db.tables.USERS_UNFOLLOWERS;
 import com.instainsight.login.LoginActivity;
 import com.instainsight.models.ObjectResponseBean;
 import com.instainsight.profile.bean.UsersBean;
@@ -466,6 +470,15 @@ public class LandingActivityNew extends ViewModelActivity implements IabBroadcas
             dbQueries.deleteTable(USERS.TABLE_NAME);
         if (dbQueries.isTableExists(MEDIA.TABLE_NAME))
             dbQueries.deleteTable(MEDIA.TABLE_NAME);
+        if (dbQueries.isTableExists(USERS_UNFOLLOWERS.TABLE_NAME))
+            dbQueries.deleteTable(USERS_UNFOLLOWERS.TABLE_NAME);
+        if (dbQueries.isTableExists(USERS_NOT_FOLLOWING_BACK.TABLE_NAME))
+            dbQueries.deleteTable(USERS_NOT_FOLLOWING_BACK.TABLE_NAME);
+        if (dbQueries.isTableExists(USERS_FOLLOWEDBY.TABLE_NAME))
+            dbQueries.deleteTable(USERS_FOLLOWEDBY.TABLE_NAME);
+        if (dbQueries.isTableExists(USERS_FOLLOWS.TABLE_NAME))
+            dbQueries.deleteTable(USERS_FOLLOWS.TABLE_NAME);
+
         Utility.clearSharedPreference(getApplicationContext());
         mInstagramSession.reset();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -505,6 +518,13 @@ public class LandingActivityNew extends ViewModelActivity implements IabBroadcas
             case DialogInterface.BUTTON_NEGATIVE:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        landingViewModel.doNotShowAd();
+        super.onBackPressed();
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -24,6 +24,8 @@ import com.instainsight.models.RelationShipStatus;
 import com.instainsight.mostpopularfollowers.viewmodel.MostPopularFollowersViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,7 +65,12 @@ public class MostPopularFollowersActivity extends ViewModelActivity implements R
                             @Override
                             public void accept(List<OtherUsersBean> otherUsersBeen) throws Exception {
                                 mostPopularFollowers.addAll(otherUsersBeen);
-
+                                Collections.sort(mostPopularFollowers, new Comparator<OtherUsersBean>() {
+                                    @Override
+                                    public int compare(OtherUsersBean otherUsersBean, OtherUsersBean t1) {
+                                        return t1.getUserCountBean().getFollowed_by().compareTo(otherUsersBean.getUserCountBean().getFollowed_by());
+                                    }
+                                });
                                 if (mostPopularFollowers.size() > 0) {
                                     mAdapter.addMostPopularFollowers(mostPopularFollowers);
                                     mAdapter.notifyDataSetChanged();
@@ -81,6 +88,9 @@ public class MostPopularFollowersActivity extends ViewModelActivity implements R
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 Utility.showToast(MostPopularFollowersActivity.this, throwable.getMessage());
+                                activityMostPopularFollowersBinding.rcyclrvwMostPopularFollowers.setVisibility(View.GONE);
+                                activityMostPopularFollowersBinding.prgsbrMostPopularFollowers.setVisibility(View.GONE);
+                                activityMostPopularFollowersBinding.txtvwNoMostPopularFollowers.setVisibility(View.VISIBLE);
                             }
                         });
             } else {

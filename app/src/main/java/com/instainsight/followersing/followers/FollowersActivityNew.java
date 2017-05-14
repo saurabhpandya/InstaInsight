@@ -96,6 +96,7 @@ public class FollowersActivityNew extends BaseActivity implements RelationshipSt
                             @Override
                             public Observable<ArrayList<FollowerBean>> apply(ArrayList<FollowerBean> aryLstfollowedBy) throws Exception {
                                 FollowedByDBQueries followedByDBQueries = new FollowedByDBQueries(getApplicationContext());
+                                followedByDBQueries.getFollowedByNotInRelation(aryLstfollowedBy);
                                 return followedByDBQueries.saveFollowedBy(aryLstfollowedBy);
                             }
                         })
@@ -113,7 +114,6 @@ public class FollowersActivityNew extends BaseActivity implements RelationshipSt
                                     followersBinding.rcyclrvwFollower.setVisibility(View.GONE);
                                     followersBinding.txtvwNoFollowers.setVisibility(View.VISIBLE);
                                 }
-
 //                                FollowersDao followersDao = new FollowersDao(FollowersActivityNew.this);
 //                                followersDao.saveFollowers(followerBeen);
 //                                arylstFollowers = followersDao.getNewFollowers();
@@ -128,7 +128,6 @@ public class FollowersActivityNew extends BaseActivity implements RelationshipSt
 //                                    followersBinding.rcyclrvwFollower.setVisibility(View.GONE);
 //                                    followersBinding.txtvwNoFollowers.setVisibility(View.VISIBLE);
 //                                }
-
                             }
                         }, new Consumer<Throwable>() {
                             @Override
