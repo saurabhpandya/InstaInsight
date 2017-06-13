@@ -24,6 +24,11 @@ import com.instainsight.databinding.ActivityLandingNewBinding;
 import com.instainsight.db.DBQueries;
 import com.instainsight.db.tables.LIKEDBYUSER;
 import com.instainsight.db.tables.MEDIA;
+import com.instainsight.db.tables.PAID_COMMENTS;
+import com.instainsight.db.tables.PAID_FOLLOWEDBY;
+import com.instainsight.db.tables.PAID_FOLLOWS;
+import com.instainsight.db.tables.PAID_LIKEDUSERS;
+import com.instainsight.db.tables.PAID_MEDIA;
 import com.instainsight.db.tables.PROFILEVIEWER;
 import com.instainsight.db.tables.RECENTMEDIA;
 import com.instainsight.db.tables.USERS;
@@ -288,8 +293,8 @@ public class LandingActivityNew extends ViewModelActivity implements IabBroadcas
                     public void accept(ObjectResponseBean<UsersBean> usersBean) throws Exception {
                         UsersBean userSelfBean = usersBean.getData();
                         landingNewBinding.txtvwProfilename.setText(userSelfBean.getUserFullName());
-                        landingNewBinding.txtvwFollowercount.setText(userSelfBean.getUserCountBean().getFollowed_by());
-                        landingNewBinding.txtvwFollowingcount.setText(userSelfBean.getUserCountBean().getFollows());
+                        landingNewBinding.txtvwFollowercount.setText("" + userSelfBean.getUserCountBean().getFollowed_by());
+                        landingNewBinding.txtvwFollowingcount.setText("" + userSelfBean.getUserCountBean().getFollows());
                         Glide.with(LandingActivityNew.this).load(userSelfBean.getProfilePic()).placeholder(R.drawable.defaultpic)
                                 .dontAnimate().into(landingNewBinding.imgvwProfilepic);
                     }
@@ -478,6 +483,17 @@ public class LandingActivityNew extends ViewModelActivity implements IabBroadcas
             dbQueries.deleteTable(USERS_FOLLOWEDBY.TABLE_NAME);
         if (dbQueries.isTableExists(USERS_FOLLOWS.TABLE_NAME))
             dbQueries.deleteTable(USERS_FOLLOWS.TABLE_NAME);
+
+        if (dbQueries.isTableExists(PAID_FOLLOWS.TABLE_NAME))
+            dbQueries.deleteTable(PAID_FOLLOWS.TABLE_NAME);
+        if (dbQueries.isTableExists(PAID_FOLLOWEDBY.TABLE_NAME))
+            dbQueries.deleteTable(PAID_FOLLOWEDBY.TABLE_NAME);
+        if (dbQueries.isTableExists(PAID_MEDIA.TABLE_NAME))
+            dbQueries.deleteTable(PAID_MEDIA.TABLE_NAME);
+        if (dbQueries.isTableExists(PAID_LIKEDUSERS.TABLE_NAME))
+            dbQueries.deleteTable(PAID_LIKEDUSERS.TABLE_NAME);
+        if (dbQueries.isTableExists(PAID_COMMENTS.TABLE_NAME))
+            dbQueries.deleteTable(PAID_COMMENTS.TABLE_NAME);
 
         Utility.clearSharedPreference(getApplicationContext());
         mInstagramSession.reset();

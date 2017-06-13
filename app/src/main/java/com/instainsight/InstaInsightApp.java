@@ -25,8 +25,8 @@ public class InstaInsightApp extends Application {
 
     private static InstagramSession mInstagramSession;
     private static Instagram mInstagram;
-//    public UsersBean usersBean;
-private ApplicationComponent mComponent;
+    //    public UsersBean usersBean;
+    private ApplicationComponent mComponent;
 
     public static synchronized InstaInsightApp getInstance() {
         return mInstance;

@@ -2,17 +2,14 @@ package com.instainsight.ilikedmost.viewmodel;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
-import com.instainsight.Utils.Utility;
 import com.instainsight.constants.Constants;
 import com.instainsight.ilikedmost.ILikeMostDBQueries;
 import com.instainsight.ilikedmost.ILikedMostEvent;
 import com.instainsight.ilikedmost.ILikedMostService;
 import com.instainsight.ilikedmost.models.ILikedMostBean;
 import com.instainsight.instagram.InstagramSession;
-import com.instainsight.login.LoginActivity;
 import com.instainsight.models.ListResponseBean;
 import com.instainsight.models.ObjectResponseBean;
 import com.instainsight.models.RelationShipStatus;
@@ -66,37 +63,28 @@ public class ILikedMostViewModel extends BaseViewModel implements IViewModel {
     }
 
     public void getILikedMost() {
-        if (mInstagramSession.isActive()) {
-            if (isConnected()) {
 
-                StringBuilder strBldrILikeMostUrl = new StringBuilder()
-                        .append(Constants.WebFields.ENDPOINT_MEDIALIKED)
-                        .append(mInstagramSession.getAccessToken());
+        StringBuilder strBldrILikeMostUrl = new StringBuilder()
+                .append(Constants.WebFields.ENDPOINT_MEDIALIKED)
+                .append(mInstagramSession.getAccessToken());
 
-                iLikedMostService.getILikedMost(new MyCallBack<ListResponseBean<ILikedMostBean>>() {
-                    @Override
-                    public void onSuccess(ListResponseBean<ILikedMostBean> response) {
-                        Log.d(TAG, "getILikedMost:" + response.getData().size());
-                        setILikedMostToDB(response.getData());
-                    }
-
-                    @Override
-                    public void onError(String header, String message) {
-                        Log.d(TAG, "getILikedMost:onError: header:" + header + " & message:" + message);
-                        EventBus.getDefault().post(new ILikedMostEvent());
-                    }
-                }, strBldrILikeMostUrl.toString());
-            } else {
-                getILikedMostFromDB();
+        iLikedMostService.getILikedMost(new MyCallBack<ListResponseBean<ILikedMostBean>>() {
+            @Override
+            public void onSuccess(ListResponseBean<ILikedMostBean> response) {
+                Log.d(TAG, "getILikedMost:" + response.getData().size());
+//                        setILikedMostToDB(response.getData());
+                ILikedMostEvent iLikedMostEvent = new ILikedMostEvent();
+                iLikedMostEvent.setArylstILikedMost(response.getData());
+                EventBus.getDefault().post(iLikedMostEvent);
             }
 
-        } else {
-            Utility.showToast(mActivity, "Could not authentication, need to log in again");
-            Intent intent = new Intent(mActivity, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mActivity.startActivity(intent);
-            mActivity.finish();
-        }
+            @Override
+            public void onError(String header, String message) {
+                Log.d(TAG, "getILikedMost:onError: header:" + header + " & message:" + message);
+                EventBus.getDefault().post(new ILikedMostEvent());
+            }
+        }, strBldrILikeMostUrl.toString());
+
     }
 
     private void getILikedMostFromDB() {

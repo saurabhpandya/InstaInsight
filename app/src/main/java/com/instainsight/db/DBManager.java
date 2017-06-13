@@ -8,6 +8,11 @@ import android.util.Log;
 
 import com.instainsight.db.tables.LIKEDBYUSER;
 import com.instainsight.db.tables.MEDIA;
+import com.instainsight.db.tables.PAID_COMMENTS;
+import com.instainsight.db.tables.PAID_FOLLOWEDBY;
+import com.instainsight.db.tables.PAID_FOLLOWS;
+import com.instainsight.db.tables.PAID_LIKEDUSERS;
+import com.instainsight.db.tables.PAID_MEDIA;
 import com.instainsight.db.tables.PROFILEVIEWER;
 import com.instainsight.db.tables.RECENTMEDIA;
 import com.instainsight.db.tables.USERS;
@@ -83,6 +88,14 @@ public class DBManager {
             dbObj.execSQL(USERS_FOLLOWEDBY.createTable());
             dbObj.execSQL(USERS_FOLLOWS.createTable());
             dbObj.execSQL(MEDIA.createTable());
+
+            dbObj.execSQL(PAID_FOLLOWS.createTable());
+            dbObj.execSQL(PAID_FOLLOWEDBY.createTable());
+            dbObj.execSQL(PAID_COMMENTS.createTable());
+            dbObj.execSQL(PAID_LIKEDUSERS.createTable());
+            dbObj.execSQL(PAID_MEDIA.createTable());
+
+
         }
 
         @Override
@@ -98,6 +111,13 @@ public class DBManager {
             dbObj.execSQL(USERS_FOLLOWEDBY.dropTable());
             dbObj.execSQL(USERS_FOLLOWS.dropTable());
             dbObj.execSQL(MEDIA.dropTable());
+
+            dbObj.execSQL(PAID_FOLLOWS.dropTable());
+            dbObj.execSQL(PAID_FOLLOWEDBY.dropTable());
+            dbObj.execSQL(PAID_COMMENTS.dropTable());
+            dbObj.execSQL(PAID_LIKEDUSERS.dropTable());
+            dbObj.execSQL(PAID_MEDIA.dropTable());
+
             onCreate(dbObj);
         }
     }

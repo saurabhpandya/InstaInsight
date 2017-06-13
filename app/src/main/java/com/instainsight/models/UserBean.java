@@ -12,6 +12,7 @@ public class UserBean {
     private String full_name;
     private String profile_picture;
     private String id;
+    private int order;
     private RelationShipStatus relationshipStatus;
 
     public String getUsername() {
@@ -52,5 +53,13 @@ public class UserBean {
 
     public void setRelationshipStatus(RelationShipStatus relationshipStatus) {
         this.relationshipStatus = relationshipStatus;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

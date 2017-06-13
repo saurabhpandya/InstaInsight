@@ -3,6 +3,7 @@ package com.instainsight.mostpopularfollowers.viewmodel;
 import android.app.Activity;
 import android.content.Context;
 
+import com.instainsight.db.PaidFollowedByDBQueries;
 import com.instainsight.followersing.followers.bean.FollowerBean;
 import com.instainsight.followersing.models.OtherUsersBean;
 import com.instainsight.instagram.InstagramSession;
@@ -55,26 +56,75 @@ public class MostPopularFollowersViewModel extends BaseViewModel implements IVie
         mActivity = value;
     }
 
-    public Single<List<OtherUsersBean>> getMostPopularFollowers() {
+//    .flatMap(new Function<FollowerBean, Observable<ObjectResponseBean<RelationShipStatus>>>() {
+//        @Override
+//        public Observable<ObjectResponseBean<RelationShipStatus>> apply(FollowerBean followerBean) throws Exception {
+//            return Observable.zip(mostPopularFollowersServices.getRelationShipStatus(followerBean.getId(), mInstagramSession.getAccessToken())
+//                    followerBean,
+//                    new BiFunction<ObjectResponseBean<RelationShipStatus>, FollowerBean, Long>() {
+//                        @Override
+//                        public Long apply(ObjectResponseBean<RelationShipStatus> relationShipStatusBean,
+//                                          FollowerBean followerBean) throws Exception {
+//                            RelationShipStatus relationShipStatus = relationShipStatusBean.getData();
+//                            long updatedRows = -1;
+//                            if (null != relationShipStatus.getTarget_user_is_private()) {
+//                                PaidFollowedByDBQueries paidFollowedByDBQueries = new PaidFollowedByDBQueries(mContext);
+//                                updatedRows = paidFollowedByDBQueries.updatePrivateUser(followerBean.getId());
+//                            }
+//                            return updatedRows;
+//                        }
+//
+//                    }
+//            )
 
+    public Single<List<Long>> getMostPopularFollowers() {
         return mostPopularFollowersServices.getFollowers(mInstagramSession.getAccessToken())
-                .concatMap(new Function<ListResponseBean<FollowerBean>, Observable<FollowerBean>>() {
+                .flatMap(new Function<ListResponseBean<FollowerBean>, Observable<FollowerBean>>() {
                     @Override
                     public Observable<FollowerBean> apply(ListResponseBean<FollowerBean> followerListBean) throws Exception {
+                        PaidFollowedByDBQueries paidFollowedByDBQueries = new PaidFollowedByDBQueries(mContext);
+                        paidFollowedByDBQueries.saveFollowedBy(followerListBean.getData());
                         return Observable.fromIterable(followerListBean.getData());
                     }
-                })
-                .concatMap(new Function<FollowerBean, Observable<ObjectResponseBean<OtherUsersBean>>>() {
+                }).flatMap(new Function<FollowerBean, Observable<Long>>() {
+                    @Override
+                    public Observable<Long> apply(FollowerBean followerBean) throws Exception {
+                        return Observable.zip(mostPopularFollowersServices.
+                                        getRelationShipStatus(followerBean.getId(), mInstagramSession.getAccessToken()),
+                                Observable.just(followerBean), new BiFunction<ObjectResponseBean<RelationShipStatus>, FollowerBean, Long>() {
+                                    @Override
+                                    public Long apply(ObjectResponseBean<RelationShipStatus> relationShipStatusBean,
+                                                      FollowerBean followerBean) throws Exception {
+                                        RelationShipStatus relationShipStatus = relationShipStatusBean.getData();
+                                        long updatedRows = -1;
+                                        if (relationShipStatus.getTarget_user_is_private()) {
+                                            PaidFollowedByDBQueries paidFollowedByDBQueries = new PaidFollowedByDBQueries(mContext);
+                                            updatedRows = paidFollowedByDBQueries.updatePrivateUser(followerBean.getId());
+                                        }
+                                        return updatedRows;
+                                    }
+                                });
+                    }
+                }).flatMap(new Function<Long, Observable<FollowerBean>>() {
+                    @Override
+                    public Observable<FollowerBean> apply(Long aLong) throws Exception {
+                        PaidFollowedByDBQueries paidFollowedByDBQueries = new PaidFollowedByDBQueries(mContext);
+                        ArrayList<FollowerBean> nonPrivateFollowers = paidFollowedByDBQueries.getNonPrivateFollowedBy();
+
+                        return Observable.fromIterable(nonPrivateFollowers);
+                    }
+                }).flatMap(new Function<FollowerBean, Observable<ObjectResponseBean<OtherUsersBean>>>() {
                     @Override
                     public Observable<ObjectResponseBean<OtherUsersBean>> apply(FollowerBean followerBean) throws Exception {
-                        return mostPopularFollowersServices.getFollowersInfo(followerBean.getId(),
-                                mInstagramSession.getAccessToken());
+                        return mostPopularFollowersServices.getFollowersInfo(followerBean.getId(), mInstagramSession.getAccessToken());
                     }
-                })
-                .concatMap(new Function<ObjectResponseBean<OtherUsersBean>, Observable<OtherUsersBean>>() {
+                }).flatMap(new Function<ObjectResponseBean<OtherUsersBean>, Observable<Long>>() {
                     @Override
-                    public Observable<OtherUsersBean> apply(ObjectResponseBean<OtherUsersBean> otherUsersBeanObjectResponseBean) throws Exception {
-                        return Observable.just(otherUsersBeanObjectResponseBean.getData());
+                    public Observable<Long> apply(ObjectResponseBean<OtherUsersBean> otherUsersBeanBean) throws Exception {
+                        long updatedOtherUserProfileRows = -1;
+                        PaidFollowedByDBQueries paidFollowedByDBQueries = new PaidFollowedByDBQueries(mContext);
+                        updatedOtherUserProfileRows = paidFollowedByDBQueries.updateFollowedByInfo(otherUsersBeanBean.getData());
+                        return Observable.just(updatedOtherUserProfileRows);
                     }
                 }).toList();
     }

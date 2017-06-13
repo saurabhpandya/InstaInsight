@@ -87,7 +87,6 @@ public class LikeGraphDBQueries {
                 valuesMap.put(MEDIA.MEDIAOWNER_FULLNAME, "");
             }
 
-
             valuesMap.put(MEDIA.TAGS, bean.getTags());
 
             valuesMap.put(MEDIA.MEDIAID, bean.getMediaId());

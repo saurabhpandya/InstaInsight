@@ -43,10 +43,10 @@ public class DBQueries {
         if (0 < columnDetails.size()) {
             for (int i = 0; i < columnDetails.size(); i++) {
                 createQuery.append(columnDetails.get(i).getColumnName());
-                if ("".equals(columnDetails.get(i).getDataType()) || null == columnDetails.get(i).getDataType())
+                if ("" .equals(columnDetails.get(i).getDataType()) || null == columnDetails.get(i).getDataType())
                     columnDetails.get(i).setDataType(DatabaseBean.TYPE_TEXT);
 
-                if ("".equals(columnDetails.get(i).getConstraint()) || null == columnDetails.get(i).getConstraint())
+                if ("" .equals(columnDetails.get(i).getConstraint()) || null == columnDetails.get(i).getConstraint())
                     columnDetails.get(i).setConstraint(CONSTRAINT_NONE);
 
                 switch (columnDetails.get(i).getDataType()) {
@@ -286,6 +286,10 @@ public class DBQueries {
 
     public long deleteTable(String tableName) {
         return manager.getDB().delete(tableName, null, null);
+    }
+
+    public long deleteTable(String tableName, String where, String[] whereArgs) {
+        return manager.getDB().delete(tableName, where + " = ?", whereArgs);
     }
 
 }

@@ -211,11 +211,23 @@ public class LikeGraphActivityNew extends ViewModelActivity {
 //        });
 
 
-        float xMax = 0f;
-        if (aryLstMedia != null && aryLstMedia.size() > 0) {
-            xMax = aryLstMedia.get(0).getLikesBean().getCount();
+        ArrayList<Integer> aryLstLikesCount = new ArrayList<>();
+        for (int i = 0; i < aryLstLikes.size(); i++) {
+            aryLstLikesCount.add(aryLstLikes.get(i).getLikesBean().getCount());
         }
-        leftAxis.setAxisMaximum(50f);
+
+        int max = Collections.max(aryLstLikesCount);
+        Log.d(TAG, "Max like count: max" + max);
+        float xMax = Float.valueOf(max);
+//        float xMax = 0f;
+//        if (aryLstMedia != null && aryLstMedia.size() > 0) {
+//            xMax = aryLstMedia.get(0).getLikesBean().getCount();
+//        }
+
+        Log.d(TAG, "Max like count:xMax" + xMax);
+        if (xMax < 50)
+            xMax = 50;
+        leftAxis.setAxisMaximum(xMax);
         leftAxis.setAxisMinimum(0f);
         //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);

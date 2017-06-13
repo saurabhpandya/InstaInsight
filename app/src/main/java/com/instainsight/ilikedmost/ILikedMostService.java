@@ -51,7 +51,7 @@ public class ILikedMostService {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        iLikeMostCallBack.onError("Server Error!", throwable.getCause().toString());
+                        iLikeMostCallBack.onError("Server Error!", throwable.getMessage().toString());
                     }
                 });
 

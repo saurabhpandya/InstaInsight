@@ -11,11 +11,20 @@ import com.instainsight.models.UserBean;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommentsBean {
 
+    private String mediaId;
     private String create_time;
     private String text;
     @JsonProperty("from")
     private UserBean from;
     private String id;
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
 
     public String getCreate_time() {
         return create_time;

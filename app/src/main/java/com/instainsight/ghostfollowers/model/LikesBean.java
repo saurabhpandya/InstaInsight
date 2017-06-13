@@ -9,12 +9,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LikesBean {
 
+    private String mediaId;
     private String username;
     private String first_name;
     private String last_name;
     private String type;
     private String id;
     private String full_name;
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
 
     public String getUsername() {
         return username;

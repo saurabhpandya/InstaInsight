@@ -51,8 +51,8 @@ public class UsersDao {
             Log.d(TAG, "inserted : " + inserId);
         } else {
             cur.moveToFirst();
-            int followerCount = Integer.parseInt(usersBean.getUserCountBean().getFollowed_by());
-            int followingCount = Integer.parseInt(usersBean.getUserCountBean().getFollows());
+            int followerCount = usersBean.getUserCountBean().getFollowed_by();
+            int followingCount = usersBean.getUserCountBean().getFollows();
             int newFollowerCount = Integer.parseInt(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWERCOUNT)));
             int newFollowingCount = Integer.parseInt(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT)));
 
@@ -96,8 +96,8 @@ public class UsersDao {
                 String followedByCount = cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWERCOUNT));
                 String followsCount = cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_FOLLOWINGCOUNT));
                 UserCountBean userCountBean = new UserCountBean();
-                userCountBean.setFollowed_by(followedByCount);
-                userCountBean.setFollows(followsCount);
+                userCountBean.setFollowed_by(Integer.parseInt(followedByCount));
+                userCountBean.setFollows(Integer.parseInt(followsCount));
                 usersBean.setUserCountBean(userCountBean);
                 usersBean.setNewFollowedByCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWERCOUNT)));
                 usersBean.setNewFollowsCount(cur.getString(cur.getColumnIndex(DatabaseHelper.KEY_NEWFOLLOWINGCOUNT)));
@@ -127,14 +127,14 @@ public class UsersDao {
                     JSONObject jsnObjDataCounts = jsnObjData.getJSONObject(WebFields.RSP_USERSELF_COUNTS);
                     UserCountBean userCountBean = new UserCountBean();
                     if (jsnObjDataCounts.has(WebFields.RSP_USERSELF_FOLLOWEDBY))
-                        userCountBean.setFollowed_by(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWEDBY));
+                        userCountBean.setFollowed_by(jsnObjDataCounts.getInt(WebFields.RSP_USERSELF_FOLLOWEDBY));
                     else
-                        userCountBean.setFollowed_by("-");
+                        userCountBean.setFollowed_by(0);
 
                     if (jsnObjDataCounts.has(WebFields.RSP_USERSELF_FOLLOWS))
-                        userCountBean.setFollows(jsnObjDataCounts.getString(WebFields.RSP_USERSELF_FOLLOWS));
+                        userCountBean.setFollows(jsnObjDataCounts.getInt(WebFields.RSP_USERSELF_FOLLOWS));
                     else
-                        userCountBean.setFollows("-");
+                        userCountBean.setFollows(0);
                     usersBean.setUserCountBean(userCountBean);
                 }
             }

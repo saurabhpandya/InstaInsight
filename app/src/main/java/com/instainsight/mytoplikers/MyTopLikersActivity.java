@@ -24,9 +24,13 @@ import com.instainsight.models.UserBean;
 import com.instainsight.mytoplikers.viewmodel.MyTopLikersViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -82,9 +86,48 @@ public class MyTopLikersActivity extends ViewModelActivity implements Relationsh
                                 for (int i = 0; i < myTopLikersList.size(); i++) {
                                     arylstTopLikers.addAll(myTopLikersList.get(i));
                                 }
+
+                                ArrayList<UserBean> arylstTopLikersFiltered = new ArrayList<UserBean>();
+                                ArrayList<String> arylstTopLikersId = new ArrayList<String>();
+                                for (int i = 0; i < arylstTopLikers.size(); i++) {
+                                    arylstTopLikersId.add(arylstTopLikers.get(i).getId());
+                                }
+
+                                Map<String, Integer> map = new HashMap<String, Integer>();
+
+                                for (String temp : arylstTopLikersId) {
+                                    Integer count = map.get(temp);
+                                    map.put(temp, (count == null) ? 1 : count + 1);
+                                }
+
+                                Map<String, Integer> treeMap = new TreeMap<String, Integer>(map);
+
+                                for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+                                    Log.d(TAG, "Key : " + entry.getKey() + " Value : "
+                                            + entry.getValue());
+
+                                    for (UserBean userBean : arylstTopLikers) {
+                                        if (userBean.getId().equalsIgnoreCase(entry.getKey().toString())
+                                                && !mInstagramSession.getUser().getUserBean().getId().equalsIgnoreCase(userBean.getId())) {
+                                            userBean.setOrder(entry.getValue());
+                                            arylstTopLikersFiltered.add(userBean);
+                                        }
+
+                                    }
+                                }
+
+                                Collections.sort(arylstTopLikersFiltered, new Comparator<UserBean>() {
+                                    @Override
+                                    public int compare(UserBean userBean, UserBean t1) {
+                                        return ((Integer) t1.getOrder()).compareTo(userBean.getOrder());
+                                    }
+                                });
+
+                                arylstTopLikers = arylstTopLikersFiltered;
 //                                arylstTopLikers.addAll(myTopLikersList.getData());
                                 arylstTopLikers = clearListFromDuplicateFirstName(arylstTopLikers);
                                 Log.d(TAG, "getMyTopLikers:arylstTopLikers:" + arylstTopLikers.size());
+
 
                                 if (arylstTopLikers.size() > 0) {
                                     mAdapter.addMyTopLikers(arylstTopLikers);
@@ -98,6 +141,7 @@ public class MyTopLikersActivity extends ViewModelActivity implements Relationsh
                                     activityMyTopLikersBinding.prgsbrMyTopLikers.setVisibility(View.GONE);
                                     activityMyTopLikersBinding.txtvwNoMyTopLikers.setVisibility(View.VISIBLE);
                                 }
+
                             }
                         }, new Consumer<Throwable>() {
                             @Override

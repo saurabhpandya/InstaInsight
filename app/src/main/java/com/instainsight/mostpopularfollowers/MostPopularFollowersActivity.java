@@ -24,9 +24,9 @@ import com.instainsight.models.RelationShipStatus;
 import com.instainsight.mostpopularfollowers.viewmodel.MostPopularFollowersViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -61,16 +61,56 @@ public class MostPopularFollowersActivity extends ViewModelActivity implements R
         if (mInstagramSession.isActive()) {
             if (isConnected()) {
                 mostPopularFollowersViewModel.getMostPopularFollowers()
-                        .subscribe(new Consumer<List<OtherUsersBean>>() {
+                        .subscribe(new Consumer<List<Long>>() {
                             @Override
-                            public void accept(List<OtherUsersBean> otherUsersBeen) throws Exception {
-                                mostPopularFollowers.addAll(otherUsersBeen);
-                                Collections.sort(mostPopularFollowers, new Comparator<OtherUsersBean>() {
-                                    @Override
-                                    public int compare(OtherUsersBean otherUsersBean, OtherUsersBean t1) {
-                                        return t1.getUserCountBean().getFollowed_by().compareTo(otherUsersBean.getUserCountBean().getFollowed_by());
-                                    }
-                                });
+                            public void accept(List<Long> otherUsersBeen) throws Exception {
+
+                                Log.d(TAG, "getMostPopularFollowers:otherUsersBeen:" + otherUsersBeen.size());
+                                mostPopularFollowers = new ArrayList<OtherUsersBean>();
+                                MostPopularFollowersDBQueries mostPopularFollowersDBQueries = new MostPopularFollowersDBQueries(MostPopularFollowersActivity.this);
+                                mostPopularFollowers = mostPopularFollowersDBQueries.getMostPopularFollowers();
+//                                for (int i = 0; i < otherUsersBeen.size(); i++) {
+//                                    mostPopularFollowers.add(otherUsersBeen.get(i));
+//                                }
+//
+//                                ArrayList<OtherUsersBean> arylstMostPopularFiltered = new ArrayList<OtherUsersBean>();
+//                                ArrayList<String> arylstMostPopularId = new ArrayList<String>();
+//                                for (int i = 0; i < mostPopularFollowers.size(); i++) {
+//                                    arylstMostPopularId.add(mostPopularFollowers.get(i).getId());
+//                                }
+//
+//                                Map<String, Integer> map = new HashMap<String, Integer>();
+//
+//                                for (String temp : arylstMostPopularId) {
+//                                    Integer count = map.get(temp);
+//                                    map.put(temp, (count == null) ? 1 : count + 1);
+//                                }
+//
+//                                Map<String, Integer> treeMap = new TreeMap<String, Integer>(map);
+//
+//                                for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+//                                    Log.d(TAG, "Key : " + entry.getKey() + " Value : "
+//                                            + entry.getValue());
+//
+//                                    for (OtherUsersBean otherUsersBean : mostPopularFollowers) {
+//                                        if (otherUsersBean.getId().equalsIgnoreCase(entry.getKey().toString())
+//                                                && !mInstagramSession.getUser().getUserBean().getId().equalsIgnoreCase(otherUsersBean.getId())) {
+//                                            arylstMostPopularFiltered.add(otherUsersBean);
+//                                        }
+//
+//                                    }
+//                                }
+//
+//                                mostPopularFollowers = clearListFromDuplicateFirstName(arylstMostPopularFiltered);
+//
+////                                mostPopularFollowers.addAll(otherUsersBeen);
+////                                Collections.sort(mostPopularFollowers, new Comparator<OtherUsersBean>() {
+////                                    @Override
+////                                    public int compare(OtherUsersBean otherUsersBean, OtherUsersBean t1) {
+////                                        return t1.getUserCountBean().getFollowed_by().compareTo(otherUsersBean.getUserCountBean().getFollowed_by());
+////                                    }
+////                                });
+
                                 if (mostPopularFollowers.size() > 0) {
                                     mAdapter.addMostPopularFollowers(mostPopularFollowers);
                                     mAdapter.notifyDataSetChanged();
@@ -103,6 +143,16 @@ public class MostPopularFollowersActivity extends ViewModelActivity implements R
             startActivity(intent);
             finish();
         }
+    }
+
+    private ArrayList<OtherUsersBean> clearListFromDuplicateFirstName(ArrayList<OtherUsersBean> list1) {
+
+        Map<String, OtherUsersBean> cleanMap = new LinkedHashMap<String, OtherUsersBean>();
+        for (int i = 0; i < list1.size(); i++) {
+            cleanMap.put(list1.get(i).getId(), list1.get(i));
+        }
+        ArrayList<OtherUsersBean> list = new ArrayList<OtherUsersBean>(cleanMap.values());
+        return list;
     }
 
     private void initRecyclerView() {

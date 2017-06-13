@@ -11,6 +11,11 @@ public class Constants {
     public static final int SPLASH_TIME = 2000;
     public static final int ADS_DELAY = 10 * 1000;
 
+    //Mi 4i
+//    public static final String TEST_ID = "F26D9F2D292FFCC31770FE3853CFE277";
+//    public static final String TEST_ID = "E03A891485FBD59D7C136786E893137C";
+    public static final String TEST_ID = "76D570241D60E079F6A38E39E6C12F57";
+    
     public static final String CLIENT_ID = "a1521f53d33b4dca82947358c75940da";
     public static final String CLIENT_SECRET = "8282f6ef07fb4f2cb47caf135053a11c";
     public static final String REDIRECT_URI = "http://yourcallback.com/";

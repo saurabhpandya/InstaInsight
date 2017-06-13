@@ -35,6 +35,17 @@ public class ILikedMostBean {
 
     private RelationShipStatus relationShipStatus;
 
+    private int order;
+
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     public String getLikedUserId() {
         return likedUserId;
     }

@@ -22,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.instainsight.constants.Constants.ADS_DELAY;
+import static com.instainsight.constants.Constants.TEST_ID;
 import static com.instainsight.constants.Constants.WebFields.TOKEN_ADMOBADS;
 
 /**
@@ -110,7 +111,10 @@ public class LandingViewModel extends BaseViewModel implements IViewModel {
 //        AdRequest adRequest = new AdRequest.Builder()
 //                .build();
 
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F26D9F2D292FFCC31770FE3853CFE277").build();
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(TEST_ID)
+                .build();
 
         // Load ads into Interstitial Ads
         mInterstitialAd.loadAd(adRequest);

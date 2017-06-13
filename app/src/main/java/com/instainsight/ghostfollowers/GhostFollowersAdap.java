@@ -62,7 +62,8 @@ public class GhostFollowersAdap extends RecyclerView.Adapter<GhostFollowersAdap.
         FollowerBean ghostFollower = (FollowerBean) ghostFollowersList.get(position);
 
         holder.txtvw_followersing_name.setText(ghostFollower.getFullName());
-        loadImage(ghostFollower.getProfilePic(), holder.imgvw_followersing);
+        if (ghostFollower.getProfilePic() != null && !ghostFollower.getProfilePic().isEmpty())
+            loadImage(ghostFollower.getProfilePic(), holder.imgvw_followersing);
 
         if (ghostFollower.getRelationShipStatus() != null) {
             holder.txtvw_followersing.setVisibility(View.VISIBLE);

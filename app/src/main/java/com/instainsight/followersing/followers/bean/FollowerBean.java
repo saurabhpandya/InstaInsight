@@ -19,8 +19,16 @@ public class FollowerBean {
     private String fullName;
     @JsonProperty("id")
     private String id;
-
+    private boolean isPrivate;
     private RelationShipStatus relationShipStatus;
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
 
     public RelationShipStatus getRelationShipStatus() {
         return relationShipStatus;
